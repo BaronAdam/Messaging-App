@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messaging-App.Api", "Messaging-App.Api\Messaging-App.Api.csproj", "{E638AFB7-4186-41E5-9F7A-BC57F9D5797A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messaging-App.Infrastructure", "Messaging-App.Infrastructure\Messaging-App.Infrastructure.csproj", "{262D1D88-765B-4311-8E1F-70ADCE1B4448}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messaging-App.Domain", "Messaging-App.Domain\Messaging-App.Domain.csproj", "{F176AB1B-162B-495D-83C5-0B2BEE8AB0BF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E638AFB7-4186-41E5-9F7A-BC57F9D5797A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E638AFB7-4186-41E5-9F7A-BC57F9D5797A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E638AFB7-4186-41E5-9F7A-BC57F9D5797A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E638AFB7-4186-41E5-9F7A-BC57F9D5797A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{262D1D88-765B-4311-8E1F-70ADCE1B4448}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{262D1D88-765B-4311-8E1F-70ADCE1B4448}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{262D1D88-765B-4311-8E1F-70ADCE1B4448}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{262D1D88-765B-4311-8E1F-70ADCE1B4448}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F176AB1B-162B-495D-83C5-0B2BEE8AB0BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F176AB1B-162B-495D-83C5-0B2BEE8AB0BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F176AB1B-162B-495D-83C5-0B2BEE8AB0BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F176AB1B-162B-495D-83C5-0B2BEE8AB0BF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

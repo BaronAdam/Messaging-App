@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>Messaging_App.Api</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
+      <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.21" />
+      <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.5.1" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.5.1" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="5.5.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Messaging-App.Infrastructure\Messaging-App.Infrastructure.csproj" />
+    </ItemGroup>
+
+
+</Project>
