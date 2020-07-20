@@ -1,20 +1,28 @@
 ﻿{
   "version": "1.0.0",
   "restore": {
-    "projectUniqueName": "/home/adambaron/Dokumenty/GitHub/Messaging-App/Messaging-App.Infrastructure/Messaging-App.Infrastructure.csproj",
+    "projectUniqueName": "C:\\Users\\adamo\\Documents\\GitHub\\Messaging-App\\Messaging-App.Infrastructure\\Messaging-App.Infrastructure.csproj",
     "projectName": "Messaging-App.Infrastructure",
-    "projectPath": "/home/adambaron/Dokumenty/GitHub/Messaging-App/Messaging-App.Infrastructure/Messaging-App.Infrastructure.csproj",
-    "outputPath": "/home/adambaron/Dokumenty/GitHub/Messaging-App/Messaging-App.Infrastructure/obj/",
+    "projectPath": "C:\\Users\\adamo\\Documents\\GitHub\\Messaging-App\\Messaging-App.Infrastructure\\Messaging-App.Infrastructure.csproj",
+    "outputPath": "C:\\Users\\adamo\\Documents\\GitHub\\Messaging-App\\Messaging-App.Infrastructure\\obj\\",
     "projectStyle": "PackageReference",
+    "fallbackFolders": [
+      "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+    ],
     "originalTargetFrameworks": [
       "netcoreapp3.1"
     ],
     "sources": {
+      "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
       "https://api.nuget.org/v3/index.json": {}
     },
     "frameworks": {
       "netcoreapp3.1": {
-        "projectReferences": {}
+        "projectReferences": {
+          "C:\\Users\\adamo\\Documents\\GitHub\\Messaging-App\\Messaging-App.Domain\\Messaging-App.Domain.csproj": {
+            "projectPath": "C:\\Users\\adamo\\Documents\\GitHub\\Messaging-App\\Messaging-App.Domain\\Messaging-App.Domain.csproj"
+          }
+        }
       }
     },
     "warningProperties": {
@@ -27,6 +35,10 @@
     "netcoreapp3.1": {
       "dependencies": {
         "Microsoft.EntityFrameworkCore": {
+          "target": "Package",
+          "version": "[3.1.6, )"
+        },
+        "Microsoft.EntityFrameworkCore.Design": {
           "target": "Package",
           "version": "[3.1.6, )"
         }
@@ -46,7 +58,7 @@
           "privateAssets": "all"
         }
       },
-      "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.302/RuntimeIdentifierGraph.json"
+      "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.302\\RuntimeIdentifierGraph.json"
     }
   }
 }

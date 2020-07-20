@@ -1,0 +1,9 @@
+C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Domain\bin\Debug\netcoreapp3.1\Messaging-App.Domain.deps.json
+C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Domain\bin\Debug\netcoreapp3.1\Messaging-App.Domain.dll
+C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Domain\bin\Debug\netcoreapp3.1\Messaging-App.Domain.pdb
+C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Domain\obj\Debug\netcoreapp3.1\Messaging-App.Domain.csprojAssemblyReference.cache
+C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Domain\obj\Debug\netcoreapp3.1\Messaging-App.Domain.AssemblyInfoInputs.cache
+C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Domain\obj\Debug\netcoreapp3.1\Messaging-App.Domain.AssemblyInfo.cs
+C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Domain\obj\Debug\netcoreapp3.1\Messaging-App.Domain.csproj.CoreCompileInputs.cache
+C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Domain\obj\Debug\netcoreapp3.1\Messaging-App.Domain.dll
+C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Domain\obj\Debug\netcoreapp3.1\Messaging-App.Domain.pdb
