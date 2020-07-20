@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Messaging_App.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace Messaging_App.Infrastructure.Persistence
 {
@@ -34,19 +35,43 @@ namespace Messaging_App.Infrastructure.Persistence
             }
         }
 
-        public async Task<User> Login(string username, string email, string password)
+        public async Task<User> Login(string username, string password)
         {
-            throw new System.NotImplementedException();
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == username);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            return VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt) ? user : null;
+        }
+
+        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        {
+            using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
+            {
+                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                for (int i = 0; i < computedHash.Length; i++)
+                {
+                    if (computedHash[i] != passwordHash[i])
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
         }
 
         public async Task<bool> UserExists(string username)
         {
-            throw new System.NotImplementedException();
+            return await _context.Users.AnyAsync(x => x.Username == username);
         }
 
         public async Task<bool> EmailExists(string email)
         {
-            throw new System.NotImplementedException();
+            return await _context.Users.AnyAsync(x => x.Email == email);
         }
     }
 }
