@@ -50,7 +50,7 @@ namespace Messaging_App.Api.Controllers
             return StatusCode(201);
         }
 
-        [HttpPost]
+        [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
             var userFromRepository = await _repository.Login(userForLoginDto.Username, userForLoginDto.Password);
