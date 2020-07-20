@@ -1,25 +1,30 @@
 {
   "format": 1,
   "restore": {
-    "/home/adambaron/Dokumenty/GitHub/Messaging-App/Messaging-App.Infrastructure/Messaging-App.Infrastructure.csproj": {}
+    "C:\\Users\\adamo\\Documents\\GitHub\\Messaging-App\\Messaging-App.Infrastructure\\Messaging-App.Infrastructure.csproj": {}
   },
   "projects": {
-    "/home/adambaron/Dokumenty/GitHub/Messaging-App/Messaging-App.Infrastructure/Messaging-App.Infrastructure.csproj": {
+    "C:\\Users\\adamo\\Documents\\GitHub\\Messaging-App\\Messaging-App.Domain\\Messaging-App.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/adambaron/Dokumenty/GitHub/Messaging-App/Messaging-App.Infrastructure/Messaging-App.Infrastructure.csproj",
-        "projectName": "Messaging-App.Infrastructure",
-        "projectPath": "/home/adambaron/Dokumenty/GitHub/Messaging-App/Messaging-App.Infrastructure/Messaging-App.Infrastructure.csproj",
-        "packagesPath": "/home/adambaron/.nuget/packages/",
-        "outputPath": "/home/adambaron/Dokumenty/GitHub/Messaging-App/Messaging-App.Infrastructure/obj/",
+        "projectUniqueName": "C:\\Users\\adamo\\Documents\\GitHub\\Messaging-App\\Messaging-App.Domain\\Messaging-App.Domain.csproj",
+        "projectName": "Messaging-App.Domain",
+        "projectPath": "C:\\Users\\adamo\\Documents\\GitHub\\Messaging-App\\Messaging-App.Domain\\Messaging-App.Domain.csproj",
+        "packagesPath": "C:\\Users\\adamo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\adamo\\Documents\\GitHub\\Messaging-App\\Messaging-App.Domain\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "/home/adambaron/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\adamo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -36,7 +41,76 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "MySql.Data.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.21, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.302\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\adamo\\Documents\\GitHub\\Messaging-App\\Messaging-App.Infrastructure\\Messaging-App.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\adamo\\Documents\\GitHub\\Messaging-App\\Messaging-App.Infrastructure\\Messaging-App.Infrastructure.csproj",
+        "projectName": "Messaging-App.Infrastructure",
+        "projectPath": "C:\\Users\\adamo\\Documents\\GitHub\\Messaging-App\\Messaging-App.Infrastructure\\Messaging-App.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\adamo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\adamo\\Documents\\GitHub\\Messaging-App\\Messaging-App.Infrastructure\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\adamo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "C:\\Users\\adamo\\Documents\\GitHub\\Messaging-App\\Messaging-App.Domain\\Messaging-App.Domain.csproj": {
+                "projectPath": "C:\\Users\\adamo\\Documents\\GitHub\\Messaging-App\\Messaging-App.Domain\\Messaging-App.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
             "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[3.1.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
               "target": "Package",
               "version": "[3.1.6, )"
             }
@@ -56,7 +130,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.302/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.302\\RuntimeIdentifierGraph.json"
         }
       }
     }

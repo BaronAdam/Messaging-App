@@ -2,8 +2,6 @@ version: '2'
 services:
   messaging-app-db:
     image: mysql:8.0.21
-    volumes:
-      - "./.mysql-data/db:/var/lib/mysql"
     ports:
       - 3306:3306
     environment:
