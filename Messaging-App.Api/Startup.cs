@@ -37,6 +37,8 @@ namespace Messaging_App.Api
 
             services.AddDbContext<AppDbContext>(options => options
                 .UseMySQL(Configuration.GetConnectionString("DbConnection")));
+
+            services.AddScoped<IAuthRepository, AuthRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
