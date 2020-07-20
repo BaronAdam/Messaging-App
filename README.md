@@ -6,3 +6,7 @@ Bachelor's degree application.
 cd Messaging-App.Infrastructure
 dotnet ef --startup-project ../Messaging-App.Api/ migrations add [name]
 ```
+## Docker
+```
+docker-compose up -d
+```
