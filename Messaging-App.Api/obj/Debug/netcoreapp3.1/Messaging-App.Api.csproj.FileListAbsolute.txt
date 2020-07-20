@@ -124,3 +124,7 @@ C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Api\obj\Debug\netcor
 C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Api\bin\Debug\netcoreapp3.1\Messaging-App.Domain.dll
 C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Api\bin\Debug\netcoreapp3.1\Messaging-App.Domain.pdb
 C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Api\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Api\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Api\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Logging.dll
+C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Api\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Tokens.dll
+C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Api\bin\Debug\netcoreapp3.1\System.IdentityModel.Tokens.Jwt.dll
