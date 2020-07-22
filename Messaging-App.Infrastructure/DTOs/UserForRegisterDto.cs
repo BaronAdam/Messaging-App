@@ -12,7 +12,10 @@ namespace Messaging_App.Infrastructure.DTOs
         public string Email { get; set; }
         
         [Required]
-        [StringLength(30, MinimumLength = 8, ErrorMessage = "You must specify password between 8 and 30 characters")]
+        [StringLength(40, MinimumLength = 8, ErrorMessage = "You must specify password between 8 and 40 characters")]
         public string Password { get; set; }
+        
+        [Required] 
+        public string Name { get; set; }
     }
 }

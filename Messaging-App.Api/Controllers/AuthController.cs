@@ -42,7 +42,8 @@ namespace Messaging_App.Api.Controllers
             var userToCreate = new User
             {
                 Username = userForRegisterDto.Username,
-                Email = userForRegisterDto.Email
+                Email = userForRegisterDto.Email,
+                Name = userForRegisterDto.Name
             };
 
             var createdUser = await _repository.Register(userToCreate, userForRegisterDto.Password);
