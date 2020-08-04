@@ -1,22 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
+using Messaging_App.Infrastructure.Migrations.Seed;
 using Messaging_App.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -45,6 +39,8 @@ namespace Messaging_App.Api
                 .UseMySQL(Configuration.GetConnectionString("DbConnection")));
 
             services.AddScoped<IAuthRepository, AuthRepository>();
+            
+            services.AddScoped<IAppRepository, AppRepository>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -106,6 +102,7 @@ namespace Messaging_App.Api
                 var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
+                Seed.SeedUsers(context);
             }
 
         }
