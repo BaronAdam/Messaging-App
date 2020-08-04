@@ -1,8 +1,8 @@
-﻿﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Messaging_App.Infrastructure.Migrations
 {
-    public partial class friends : Migration
+    public partial class Friends : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

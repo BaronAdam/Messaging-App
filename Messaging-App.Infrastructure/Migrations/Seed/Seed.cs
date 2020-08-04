@@ -18,11 +18,13 @@ namespace Messaging_App.Infrastructure.Migrations.Seed
                 foreach (var user in users)
                 {
                     CreatePasswordHash("password", out var passwordHash, out var passwordSalt);
-
+                    
                     user.PasswordHash = passwordHash;
                     user.PasswordSalt = passwordSalt;
                     context.Users.Add(user);
                 }
+
+                context.SaveChanges();
             }
         }
         

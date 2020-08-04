@@ -97,14 +97,13 @@ namespace Messaging_App.Api
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
-                Seed.SeedUsers(context);
-            }
-
+            // using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            // {
+            //     var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
+            //     context.Database.EnsureDeleted();
+            //     context.Database.EnsureCreated();
+            //     Seed.SeedUsers(context);
+            // }
         }
     }
 }
