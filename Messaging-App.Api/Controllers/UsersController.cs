@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using AutoMapper;
+using Messaging_App.Infrastructure.DTOs;
 using Messaging_App.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +13,12 @@ namespace Messaging_App.Api.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IAppRepository _repository;
+        private readonly IMapper _mapper;
 
-        public UsersController(IAppRepository repository)
+        public UsersController(IAppRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -21,7 +26,9 @@ namespace Messaging_App.Api.Controllers
         {
             var users = await _repository.GetUsers();
 
-            return Ok(users);
+            var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+
+            return Ok(usersToReturn);
         }
 
         [HttpGet("{id}")]
@@ -29,7 +36,9 @@ namespace Messaging_App.Api.Controllers
         {
             var user = await _repository.GetUser(id);
 
-            return Ok(user);
+            var userToReturn = _mapper.Map<UserForSingleDto>(user);
+
+            return Ok(userToReturn);
         }
     }
 }

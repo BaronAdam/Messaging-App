@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text;
+using AutoMapper;
 using Messaging_App.Infrastructure.Migrations.Seed;
 using Messaging_App.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -37,6 +38,8 @@ namespace Messaging_App.Api
 
             services.AddDbContext<AppDbContext>(options => options
                 .UseMySQL(Configuration.GetConnectionString("DbConnection")));
+            
+            services.AddAutoMapper(typeof(Startup).Assembly);
 
             services.AddScoped<IAuthRepository, AuthRepository>();
             
@@ -96,14 +99,7 @@ namespace Messaging_App.Api
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-
-            // using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            // {
-            //     var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
-            //     context.Database.EnsureDeleted();
-            //     context.Database.EnsureCreated();
-            //     Seed.SeedUsers(context);
-            // }
+            
         }
     }
 }

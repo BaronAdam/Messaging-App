@@ -132,3 +132,5 @@ C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Api\bin\Debug\netcor
 C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Api\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.dll
 C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Api\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Api\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Api\bin\Debug\netcoreapp3.1\AutoMapper.dll
+C:\Users\adamo\Documents\GitHub\Messaging-App\Messaging-App.Api\bin\Debug\netcoreapp3.1\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
