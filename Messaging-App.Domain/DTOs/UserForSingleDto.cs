@@ -1,6 +1,6 @@
-﻿namespace Messaging_App.Infrastructure.DTOs
+﻿namespace Messaging_App.Domain.DTOs
 {
-    public class UserForListDto
+    public class UserForSingleDto
     {
         public int Id { get; set; }
         public string Username { get; set; }

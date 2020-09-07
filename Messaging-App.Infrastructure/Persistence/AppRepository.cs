@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Messaging_App.Domain;
+using Messaging_App.Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Messaging_App.Infrastructure.Persistence
@@ -41,6 +42,11 @@ namespace Messaging_App.Infrastructure.Persistence
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
 
             return user;
+        }
+
+        public async Task<Contact> GetContact(int userId, int friendId)
+        {
+            return await _context.Contacts.FirstOrDefaultAsync(u => u.UserId == userId && u.ContactId == friendId);
         }
     }
 }

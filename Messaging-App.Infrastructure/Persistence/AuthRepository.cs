@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Messaging_App.Domain;
+using Messaging_App.Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Messaging_App.Infrastructure.Persistence

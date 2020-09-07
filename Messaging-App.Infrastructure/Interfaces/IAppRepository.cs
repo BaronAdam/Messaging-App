@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Messaging_App.Domain;
 
-namespace Messaging_App.Infrastructure.Persistence
+namespace Messaging_App.Infrastructure.Interfaces
 {
     public interface IAppRepository
     {
@@ -11,5 +11,6 @@ namespace Messaging_App.Infrastructure.Persistence
         Task<bool> SaveAll();
         Task<IEnumerable<User>> GetUsers();
         Task<User> GetUser(int id);
+        Task<Contact> GetContact(int userId, int friendId);
     }
 }

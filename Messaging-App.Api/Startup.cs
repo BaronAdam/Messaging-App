@@ -1,7 +1,8 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using AutoMapper;
-using Messaging_App.Infrastructure.Migrations.Seed;
+using Messaging_App.Infrastructure.Interfaces;
 using Messaging_App.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -31,9 +32,37 @@ namespace Messaging_App.Api
         {
             services.AddControllers();
             
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MessagingApp", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo {Title = "MessagingApp", Version = "v1"});
+
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "Enter 'Bearer' [space] {token}",
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+
+                        },
+                        new List<string>()
+                    }
+                });
             });
 
             services.AddDbContext<AppDbContext>(options => options
@@ -87,7 +116,7 @@ namespace Messaging_App.Api
             
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Star Wars - Heroes WebAPI");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MessagingApp");
                 c.RoutePrefix = "swagger";
             });
 

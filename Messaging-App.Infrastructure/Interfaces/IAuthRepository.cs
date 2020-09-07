@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Messaging_App.Domain;
 
-namespace Messaging_App.Infrastructure.Persistence
+namespace Messaging_App.Infrastructure.Interfaces
 {
     public interface IAuthRepository
     {

@@ -4,8 +4,10 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Messaging_App.Domain;
-using Messaging_App.Infrastructure.DTOs;
+using Messaging_App.Domain.DTOs;
+using Messaging_App.Infrastructure.Interfaces;
 using Messaging_App.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -13,6 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Messaging_App.Api.Controllers
 {
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -25,7 +28,9 @@ namespace Messaging_App.Api.Controllers
             _repository = repository;
             _configuration = configuration;
         }
-
+        
+        [ProducesResponseType(201)]
+        [ProducesResponseType(500)]
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
         {
@@ -50,7 +55,10 @@ namespace Messaging_App.Api.Controllers
 
             return StatusCode(201);
         }
-
+        
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(500)]
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
