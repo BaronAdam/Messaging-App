@@ -38,7 +38,7 @@ namespace Messaging_App.Api
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = "Enter 'Bearer' [space] {token}",
+                    Description = "Enter 'Bearer {token}'",
                     In = ParameterLocation.Header,
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey,
