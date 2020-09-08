@@ -33,13 +33,13 @@ namespace Messaging_App.Api.Controllers
         [ProducesResponseType(typeof(UserForListDto), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetUsers([FromQuery] UserParams userParams)
+        public async Task<IActionResult> GetUsers([FromQuery] UserParameters userParameters)
         {
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            userParams.UserId = currentUserId;
+            userParameters.UserId = currentUserId;
             
-            var users = await _userRepository.GetUsers(userParams);
+            var users = await _userRepository.GetUsers(userParameters);
 
             var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
 

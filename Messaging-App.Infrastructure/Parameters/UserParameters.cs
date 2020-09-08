@@ -1,6 +1,6 @@
 namespace Messaging_App.Infrastructure.Parameters
 {
-    public class UserParams
+    public class UserParameters
     {
         private const int MaxPageSize = 50;
         
@@ -14,5 +14,7 @@ namespace Messaging_App.Infrastructure.Parameters
         }
 
         public int UserId { get; set; }
+        public bool Contacts { get; set; } = false;
+        public bool InContacts { get; set; } = false;
     }
 }

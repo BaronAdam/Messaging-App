@@ -7,7 +7,7 @@ namespace Messaging_App.Infrastructure.Interfaces
 {
     public interface IUserRepository
     {
-        Task<PagedList<User>> GetUsers(UserParams userParams);
+        Task<PagedList<User>> GetUsers(UserParameters userParameters);
         Task<User> GetUser(int id);
     }
 }
