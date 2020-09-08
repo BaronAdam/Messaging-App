@@ -3,8 +3,10 @@ using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Messaging_App.Api.Helpers;
 using Messaging_App.Domain;
 using Messaging_App.Domain.DTOs;
+using Messaging_App.Infrastructure.Helpers;
 using Messaging_App.Infrastructure.Interfaces;
 using Messaging_App.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
@@ -31,11 +33,17 @@ namespace Messaging_App.Api.Controllers
         [ProducesResponseType(typeof(UserForListDto), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers([FromQuery] UserParams userParams)
         {
-            var users = await _repository.GetUsers();
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            userParams.UserId = currentUserId;
+            
+            var users = await _repository.GetUsers(userParams);
 
             var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+
+            Response.AddPagination(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
 
             return Ok(usersToReturn);
         }

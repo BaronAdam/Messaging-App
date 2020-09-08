@@ -74,6 +74,8 @@ namespace Messaging_App.Api
             
             services.AddScoped<IAppRepository, AppRepository>();
 
+            services.AddCors();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -123,6 +125,8 @@ namespace Messaging_App.Api
             // app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseAuthentication();
             app.UseAuthorization();
