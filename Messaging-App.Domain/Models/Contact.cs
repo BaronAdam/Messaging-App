@@ -1,4 +1,4 @@
-﻿namespace Messaging_App.Domain
+﻿namespace Messaging_App.Domain.Models
 {
     public class Contact
     {

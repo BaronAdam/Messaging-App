@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
-using Messaging_App.Domain;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Messaging_App.Domain.Models;
 using Messaging_App.Infrastructure.Interfaces;
+using Messaging_App.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace Messaging_App.Infrastructure.Persistence
+namespace Messaging_App.Infrastructure.Repositories
 {
     public class AuthRepository : IAuthRepository
     {
@@ -15,8 +17,7 @@ namespace Messaging_App.Infrastructure.Persistence
         }
         public async Task<User> Register(User user, string password)
         {
-            byte[] passwordHash, passwordSalt;
-            CreatePasswordHash(password, out passwordHash, out passwordSalt);
+            CreatePasswordHash(password, out var passwordHash, out var passwordSalt);
 
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
@@ -29,11 +30,9 @@ namespace Messaging_App.Infrastructure.Persistence
 
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
-            using (var hmac = new System.Security.Cryptography.HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            }
+            using var hmac = new System.Security.Cryptography.HMACSHA512();
+            passwordSalt = hmac.Key;
+            passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
         }
 
         public async Task<User> Login(string username, string password)
@@ -50,19 +49,9 @@ namespace Messaging_App.Infrastructure.Persistence
 
         private static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
-            using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
-            {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                for (int i = 0; i < computedHash.Length; i++)
-                {
-                    if (computedHash[i] != passwordHash[i])
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
+            using var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt);
+            var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            return !computedHash.Where((t, i) => t != passwordHash[i]).Any();
         }
 
         public async Task<bool> UserExists(string username)

@@ -3,14 +3,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Messaging_App.Domain;
 using Messaging_App.Domain.DTOs;
+using Messaging_App.Domain.Models;
 using Messaging_App.Infrastructure.Interfaces;
-using Messaging_App.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Messaging_App.Api.Controllers

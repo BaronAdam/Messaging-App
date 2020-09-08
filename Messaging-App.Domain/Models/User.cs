@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Messaging_App.Domain
+namespace Messaging_App.Domain.Models
 {
     public class User
     {
