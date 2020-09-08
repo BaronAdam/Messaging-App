@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -9,7 +10,6 @@ using Messaging_App.Infrastructure.Interfaces;
 using Messaging_App.Infrastructure.Parameters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 
 namespace Messaging_App.Api.Controllers
 {
@@ -30,9 +30,9 @@ namespace Messaging_App.Api.Controllers
         }
         
         [HttpGet]
-        [ProducesResponseType(typeof(UserForListDto), 200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(500)]
+        [ProducesResponseType(typeof(UserForListDto), (int) HttpStatusCode.OK)]
+        [ProducesResponseType((int) HttpStatusCode.Unauthorized)]
+        [ProducesResponseType((int) HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> GetUsers([FromQuery] UserParameters userParameters)
         {
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -49,9 +49,9 @@ namespace Messaging_App.Api.Controllers
         }
         
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(UserForSingleDto), 200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(500)]
+        [ProducesResponseType(typeof(UserForSingleDto), (int) HttpStatusCode.OK)]
+        [ProducesResponseType((int) HttpStatusCode.Unauthorized)]
+        [ProducesResponseType((int) HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> GetUser(int id)
         {
             var user = await _userRepository.GetUser(id);
@@ -62,11 +62,11 @@ namespace Messaging_App.Api.Controllers
         }
 
         [HttpPost("{id}/friend/{friendId}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
+        [ProducesResponseType((int) HttpStatusCode.OK)]
+        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int) HttpStatusCode.Unauthorized)]
+        [ProducesResponseType((int) HttpStatusCode.NotFound)]
+        [ProducesResponseType((int) HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> AddFriend(int id, int friendId)
         {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
