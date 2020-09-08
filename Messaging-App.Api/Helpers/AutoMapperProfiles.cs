@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Messaging_App.Domain;
 using Messaging_App.Domain.DTOs;
+using Messaging_App.Domain.Models;
 
 namespace Messaging_App.Api.Helpers
 {

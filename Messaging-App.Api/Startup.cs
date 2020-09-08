@@ -4,6 +4,7 @@ using System.Text;
 using AutoMapper;
 using Messaging_App.Infrastructure.Interfaces;
 using Messaging_App.Infrastructure.Persistence;
+using Messaging_App.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -73,6 +74,8 @@ namespace Messaging_App.Api
             services.AddScoped<IAuthRepository, AuthRepository>();
             
             services.AddScoped<IAppRepository, AppRepository>();
+            
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddCors();
 

@@ -1,4 +1,4 @@
-namespace Messaging_App.Infrastructure.Helpers
+namespace Messaging_App.Infrastructure.Parameters
 {
     public class UserParams
     {

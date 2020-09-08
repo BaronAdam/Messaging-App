@@ -1,4 +1,4 @@
-using Messaging_App.Domain;
+using Messaging_App.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Messaging_App.Infrastructure.Persistence

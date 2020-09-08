@@ -1,4 +1,4 @@
-namespace Messaging_App.Api.Helpers
+namespace Messaging_App.Infrastructure.Helpers
 {
     public class PaginationHeader
     {

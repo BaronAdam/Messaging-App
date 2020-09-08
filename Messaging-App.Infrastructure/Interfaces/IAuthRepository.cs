@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Messaging_App.Domain;
+using Messaging_App.Domain.Models;
 
 namespace Messaging_App.Infrastructure.Interfaces
 {

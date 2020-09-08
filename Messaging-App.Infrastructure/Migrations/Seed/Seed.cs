@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using Messaging_App.Domain;
+using Messaging_App.Domain.Models;
 using Messaging_App.Infrastructure.Persistence;
 
 namespace Messaging_App.Infrastructure.Migrations.Seed

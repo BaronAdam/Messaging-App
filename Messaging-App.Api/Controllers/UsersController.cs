@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Messaging_App.Api.Helpers;
-using Messaging_App.Domain;
 using Messaging_App.Domain.DTOs;
-using Messaging_App.Infrastructure.Helpers;
+using Messaging_App.Domain.Models;
 using Messaging_App.Infrastructure.Interfaces;
-using Messaging_App.Infrastructure.Persistence;
+using Messaging_App.Infrastructure.Parameters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,13 +18,15 @@ namespace Messaging_App.Api.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IAppRepository _repository;
+        private readonly IAppRepository _appRepository;
         private readonly IMapper _mapper;
+        private readonly IUserRepository _userRepository;
 
-        public UsersController(IAppRepository repository, IMapper mapper)
+        public UsersController(IUserRepository userRepository, IMapper mapper, IAppRepository appRepository)
         {
-            _repository = repository;
+            _userRepository = userRepository;
             _mapper = mapper;
+            _appRepository = appRepository;
         }
         
         [HttpGet]
@@ -39,7 +39,7 @@ namespace Messaging_App.Api.Controllers
 
             userParams.UserId = currentUserId;
             
-            var users = await _repository.GetUsers(userParams);
+            var users = await _userRepository.GetUsers(userParams);
 
             var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
 
@@ -54,7 +54,7 @@ namespace Messaging_App.Api.Controllers
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetUser(int id)
         {
-            var user = await _repository.GetUser(id);
+            var user = await _userRepository.GetUser(id);
 
             var userToReturn = _mapper.Map<UserForSingleDto>(user);
 
@@ -71,11 +71,11 @@ namespace Messaging_App.Api.Controllers
         {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
             
-            var friend = await _repository.GetContact(id, friendId);
+            var friend = await _appRepository.GetContact(id, friendId);
 
             if (friend != null) return BadRequest("This user is already in your friend list");
 
-            if (await _repository.GetUser(friendId) == null) return NotFound();
+            if (await _userRepository.GetUser(friendId) == null) return NotFound();
 
             friend = new Contact
             {
@@ -83,9 +83,9 @@ namespace Messaging_App.Api.Controllers
                 ContactId = friendId
             };
             
-            _repository.Add<Contact>(friend);
+            _appRepository.Add(friend);
 
-            if (await _repository.SaveAll()) return Ok();
+            if (await _appRepository.SaveAll()) return Ok();
 
             return BadRequest("Failed to add new friend");
         }
