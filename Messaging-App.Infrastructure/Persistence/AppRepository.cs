@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Messaging_App.Domain;
+using Messaging_App.Infrastructure.Helpers;
 using Messaging_App.Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,11 +32,13 @@ namespace Messaging_App.Infrastructure.Persistence
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<PagedList<User>> GetUsers(UserParams userParams)
         {
-            var users = await _context.Users.ToListAsync();
+            var users = _context.Users.AsQueryable();
 
-            return users;
+            users = users.Where(u => u.Id != userParams.UserId);
+
+            return await PagedList<User>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<User> GetUser(int id)
