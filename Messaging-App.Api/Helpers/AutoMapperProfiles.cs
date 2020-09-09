@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Messaging_App.Domain.DTOs;
 using Messaging_App.Domain.Models;
+using Message = Renci.SshNet.Messages.Message;
 
 namespace Messaging_App.Api.Helpers
 {
@@ -10,6 +11,7 @@ namespace Messaging_App.Api.Helpers
         {
             CreateMap<User, UserForListDto>();
             CreateMap<User, UserForSingleDto>();
+            CreateMap<MessageForCreationDto, Message>().ReverseMap();
         }
     }
 }

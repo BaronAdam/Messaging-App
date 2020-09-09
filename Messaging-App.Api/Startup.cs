@@ -77,6 +77,8 @@ namespace Messaging_App.Api
             
             services.AddScoped<IUserRepository, UserRepository>();
 
+            services.AddScoped<IMessageRepository, MessageRepository>();
+
             services.AddCors();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
