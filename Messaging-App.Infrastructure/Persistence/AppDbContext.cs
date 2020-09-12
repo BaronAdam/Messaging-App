@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Messaging_App.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,13 +9,9 @@ namespace Messaging_App.Infrastructure.Persistence
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
 
         public DbSet<User> Users { get; set; }
-        
         public DbSet<Contact> Contacts { get; set; }
-        
         public DbSet<MessageGroup> MessageGroups { get; set; }
-
         public DbSet<UserMessageGroup> UserMessageGroups { get; set; }
-
         public DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

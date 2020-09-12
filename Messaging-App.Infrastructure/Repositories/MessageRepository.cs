@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Messaging_App.Domain.Models;
 using Messaging_App.Infrastructure.Helpers;
 using Messaging_App.Infrastructure.Interfaces;
+using Messaging_App.Infrastructure.Parameters;
 using Messaging_App.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,20 +23,28 @@ namespace Messaging_App.Infrastructure.Repositories
         {
             return await _context.Messages.FirstOrDefaultAsync(m => m.Id == id);
         }
-
-        public async Task<PagedList<Message>> GetMessagesForUser()
+        
+        public async Task<PagedList<Message>> GetMessageThread(int userId, int groupId, 
+            MessageParameters messageParameters)
         {
-            throw new System.NotImplementedException();
+            var messages = _context.Messages
+                .Include(m => m.Sender)
+                .Include(m => m.Group)
+                .Where(m => m.GroupId == groupId || m.SenderId == userId)
+                .OrderByDescending(m => m.DateSent)
+                .AsQueryable();
+
+            return await PagedList<Message>.CreateAsync(messages, messageParameters.PageNumber,
+                messageParameters.PageSize);
         }
 
-        public async Task<IEnumerable<Message>> GetMessageThread(int userId, int groupId)
+        public async Task<Message> GetLastMessage(int groupId)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public async Task<MessageGroup> GetMessageGroup(int id)
-        {
-            return await _context.MessageGroups.FirstOrDefaultAsync(g => g.Id == id);
+            return await _context.Messages
+                .Where(m => m.GroupId == groupId)
+                .Include(m => m.Sender)
+                .OrderByDescending(m => m.DateSent)
+                .FirstOrDefaultAsync();
         }
     }
 }

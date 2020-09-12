@@ -40,7 +40,7 @@ namespace Messaging_App.Infrastructure.Repositories
             return await PagedList<User>.CreateAsync(users, userParameters.PageNumber, userParameters.PageSize);
         }
 
-        private async Task<IEnumerable<int>> GetUserContacts(int id, bool inContacts)
+        public async Task<IEnumerable<int>> GetUserContacts(int id, bool inContacts)
         {
             var user = await _context.Users.Include(x => x.Contacts1).Include(x => x.Contacts2)
                 .FirstOrDefaultAsync(u => u.Id == id);
