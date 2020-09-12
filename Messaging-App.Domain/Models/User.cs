@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace Messaging_App.Domain.Models
 {
@@ -13,5 +14,6 @@ namespace Messaging_App.Domain.Models
         
         public virtual ICollection<Contact> Contacts1 { get; set; }
         public virtual ICollection<Contact> Contacts2 { get; set; }
+        public virtual ICollection<Message> Messages { get; set; }
     }
 }

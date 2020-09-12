@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using AutoMapper;
-using Messaging_App.Infrastructure.Interfaces;
+using Messaging_App.Api.Configuration;
 using Messaging_App.Infrastructure.Persistence;
-using Messaging_App.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -15,7 +13,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 
 namespace Messaging_App.Api
 {
@@ -33,50 +30,15 @@ namespace Messaging_App.Api
         {
             services.AddControllers();
             
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc("v1", new OpenApiInfo {Title = "MessagingApp", Version = "v1"});
-
-                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    Description = "Enter 'Bearer {token}'",
-                    In = ParameterLocation.Header,
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer",
-                });
-
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement()
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            },
-                            Scheme = "oauth2",
-                            Name = "Bearer",
-                            In = ParameterLocation.Header,
-
-                        },
-                        new List<string>()
-                    }
-                });
-            });
+            services.ConfigureSwagger();
 
             services.AddDbContext<AppDbContext>(options => options
                 .UseMySQL(Configuration.GetConnectionString("DbConnection")));
             
             services.AddAutoMapper(typeof(Startup).Assembly);
 
-            services.AddScoped<IAuthRepository, AuthRepository>();
+            services.ConfigureDependencyInjection();
             
-            services.AddScoped<IAppRepository, AppRepository>();
-            
-            services.AddScoped<IUserRepository, UserRepository>();
-
             services.AddCors();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

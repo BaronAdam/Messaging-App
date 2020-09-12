@@ -9,5 +9,6 @@ namespace Messaging_App.Infrastructure.Interfaces
         void Delete<T>(T entity) where T : class;
         Task<bool> SaveAll();
         Task<Contact> GetContact(int userId, int friendId);
+        Task<int> CreateMessagingGroup(bool isGroup, string name);
     }
 }

@@ -21,25 +21,28 @@ namespace Messaging_App.Api.Controllers
         private readonly IAppRepository _appRepository;
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
+        private IMessageGroupRepository _groupRepository;
 
-        public UsersController(IUserRepository userRepository, IMapper mapper, IAppRepository appRepository)
+        public UsersController(IUserRepository userRepository, IMapper mapper, 
+            IAppRepository appRepository, IMessageGroupRepository groupRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _appRepository = appRepository;
+            _groupRepository = groupRepository;
         }
         
         [HttpGet]
         [ProducesResponseType(typeof(UserForListDto), (int) HttpStatusCode.OK)]
         [ProducesResponseType((int) HttpStatusCode.Unauthorized)]
         [ProducesResponseType((int) HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> GetUsers([FromQuery] UserParams userParams)
+        public async Task<IActionResult> GetUsers([FromQuery] UserParameters userParameters)
         {
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            userParams.UserId = currentUserId;
+            userParameters.UserId = currentUserId;
             
-            var users = await _userRepository.GetUsers(userParams);
+            var users = await _userRepository.GetUsers(userParameters);
 
             var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
 
@@ -71,19 +74,35 @@ namespace Messaging_App.Api.Controllers
         {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
             
-            var friend = await _appRepository.GetContact(id, friendId);
+            var contact = await _appRepository.GetContact(id, friendId);
 
-            if (friend != null) return BadRequest("This user is already in your friend list");
+            if (contact != null) return BadRequest("This user is already in your friend list");
 
-            if (await _userRepository.GetUser(friendId) == null) return NotFound();
+            var friend = await _userRepository.GetUser(friendId);
+            
+            if (friend == null) return NotFound();
 
-            friend = new Contact
+            contact = new Contact
             {
                 UserId = id,
                 ContactId = friendId
             };
+
+            if (await _appRepository.GetContact(friendId, id) == null)
+            {
+                var user = await _userRepository.GetUser(id);
             
-            _appRepository.Add(friend);
+                var name = user.Name + " & " + friend.Name;
+
+                var groupId = await _appRepository.CreateMessagingGroup(false, name);
+
+                if (!await _groupRepository.CreateMessagingThread(new List<int> {id, friendId}, groupId, true))
+                {
+                    return BadRequest("There was an error while creating new group.");
+                }
+            }
+
+            _appRepository.Add(contact);
 
             if (await _appRepository.SaveAll()) return Ok();
 

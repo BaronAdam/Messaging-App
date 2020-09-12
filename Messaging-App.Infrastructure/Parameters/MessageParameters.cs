@@ -1,6 +1,6 @@
 namespace Messaging_App.Infrastructure.Parameters
 {
-    public class UserParams
+    public class MessageParameters
     {
         private const int MaxPageSize = 50;
         
@@ -12,7 +12,5 @@ namespace Messaging_App.Infrastructure.Parameters
             get => _pageSize;
             set => _pageSize = value > MaxPageSize ? MaxPageSize : value;
         }
-
-        public int UserId { get; set; }
     }
 }

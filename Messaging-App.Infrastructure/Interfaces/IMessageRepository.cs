@@ -6,10 +6,10 @@ using Messaging_App.Infrastructure.Parameters;
 
 namespace Messaging_App.Infrastructure.Interfaces
 {
-    public interface IUserRepository
+    public interface IMessageRepository
     {
-        Task<PagedList<User>> GetUsers(UserParameters userParameters);
-        Task<User> GetUser(int id);
-        Task<IEnumerable<int>> GetUserContacts(int id, bool inContacts);
+        Task<Message> GetMessage(int id);
+        Task<PagedList<Message>> GetMessageThread(int userId, int groupId, MessageParameters messageParameters);
+        Task<Message> GetLastMessage(int groupId);
     }
 }
