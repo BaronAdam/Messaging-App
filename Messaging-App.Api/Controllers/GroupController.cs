@@ -120,6 +120,8 @@ namespace Messaging_App.Api.Controllers
         
             if (!userGroup.IsAdmin) return Unauthorized();
 
+            if (userId == dto.UserId) return BadRequest("You cannot change your admin status.");
+
             var group = await _groupRepository.GetUserMessageGroup(dto.UserId, dto.GroupId);
 
             group.IsAdmin = !group.IsAdmin;
