@@ -4,6 +4,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Messaging_App.Domain.DTOs;
 using Messaging_App.Domain.Models;
 using Messaging_App.Infrastructure.Interfaces;
@@ -21,14 +22,16 @@ namespace Messaging_App.Api.Controllers
     {
         private readonly IAuthRepository _repository;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public AuthController(IAuthRepository repository, IConfiguration configuration)
+        public AuthController(IAuthRepository repository, IConfiguration configuration, IMapper mapper)
         {
             _repository = repository;
             _configuration = configuration;
+            _mapper = mapper;
         }
         
-        [ProducesResponseType((int) HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(UserForSingleDto), (int) HttpStatusCode.Created)]
         [ProducesResponseType((int) HttpStatusCode.BadRequest)]
         [ProducesResponseType((int) HttpStatusCode.InternalServerError)]
         [HttpPost("register")]
@@ -52,8 +55,8 @@ namespace Messaging_App.Api.Controllers
             };
 
             var createdUser = await _repository.Register(userToCreate, userForRegisterDto.Password);
-
-            return StatusCode(201);
+            
+            return CreatedAtRoute("CreateUser", _mapper.Map<UserForSingleDto>(createdUser));
         }
         
         [ProducesResponseType(typeof(string), (int) HttpStatusCode.OK)]
