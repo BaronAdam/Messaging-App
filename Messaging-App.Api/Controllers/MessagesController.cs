@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Security.Claims;
@@ -104,7 +105,14 @@ namespace Messaging_App.Api.Controllers
             
             foreach (var messageGroup in messageGroups)
             {
-                var message = await _messageRepository.GetLastMessage(messageGroup.Id);
+                var message = await _messageRepository.GetLastMessage(messageGroup.Id) ?? new Message
+                {
+                    Content = string.Empty,
+                    Sender = new User
+                    {
+                        Name = string.Empty
+                    }
+                };
 
                 var content = message.Content;
 
