@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Messaging_App.Domain.Models
 {
@@ -9,6 +10,7 @@ namespace Messaging_App.Domain.Models
         public User Sender { get; set; }
         public int GroupId { get; set; }
         public MessageGroup Group { get; set; }
+        [Encrypted]
         public string Content { get; set; }
         public DateTime DateSent { get; set; }
         public bool IsRead { get; set; }

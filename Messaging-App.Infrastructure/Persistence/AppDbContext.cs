@@ -1,12 +1,23 @@
-using System.Threading.Tasks;
+using System;
 using Messaging_App.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.DataEncryption;
+using Microsoft.EntityFrameworkCore.DataEncryption.Providers;
+using Microsoft.Extensions.Configuration;
 
 namespace Messaging_App.Infrastructure.Persistence
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
+        private readonly IEncryptionProvider _provider;
+
+        public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration) : base(options)
+        {
+            var encryptionKey = Convert.FromBase64String(configuration.GetSection("AppSettings:EncryptionKey").Value);
+            var initializationVector =
+                Convert.FromBase64String(configuration.GetSection("AppSettings:EncryptionIV").Value);
+            _provider = new AesProvider(encryptionKey, initializationVector);
+        }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Contact> Contacts { get; set; }
@@ -16,6 +27,8 @@ namespace Messaging_App.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.UseEncryption(_provider);
+            
             modelBuilder.Entity<Contact>()
                 .HasKey(k => new {k.UserId, k.ContactId});
 
