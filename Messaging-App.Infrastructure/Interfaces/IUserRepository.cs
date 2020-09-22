@@ -11,5 +11,7 @@ namespace Messaging_App.Infrastructure.Interfaces
         Task<PagedList<User>> GetUsers(UserParameters userParameters);
         Task<User> GetUser(int id);
         Task<IEnumerable<int>> GetUserContacts(int id, bool inContacts);
+        Task<User> GetUserByEmail(string email);
+        Task<User> GetUserByUsername(string username);
     }
 }
