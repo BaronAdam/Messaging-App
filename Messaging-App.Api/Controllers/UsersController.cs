@@ -21,7 +21,7 @@ namespace Messaging_App.Api.Controllers
         private readonly IAppRepository _appRepository;
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
-        private IMessageGroupRepository _groupRepository;
+        private readonly IMessageGroupRepository _groupRepository;
 
         public UsersController(IUserRepository userRepository, IMapper mapper, 
             IAppRepository appRepository, IMessageGroupRepository groupRepository)
@@ -59,9 +59,22 @@ namespace Messaging_App.Api.Controllers
         {
             var user = await _userRepository.GetUser(id);
 
-            var userToReturn = _mapper.Map<UserForSingleDto>(user);
+            return Ok(_mapper.Map<UserForSingleDto>(user));
+        }
+        
+        [HttpGet("find/{searchPhrase}")]
+        [ProducesResponseType(typeof(UserForSingleDto), (int) HttpStatusCode.OK)]
+        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int) HttpStatusCode.Unauthorized)]
+        [ProducesResponseType((int) HttpStatusCode.InternalServerError)]
+        public async Task<IActionResult> FindUser (string searchPhrase)
+        {
+            var user = await _userRepository.GetUserByUsername(searchPhrase) ??
+                       await _userRepository.GetUserByEmail(searchPhrase);
 
-            return Ok(userToReturn);
+            if (user == null) return BadRequest("Could not find specified user");
+            
+            return Ok(_mapper.Map<UserForSingleDto>(user));
         }
 
         [HttpPost("{id}/friend/{friendId}")]

@@ -50,6 +50,20 @@ namespace Messaging_App.Infrastructure.Repositories
                 : user.Contacts2.Where(u => u.UserId == id).Select(i => i.ContactId);
         }
 
+        public async Task<User> GetUserByEmail(string email)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+            return user;
+        }
+
+        public async Task<User> GetUserByUsername(string username)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+            return user;
+        }
+
         public async Task<User> GetUser(int id)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
