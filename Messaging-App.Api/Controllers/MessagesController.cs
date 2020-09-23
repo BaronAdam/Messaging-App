@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -76,6 +77,7 @@ namespace Messaging_App.Api.Controllers
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
 
             messageForCreationDto.SenderId = userId;
+            messageForCreationDto.MessageSent = DateTime.Now;
 
             var group = await _groupRepository.GetMessageGroup(messageForCreationDto.GroupId);
 
@@ -126,13 +128,16 @@ namespace Messaging_App.Api.Controllers
                     Id = messageGroup.Id,
                     Name = messageGroup.Name,
                     LastMessage = content,
-                    LastSender = message.Sender.Name
+                    LastSender = message.Sender.Name,
+                    LastSent = message.DateSent
                 };
 
                 groups.Add(group);
             }
 
-            return Ok(groups);
+            var orderedGroups = groups.OrderByDescending(g => g.LastSent);
+
+            return Ok(orderedGroups);
         }
     }
 }

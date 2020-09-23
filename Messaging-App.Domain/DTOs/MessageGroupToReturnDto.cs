@@ -1,3 +1,5 @@
+using System;
+
 namespace Messaging_App.Domain.DTOs
 {
     public class MessageGroupToReturnDto
@@ -6,5 +8,6 @@ namespace Messaging_App.Domain.DTOs
         public string Name { get; set; }
         public string LastSender { get; set; }
         public string LastMessage { get; set; }
+        public DateTime? LastSent { get; set; }
     }
 }

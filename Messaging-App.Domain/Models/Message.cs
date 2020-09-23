@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Messaging_App.Domain.Models
 {
@@ -13,7 +14,5 @@ namespace Messaging_App.Domain.Models
         [Encrypted]
         public string Content { get; set; }
         public DateTime DateSent { get; set; }
-        public bool IsRead { get; set; }
-        public DateTime? DateRead { get; set; }
     }
 }
