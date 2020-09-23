@@ -22,15 +22,17 @@ namespace Messaging_App.Api.Controllers
         private readonly IMessageRepository _messageRepository;
         private readonly IMessageGroupRepository _groupRepository;
         private readonly IAppRepository _appRepository;
+        private IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
         public MessagesController(IMessageRepository messageRepository, IMapper mapper, IAppRepository appRepository,
-            IMessageGroupRepository groupRepository)
+            IMessageGroupRepository groupRepository, IUserRepository userRepository)
         {
             _messageRepository = messageRepository;
             _mapper = mapper;
             _appRepository = appRepository;
             _groupRepository = groupRepository;
+            _userRepository = userRepository;
         }
         
         [HttpGet("{id}", Name = "GetMessage")]
@@ -116,6 +118,21 @@ namespace Messaging_App.Api.Controllers
                     }
                 };
 
+                string groupName;
+                
+                if (!messageGroup.IsGroup)
+                {
+                    var ids = await _groupRepository.GetUserIdsForGroup(messageGroup.Id);
+
+                    var user = await _userRepository.GetUser(ids.First(i => i != userId));
+
+                    groupName = user.Name;
+                }
+                else
+                {
+                    groupName = messageGroup.Name;
+                }
+
                 var content = message.Content;
 
                 if (content.Length > 60)
@@ -126,7 +143,7 @@ namespace Messaging_App.Api.Controllers
                 var group = new MessageGroupToReturnDto
                 {
                     Id = messageGroup.Id,
-                    Name = messageGroup.Name,
+                    Name = groupName,
                     LastMessage = content,
                     LastSender = message.Sender.Name,
                     LastSent = message.DateSent

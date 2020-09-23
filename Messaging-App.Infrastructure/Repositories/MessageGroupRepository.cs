@@ -84,5 +84,19 @@ namespace Messaging_App.Infrastructure.Repositories
             _context.UserMessageGroups.Update(userMessageGroup);
             return await _context.SaveChangesAsync() > 0;
         }
+
+        public async Task<IEnumerable<int>> GetUserIdsForGroup(int groupId)
+        {
+            var groups = await _context.UserMessageGroups.Where(g => g.GroupId == groupId).ToListAsync();
+
+            IEnumerable<int> ids = new List<int>();
+            
+            foreach (var group in groups)
+            {
+                ids = ids.Append(group.UserId);
+            }
+
+            return ids;
+        }
     }
 }
