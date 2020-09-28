@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:messaging_app_flutter/api/auth.dart';
 import 'package:messaging_app_flutter/components/rounded_button.dart';
 import 'package:messaging_app_flutter/constants.dart';
+import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
+import 'package:messaging_app_flutter/screens/conversations_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'login_screen';
@@ -10,6 +13,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  String _login;
+  String _password;
+  final loginTextController = TextEditingController();
+  final passwordTextController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,8 +41,10 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 48.0,
             ),
             TextField(
+              textAlign: TextAlign.center,
+              controller: loginTextController,
               onChanged: (value) {
-                //Do something with the user input.
+                _login = value;
               },
               decoration: kTextFieldDecoration.copyWith(
                 hintText: 'Enter your login',
@@ -44,8 +54,11 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 8.0,
             ),
             TextField(
+              controller: passwordTextController,
+              textAlign: TextAlign.center,
+              obscureText: true,
               onChanged: (value) {
-                //Do something with the user input.
+                _password = value;
               },
               decoration: kTextFieldDecoration.copyWith(
                 hintText: 'Enter your password',
@@ -54,7 +67,26 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(
               height: 24.0,
             ),
-            RoundedButton(title: 'Log In', color: kAppColor, onPressed: () {}),
+            RoundedButton(
+              title: 'Log In',
+              color: kAppColor,
+              onPressed: () async {
+                try {
+                  final String token = await Auth.login(_login, _password);
+                  if (token != null) {
+                    loginTextController.clear();
+                    passwordTextController.clear();
+                    Navigator.pushNamed(
+                      context,
+                      ConversationsScreen.id,
+                      arguments: ConversationsScreenArguments(token),
+                    );
+                  }
+                } catch (e) {
+                  print(e);
+                }
+              },
+            ),
           ],
         ),
       ),

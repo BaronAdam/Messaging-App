@@ -19,7 +19,7 @@ class MessagingApp extends StatelessWidget {
         WelcomeScreen.id: (context) => WelcomeScreen(),
         LoginScreen.id: (context) => LoginScreen(),
         RegistrationScreen.id: (context) => RegistrationScreen(),
-        // 'conversations_screen': (context) => WelcomeScreen(),
+        ConversationsScreen.id: (context) => ConversationsScreen(),
       },
     );
   }

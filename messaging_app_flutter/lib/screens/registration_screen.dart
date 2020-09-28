@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:messaging_app_flutter/api/auth.dart';
 import 'package:messaging_app_flutter/components/rounded_button.dart';
 import 'package:messaging_app_flutter/constants.dart';
+import 'package:messaging_app_flutter/screens/login_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const String id = 'registration_screen';
@@ -10,6 +12,15 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  String _email;
+  String _login;
+  String _password;
+  String _name;
+  final loginTextController = TextEditingController();
+  final passwordTextController = TextEditingController();
+  final emailTextController = TextEditingController();
+  final nameTextController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,8 +44,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               height: 48.0,
             ),
             TextField(
+              textAlign: TextAlign.center,
+              controller: emailTextController,
+              keyboardType: TextInputType.emailAddress,
               onChanged: (value) {
-                //Do something with the user input.
+                _email = value;
               },
               decoration: kTextFieldDecoration.copyWith(
                 hintText: 'Enter your email',
@@ -44,8 +58,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               height: 8.0,
             ),
             TextField(
+              textAlign: TextAlign.center,
+              controller: loginTextController,
               onChanged: (value) {
-                //Do something with the user input.
+                _login = value;
               },
               decoration: kTextFieldDecoration.copyWith(
                 hintText: 'Enter your login',
@@ -55,18 +71,51 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               height: 8.0,
             ),
             TextField(
+              textAlign: TextAlign.center,
+              obscureText: true,
+              controller: passwordTextController,
               onChanged: (value) {
-                //Do something with the user input.
+                _password = value;
               },
               decoration: kTextFieldDecoration.copyWith(
                 hintText: 'Enter your password',
               ),
             ),
             SizedBox(
+              height: 8.0,
+            ),
+            TextField(
+              textAlign: TextAlign.center,
+              controller: nameTextController,
+              onChanged: (value) {
+                _name = value;
+              },
+              decoration: kTextFieldDecoration.copyWith(
+                hintText: 'Enter your name',
+              ),
+            ),
+            SizedBox(
               height: 24.0,
             ),
             RoundedButton(
-                title: 'Register', color: Colors.blueAccent, onPressed: () {}),
+                title: 'Register',
+                color: Colors.blueAccent,
+                onPressed: () async {
+                  var result = await Auth.register(
+                    _login,
+                    _password,
+                    _email,
+                    _name,
+                  );
+
+                  if (result) {
+                    loginTextController.clear();
+                    passwordTextController.clear();
+                    emailTextController.clear();
+                    nameTextController.clear();
+                    Navigator.pushNamed(context, LoginScreen.id);
+                  }
+                }),
           ],
         ),
       ),

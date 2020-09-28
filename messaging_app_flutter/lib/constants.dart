@@ -35,3 +35,5 @@ const kTextFieldDecoration = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(32.0)),
   ),
 );
+
+const kApiUrl = '10.0.2.2:5000'; // localhost points to emulator's localhost
