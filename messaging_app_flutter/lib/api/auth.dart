@@ -21,9 +21,7 @@ class Auth {
 
     if (response.statusCode != 200) return null;
 
-    var token = jsonDecode(response.body)['token'];
-
-    return token;
+    return jsonDecode(response.body)['token'];
   }
 
   static Future<bool> register(login, password, email, name) async {
