@@ -7,6 +7,7 @@
 
     <ItemGroup>
       <PackageReference Include="EntityFrameworkCore.DataEncryption" Version="1.1.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="3.1.8" />
       <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.21" />
     </ItemGroup>
 

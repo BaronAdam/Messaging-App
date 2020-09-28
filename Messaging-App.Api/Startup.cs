@@ -2,6 +2,7 @@ using System.Net;
 using System.Text;
 using AutoMapper;
 using Messaging_App.Api.Configuration;
+using Messaging_App.Api.Helpers;
 using Messaging_App.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -40,6 +41,8 @@ namespace Messaging_App.Api
             services.ConfigureDependencyInjection();
             
             services.AddCors();
+
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

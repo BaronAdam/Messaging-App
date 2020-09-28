@@ -12,5 +12,8 @@ namespace Messaging_App.Domain.DTOs
         public string GroupName { get; set; }
         public string Content { get; set; }
         public DateTime DateSent { get; set; }
+        public bool IsPhoto { get; set; }
+        public string Url { get; set; }
+        public string PublicId { get; set; }
     }
 }
