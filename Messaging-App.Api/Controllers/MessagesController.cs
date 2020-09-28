@@ -5,12 +5,16 @@ using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using Messaging_App.Api.Helpers;
 using Messaging_App.Domain.DTOs;
 using Messaging_App.Domain.Models;
 using Messaging_App.Infrastructure.Interfaces;
 using Messaging_App.Infrastructure.Parameters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace Messaging_App.Api.Controllers
 {
@@ -22,17 +26,25 @@ namespace Messaging_App.Api.Controllers
         private readonly IMessageRepository _messageRepository;
         private readonly IMessageGroupRepository _groupRepository;
         private readonly IAppRepository _appRepository;
-        private IUserRepository _userRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private Cloudinary _cloudinary;
 
         public MessagesController(IMessageRepository messageRepository, IMapper mapper, IAppRepository appRepository,
-            IMessageGroupRepository groupRepository, IUserRepository userRepository)
+            IMessageGroupRepository groupRepository, IUserRepository userRepository, IOptions<CloudinarySettings> cloudinaryOptions)
         {
             _messageRepository = messageRepository;
             _mapper = mapper;
             _appRepository = appRepository;
             _groupRepository = groupRepository;
             _userRepository = userRepository;
+
+            var account = new Account(
+                cloudinaryOptions.Value.ApiKey, 
+                cloudinaryOptions.Value.ApiKey, 
+                cloudinaryOptions.Value.ApiSecret);
+            
+            _cloudinary = new Cloudinary(account);
         }
         
         [HttpGet("{id}", Name = "GetMessage")]
@@ -86,6 +98,26 @@ namespace Messaging_App.Api.Controllers
             if (group == null) return BadRequest("Could not find user/group");
 
             var message = _mapper.Map<Message>(messageForCreationDto);
+
+            if (messageForCreationDto.IsPhoto)
+            {
+                messageForCreationDto.Content = null;
+
+                var file = messageForCreationDto.File;
+
+                if (!(file.Length > 0)) return BadRequest("There was an error with the file");
+
+                await using var stream = file.OpenReadStream();
+                var uploadParameters = new ImageUploadParams
+                {
+                    File = new FileDescription(Guid.NewGuid().ToString(), stream),
+                    Transformation = new Transformation().Quality(50)
+                };
+                var result = _cloudinary.Upload(uploadParameters);
+
+                messageForCreationDto.Url = result.Url.ToString();
+                messageForCreationDto.PublicId = result.PublicId;
+            }
             
             _appRepository.Add(message);
 

@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Messaging_App.Domain.Models
 {
@@ -13,6 +12,10 @@ namespace Messaging_App.Domain.Models
         public MessageGroup Group { get; set; }
         [Encrypted]
         public string Content { get; set; }
+        [Encrypted]
+        public string Url { get; set; }
+        public string PublicId { get; set; }
+        public bool IsPhoto { get; set; }
         public DateTime DateSent { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using Microsoft.AspNetCore.Http;
 
 namespace Messaging_App.Domain.DTOs
 {
@@ -8,10 +9,9 @@ namespace Messaging_App.Domain.DTOs
         public int GroupId { get; set; }
         public DateTime MessageSent { get; set; }
         public string Content { get; set; }
-
-        public MessageForCreationDto()
-        {
-            MessageSent = DateTime.Now;
-        }
+        public bool IsPhoto { get; set; }
+        public string Url { get; set; }
+        public IFormFile File { get; set; }
+        public string PublicId { get; set; }
     }
 }
