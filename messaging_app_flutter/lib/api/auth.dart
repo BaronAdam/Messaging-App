@@ -4,7 +4,7 @@ import 'dart:convert';
 
 class Auth {
   static Future<String> login(login, password) async {
-    Uri uri = Uri.http(kApiUrl, '/api/auth/');
+    Uri uri = Uri.http(kApiUrl, '/api/auth/login');
 
     var response = await http.post(
       uri,
@@ -19,6 +19,7 @@ class Auth {
       ),
     );
 
+    print(response.statusCode);
     if (response.statusCode != 200) return null;
 
     return jsonDecode(response.body)['token'];
