@@ -31,7 +31,7 @@ namespace Messaging_App.Api.Controllers
             _mapper = mapper;
         }
         
-        [ProducesResponseType(typeof(UserForSingleDto), (int) HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(UserForSingleDto), (int) HttpStatusCode.OK)]
         [ProducesResponseType((int) HttpStatusCode.BadRequest)]
         [ProducesResponseType((int) HttpStatusCode.InternalServerError)]
         [HttpPost("register")]
@@ -55,8 +55,8 @@ namespace Messaging_App.Api.Controllers
             };
 
             var createdUser = await _repository.Register(userToCreate, userForRegisterDto.Password);
-            
-            return CreatedAtRoute("CreateUser", _mapper.Map<UserForSingleDto>(createdUser));
+
+            return Ok(_mapper.Map<UserForSingleDto>(createdUser));
         }
         
         [ProducesResponseType(typeof(string), (int) HttpStatusCode.OK)]
