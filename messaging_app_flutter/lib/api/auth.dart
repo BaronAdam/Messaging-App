@@ -9,12 +9,12 @@ class Auth {
     var response = await http.post(
       uri,
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: jsonEncode(
         {
-          "username": login,
-          "password": password,
+          'username': login,
+          'password': password,
         },
       ),
     );
