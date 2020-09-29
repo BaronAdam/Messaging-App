@@ -86,6 +86,8 @@ namespace Messaging_App.Api.Controllers
         public async Task<IActionResult> AddFriend(int id, int friendId)
         {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
+
+            if (friendId == id) return BadRequest("You cannot add yourself to your friend list");
             
             var contact = await _appRepository.GetContact(id, friendId);
 

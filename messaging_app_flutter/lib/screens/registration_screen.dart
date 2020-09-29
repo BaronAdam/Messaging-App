@@ -1,6 +1,8 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:messaging_app_flutter/api/auth.dart';
 import 'package:messaging_app_flutter/components/rounded_button.dart';
+import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
 import 'package:messaging_app_flutter/constants.dart';
 import 'package:messaging_app_flutter/screens/login_screen.dart';
 
@@ -101,19 +103,38 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 title: 'Register',
                 color: Colors.blueAccent,
                 onPressed: () async {
-                  var result = await Auth.register(
-                    _login,
-                    _password,
-                    _email,
-                    _name,
-                  );
+                  var result = '';
 
-                  if (result) {
+                  try {
+                    result = await Auth.register(
+                      _login,
+                      _password,
+                      _email,
+                      _name,
+                    );
+                  } catch (e) {
+                    print(e);
+                  }
+                  if (result == null) {
                     loginTextController.clear();
                     passwordTextController.clear();
                     emailTextController.clear();
                     nameTextController.clear();
                     Navigator.pushNamed(context, LoginScreen.id);
+                  } else if (result == '500') {
+                    showNewDialog(
+                      'Internal server error',
+                      'A server error occurred while processing your request. Try again later',
+                      DialogType.ERROR,
+                      context,
+                    );
+                  } else {
+                    showNewDialog(
+                      'Following errors occurred',
+                      result,
+                      DialogType.WARNING,
+                      context,
+                    );
                   }
                 }),
           ],

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:messaging_app_flutter/constants.dart';
+import 'package:messaging_app_flutter/screens/add_friend_screen.dart';
 
 import 'screens/welcome_screen.dart';
 import 'screens/login_screen.dart';
@@ -20,6 +20,7 @@ class MessagingApp extends StatelessWidget {
         LoginScreen.id: (context) => LoginScreen(),
         RegistrationScreen.id: (context) => RegistrationScreen(),
         ConversationsScreen.id: (context) => ConversationsScreen(),
+        AddFriendScreen.id: (context) => AddFriendScreen(),
       },
     );
   }

@@ -19,13 +19,14 @@ class Auth {
       ),
     );
 
-    print(response.statusCode);
-    if (response.statusCode != 200) return null;
+    if (response.statusCode == 401) return '401';
+
+    if (response.statusCode == 500) return '500';
 
     return jsonDecode(response.body)['token'];
   }
 
-  static Future<bool> register(login, password, email, name) async {
+  static Future<String> register(login, password, email, name) async {
     Uri uri = Uri.http(kApiUrl, '/api/auth/register');
 
     var response = await http.post(
@@ -41,10 +42,59 @@ class Auth {
       ),
     );
 
-    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 400) {
+      var decoded;
+      try {
+        decoded = jsonDecode(response.body);
+      } catch (e) {
+        print(e);
+      }
 
-    if (response.statusCode != 200) return false;
+      String errors;
 
-    return true;
+      if (decoded != null) {
+        decoded = decoded['errors'];
+        errors = _writeRegisterErrors(decoded);
+      } else {
+        errors = response.body;
+      }
+
+      return errors;
+    }
+
+    if (response.statusCode == 500) return '500';
+
+    return null;
+  }
+
+  static String _writeRegisterErrors(var decoded) {
+    String toReturn = '';
+
+    if (decoded['Email'] != null) {
+      for (var element in decoded['Email']) {
+        toReturn += element + '\n';
+      }
+    }
+
+    if (decoded['Password'] != null) {
+      for (var element in decoded['Password']) {
+        toReturn += element + '\n';
+      }
+    }
+
+    if (decoded['Username'] != null) {
+      for (var element in decoded['Username']) {
+        toReturn += element + '\n';
+      }
+    }
+
+    if (decoded['Name'] != null) {
+      for (var element in decoded['Name']) {
+        toReturn += element + '\n';
+      }
+    }
+
+    return toReturn;
   }
 }

@@ -1,8 +1,10 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:messaging_app_flutter/api/auth.dart';
 import 'package:messaging_app_flutter/components/rounded_button.dart';
 import 'package:messaging_app_flutter/constants.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
+import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
 import 'package:messaging_app_flutter/screens/conversations_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -73,7 +75,21 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: () async {
                 try {
                   final String token = await Auth.login(_login, _password);
-                  if (token != null) {
+                  if (token == '401') {
+                    showNewDialog(
+                      'Could not login',
+                      'Wrong login or/and password',
+                      DialogType.WARNING,
+                      context,
+                    );
+                  } else if (token == '500') {
+                    showNewDialog(
+                      'Internal server error',
+                      'A server error occurred while processing your request. Try again later',
+                      DialogType.ERROR,
+                      context,
+                    );
+                  } else if (token != null) {
                     loginTextController.clear();
                     passwordTextController.clear();
                     Navigator.pushNamed(
