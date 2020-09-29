@@ -96,8 +96,6 @@ namespace Messaging_App.Api.Controllers
 
             if (group == null) return BadRequest("Could not find user/group");
 
-            var message = _mapper.Map<Message>(messageForCreationDto);
-
             if (messageForCreationDto.IsPhoto)
             {
                 messageForCreationDto.Content = null;
@@ -117,7 +115,15 @@ namespace Messaging_App.Api.Controllers
                 messageForCreationDto.Url = result.Url.ToString();
                 messageForCreationDto.PublicId = result.PublicId;
             }
+            else
+            {
+                messageForCreationDto.Url = null;
+                messageForCreationDto.File = null;
+                messageForCreationDto.PublicId = null;
+            }
 
+            var message = _mapper.Map<Message>(messageForCreationDto);
+            
             _appRepository.Add(message);
 
             if (!await _appRepository.SaveAll()) return StatusCode((int) HttpStatusCode.InternalServerError);
