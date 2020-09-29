@@ -28,7 +28,7 @@ namespace Messaging_App.Api.Controllers
         private readonly IAppRepository _appRepository;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        private Cloudinary _cloudinary;
+        private readonly Cloudinary _cloudinary;
 
         public MessagesController(IMessageRepository messageRepository, IMapper mapper, IAppRepository appRepository,
             IMessageGroupRepository groupRepository, IUserRepository userRepository, IOptions<CloudinarySettings> cloudinaryOptions)
@@ -169,15 +169,17 @@ namespace Messaging_App.Api.Controllers
 
                 if (content.Length > 60)
                 {
-                    content = content.Substring(0, 57) + "...";
+                    content = content.Substring(0, 27) + "...";
                 }
+
+                var lastName = message.Sender.Id == userId ? "You" : message.Sender.Name;
 
                 var group = new MessageGroupToReturnDto
                 {
                     Id = messageGroup.Id,
                     Name = groupName,
                     LastMessage = content,
-                    LastSender = message.Sender.Name,
+                    LastSender = lastName,
                     LastSent = message.DateSent
                 };
 
