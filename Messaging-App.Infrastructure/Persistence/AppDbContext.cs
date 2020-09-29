@@ -28,7 +28,7 @@ namespace Messaging_App.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.UseEncryption(_provider);
-            
+
             modelBuilder.Entity<Contact>()
                 .HasKey(k => new {k.UserId, k.ContactId});
 

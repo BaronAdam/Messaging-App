@@ -9,13 +9,13 @@ namespace Messaging_App.Api.Configuration
         public static void ConfigureDependencyInjection(this IServiceCollection services)
         {
             services.AddScoped<IAuthRepository, AuthRepository>();
-            
+
             services.AddScoped<IAppRepository, AppRepository>();
-            
+
             services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddScoped<IMessageRepository, MessageRepository>();
-            
+
             services.AddScoped<IMessageGroupRepository, MessageGroupRepository>();
         }
     }

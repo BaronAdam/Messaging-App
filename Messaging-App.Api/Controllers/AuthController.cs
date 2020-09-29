@@ -20,9 +20,9 @@ namespace Messaging_App.Api.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthRepository _repository;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
+        private readonly IAuthRepository _repository;
 
         public AuthController(IAuthRepository repository, IConfiguration configuration, IMapper mapper)
         {
@@ -30,22 +30,16 @@ namespace Messaging_App.Api.Controllers
             _configuration = configuration;
             _mapper = mapper;
         }
-        
+
         [ProducesResponseType(typeof(UserForSingleDto), (int) HttpStatusCode.OK)]
         [ProducesResponseType((int) HttpStatusCode.BadRequest)]
         [ProducesResponseType((int) HttpStatusCode.InternalServerError)]
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
         {
-            if (await _repository.UserExists(userForRegisterDto.Username))
-            {
-                return BadRequest("Username already exists");
-            }
+            if (await _repository.UserExists(userForRegisterDto.Username)) return BadRequest("Username already exists");
 
-            if (await _repository.EmailExists(userForRegisterDto.Email))
-            {
-                return BadRequest("Email already registered");
-            }
+            if (await _repository.EmailExists(userForRegisterDto.Email)) return BadRequest("Email already registered");
 
             var userToCreate = new User
             {
@@ -58,7 +52,7 @@ namespace Messaging_App.Api.Controllers
 
             return Ok(_mapper.Map<UserForSingleDto>(createdUser));
         }
-        
+
         [ProducesResponseType(typeof(string), (int) HttpStatusCode.OK)]
         [ProducesResponseType((int) HttpStatusCode.Unauthorized)]
         [ProducesResponseType((int) HttpStatusCode.InternalServerError)]
@@ -67,20 +61,17 @@ namespace Messaging_App.Api.Controllers
         {
             var userFromRepository = await _repository.Login(userForLoginDto.Username, userForLoginDto.Password);
 
-            if (userFromRepository == null)
-            {
-                return Unauthorized();
-            }
+            if (userFromRepository == null) return Unauthorized();
 
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, userFromRepository.Id.ToString()),
                 new Claim(ClaimTypes.Name, userFromRepository.Username)
             };
-            
+
             var key = new SymmetricSecurityKey(Encoding.UTF8
                 .GetBytes(_configuration.GetSection("AppSettings:Token").Value));
-            
+
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -89,7 +80,7 @@ namespace Messaging_App.Api.Controllers
                 Expires = DateTime.Now.AddDays(1),
                 SigningCredentials = credentials
             };
-            
+
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var token = tokenHandler.CreateToken(tokenDescriptor);

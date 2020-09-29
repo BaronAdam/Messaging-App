@@ -18,10 +18,10 @@ namespace Messaging_App.Api.Configuration
                     In = ParameterLocation.Header,
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer",
+                    Scheme = "Bearer"
                 });
 
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
                         new OpenApiSecurityScheme
@@ -33,8 +33,7 @@ namespace Messaging_App.Api.Configuration
                             },
                             Scheme = "oauth2",
                             Name = "Bearer",
-                            In = ParameterLocation.Header,
-
+                            In = ParameterLocation.Header
                         },
                         new List<string>()
                     }
