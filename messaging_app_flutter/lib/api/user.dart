@@ -31,9 +31,6 @@ class User {
       },
     );
 
-    print(response.body);
-    print(response.statusCode);
-
     if (response.statusCode == 400) return response.body;
 
     if (response.statusCode == 401) return '401';

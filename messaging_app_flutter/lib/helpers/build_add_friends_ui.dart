@@ -7,6 +7,7 @@ import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
 
 Container displayUser(result, userId, token, context) {
   Widget child;
+
   if (result == '400') {
     child = Container();
     showNewDialog(

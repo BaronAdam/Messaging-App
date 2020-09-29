@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:messaging_app_flutter/api/user.dart';
 import 'package:messaging_app_flutter/components/rounded_button.dart';
 import 'package:messaging_app_flutter/helpers/build_add_friends_ui.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
-import 'package:enhanced_future_builder/enhanced_future_builder.dart';
-import 'package:messaging_app_flutter/api/user.dart';
 
 import '../constants.dart';
 
