@@ -21,27 +21,25 @@ namespace Messaging_App.Infrastructure.Repositories
         {
             return await _context.MessageGroups.FirstOrDefaultAsync(g => g.Id == id);
         }
-        
+
         public async Task<IEnumerable<MessageGroup>> GetAllMessageGroupsForUser(int userId)
         {
             var userMessageGroups = await _context.UserMessageGroups.Where(u => u.UserId == userId).ToListAsync();
 
             var groups = new List<MessageGroup>();
-            
+
             foreach (var userMessageGroup in userMessageGroups)
-            {
                 groups.Add(await _context.MessageGroups.FirstOrDefaultAsync(g => g.Id == userMessageGroup.GroupId));
-            }
 
             return groups;
         }
-        
+
         public async Task<UserMessageGroup> GetUserMessageGroup(int userId, int groupId)
         {
             return await _context.UserMessageGroups.FirstOrDefaultAsync(g =>
                 g.UserId == userId && g.GroupId == groupId);
         }
-        
+
         public async Task<bool> CreateMessagingThread(IEnumerable<int> userIds, int groupId, bool makeAdmins = false)
         {
             if (await GetMessageGroup(groupId) == null) return false;
@@ -54,7 +52,7 @@ namespace Messaging_App.Infrastructure.Repositories
                     UserId = id,
                     IsAdmin = makeAdmins
                 };
-                
+
                 if (await GetUserMessageGroup(id, groupId) != null) continue;
 
                 await _context.UserMessageGroups.AddAsync(entity);
@@ -89,12 +87,20 @@ namespace Messaging_App.Infrastructure.Repositories
         {
             var groups = await _context.UserMessageGroups.Where(g => g.GroupId == groupId).ToListAsync();
 
-            IEnumerable<int> ids = new List<int>();
+            List<int> ids = new List<int>();
+
+            foreach (var group in groups) ids.Add(group.UserId);
+
+            return ids;
+        }
+
+        public async Task<IEnumerable<int>> GetAdminsForGroup(int groupId)
+        {
+            var groups = await _context.UserMessageGroups.Where(g => g.GroupId == groupId && g.IsAdmin).ToListAsync();
+
+            List<int> ids = new List<int>();
             
-            foreach (var group in groups)
-            {
-                ids = ids.Append(group.UserId);
-            }
+            foreach (var group in groups) ids.Add(group.UserId);
 
             return ids;
         }

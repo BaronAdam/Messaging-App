@@ -14,5 +14,6 @@ namespace Messaging_App.Infrastructure.Interfaces
         Task<MessageGroup> Update(MessageGroup messageGroup);
         Task<bool> UpdateAdmin(UserMessageGroup userMessageGroup);
         Task<IEnumerable<int>> GetUserIdsForGroup(int groupId);
+        Task<IEnumerable<int>> GetAdminsForGroup(int groupId);
     }
 }

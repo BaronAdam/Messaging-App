@@ -18,8 +18,8 @@ namespace Messaging_App.Api.Controllers
     public class GroupController : ControllerBase
     {
         private readonly IMessageGroupRepository _groupRepository;
-        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly IUserRepository _userRepository;
 
         public GroupController(IMessageGroupRepository groupRepository, IMapper mapper, IUserRepository userRepository)
         {
@@ -27,7 +27,7 @@ namespace Messaging_App.Api.Controllers
             _mapper = mapper;
             _userRepository = userRepository;
         }
-        
+
         [HttpPost("add")]
         [ProducesResponseType(typeof(CreatedMessageGroupToReturnDto), (int) HttpStatusCode.OK)]
         [ProducesResponseType((int) HttpStatusCode.BadRequest)]
@@ -47,26 +47,27 @@ namespace Messaging_App.Api.Controllers
 
             if (created == null) return BadRequest("There was an error while creating new group.");
 
-            var toReturn =  _mapper.Map<CreatedMessageGroupToReturnDto>(created);
+            var toReturn = _mapper.Map<CreatedMessageGroupToReturnDto>(created);
 
-            if (await _groupRepository.CreateMessagingThread(new List<int> {userId}, created.Id, true)) return Ok(toReturn);
+            if (await _groupRepository.CreateMessagingThread(new List<int> {userId}, created.Id, true))
+                return Ok(toReturn);
 
             return BadRequest("There was an error while creating new group.");
         }
-        
+
         [HttpPost("add/{groupId}")]
         [ProducesResponseType((int) HttpStatusCode.OK)]
         [ProducesResponseType((int) HttpStatusCode.BadRequest)]
         [ProducesResponseType((int) HttpStatusCode.Unauthorized)]
         [ProducesResponseType((int) HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> AddUserToGroup(int userId, int groupId, AddingUsersToGroupDto newUsers)
+        public async Task<IActionResult> AddUsersToGroup(int userId, int groupId, AddingUsersToGroupDto newUsers)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
-        
+
             var userGroup = await _groupRepository.GetUserMessageGroup(userId, groupId);
-        
+
             if (userGroup == null) return BadRequest("You cannot access this group.");
-        
+
             if (!userGroup.IsAdmin) return Unauthorized();
 
             var contacts = await _userRepository.GetUserContacts(userId, false);
@@ -89,14 +90,16 @@ namespace Messaging_App.Api.Controllers
             MessageGroupForChangeNameDto messageGroupForChangeNameDto)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
-        
+
             var userGroup = await _groupRepository.GetUserMessageGroup(userId, messageGroupForChangeNameDto.Id);
-        
+
             if (userGroup == null) return BadRequest("You cannot access this group.");
-        
+
             if (!userGroup.IsAdmin) return Unauthorized();
 
-            var group = _mapper.Map<MessageGroup>(messageGroupForChangeNameDto);
+            var group = await _groupRepository.GetMessageGroup(messageGroupForChangeNameDto.Id);
+
+            group.Name = messageGroupForChangeNameDto.Name;
 
             var updated = await _groupRepository.Update(group);
 
@@ -113,11 +116,11 @@ namespace Messaging_App.Api.Controllers
         public async Task<IActionResult> ChangeAdminStatus(int userId, UserMessageGroupForAdminDto dto)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
-        
+
             var userGroup = await _groupRepository.GetUserMessageGroup(userId, dto.GroupId);
-        
+
             if (userGroup == null) return BadRequest("You cannot access this group.");
-        
+
             if (!userGroup.IsAdmin) return Unauthorized();
 
             if (userId == dto.UserId) return BadRequest("You cannot change your admin status.");
@@ -129,6 +132,40 @@ namespace Messaging_App.Api.Controllers
             if (await _groupRepository.UpdateAdmin(group)) return Ok();
 
             return BadRequest("Could not change user's admin permissions");
+        }
+        
+        [HttpGet("members/id/{groupId}")]
+        [ProducesResponseType(typeof(IEnumerable<int>), (int) HttpStatusCode.OK)]
+        [ProducesResponseType((int) HttpStatusCode.Unauthorized)]
+        [ProducesResponseType((int) HttpStatusCode.InternalServerError)]
+        public async Task<IActionResult> GetGroupMembers(int userId, int groupId)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
+            
+            var userGroup = await _groupRepository.GetUserMessageGroup(userId, groupId);
+            
+            if (!userGroup.IsAdmin) return Unauthorized();
+
+            var userIds = await _groupRepository.GetUserIdsForGroup(groupId);
+
+            return Ok(userIds);
+        }
+        
+        [HttpGet("members/admins/{groupId}")]
+        [ProducesResponseType(typeof(IEnumerable<int>), (int) HttpStatusCode.OK)]
+        [ProducesResponseType((int) HttpStatusCode.Unauthorized)]
+        [ProducesResponseType((int) HttpStatusCode.InternalServerError)]
+        public async Task<IActionResult> GetAdminIds(int userId, int groupId)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
+            
+            var userGroup = await _groupRepository.GetUserMessageGroup(userId, groupId);
+            
+            if (!userGroup.IsAdmin) return Unauthorized();
+
+            var userIds = await _groupRepository.GetAdminsForGroup(groupId);
+
+            return Ok(userIds);
         }
     }
 }

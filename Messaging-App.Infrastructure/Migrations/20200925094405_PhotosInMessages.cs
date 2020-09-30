@@ -7,35 +7,35 @@ namespace Messaging_App.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<bool>(
-                name: "IsPhoto",
-                table: "Messages",
+                "IsPhoto",
+                "Messages",
                 nullable: false,
                 defaultValue: false);
 
             migrationBuilder.AddColumn<string>(
-                name: "PublicId",
-                table: "Messages",
+                "PublicId",
+                "Messages",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "Url",
-                table: "Messages",
+                "Url",
+                "Messages",
                 nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "IsPhoto",
-                table: "Messages");
+                "IsPhoto",
+                "Messages");
 
             migrationBuilder.DropColumn(
-                name: "PublicId",
-                table: "Messages");
+                "PublicId",
+                "Messages");
 
             migrationBuilder.DropColumn(
-                name: "Url",
-                table: "Messages");
+                "Url",
+                "Messages");
         }
     }
 }

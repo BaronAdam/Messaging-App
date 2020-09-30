@@ -8,14 +8,14 @@ namespace Messaging_App.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<DateTime>(
-                name: "DateRead",
-                table: "Messages",
+                "DateRead",
+                "Messages",
                 nullable: true,
                 defaultValue: null);
 
             migrationBuilder.AddColumn<bool>(
-                name: "IsRead",
-                table: "Messages",
+                "IsRead",
+                "Messages",
                 nullable: false,
                 defaultValue: false);
         }
@@ -23,12 +23,12 @@ namespace Messaging_App.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "DateRead",
-                table: "Messages");
+                "DateRead",
+                "Messages");
 
             migrationBuilder.DropColumn(
-                name: "IsRead",
-                table: "Messages");
+                "IsRead",
+                "Messages");
         }
     }
 }

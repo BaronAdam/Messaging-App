@@ -18,7 +18,7 @@ namespace Messaging_App.Infrastructure.Repositories
         {
             _context = context;
         }
-        
+
         public async Task<PagedList<User>> GetUsers(UserParameters userParameters)
         {
             var users = _context.Users.AsQueryable();

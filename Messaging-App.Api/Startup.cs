@@ -30,16 +30,16 @@ namespace Messaging_App.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            
+
             services.ConfigureSwagger();
 
             services.AddDbContext<AppDbContext>(options => options
                 .UseMySQL(Configuration.GetConnectionString("DbConnection")));
-            
+
             services.AddAutoMapper(typeof(Startup).Assembly);
 
             services.ConfigureDependencyInjection();
-            
+
             services.AddCors();
 
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
@@ -62,11 +62,8 @@ namespace Messaging_App.Api
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
             else
-            {
                 app.UseExceptionHandler(builder =>
                 {
                     builder.Run(async context =>
@@ -74,16 +71,12 @@ namespace Messaging_App.Api
                         context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
 
                         var error = context.Features.Get<IExceptionHandlerFeature>();
-                        if (error != null)
-                        {
-                            await context.Response.WriteAsync(error.Error.Message);
-                        }
+                        if (error != null) await context.Response.WriteAsync(error.Error.Message);
                     });
                 });
-            }
-            
+
             app.UseSwagger();
-            
+
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "MessagingApp");
@@ -100,7 +93,6 @@ namespace Messaging_App.Api
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-            
         }
     }
 }

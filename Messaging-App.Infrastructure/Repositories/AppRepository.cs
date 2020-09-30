@@ -29,12 +29,12 @@ namespace Messaging_App.Infrastructure.Repositories
         {
             return await _context.SaveChangesAsync() > 0;
         }
-        
+
         public async Task<Contact> GetContact(int userId, int friendId)
         {
             return await _context.Contacts.FirstOrDefaultAsync(u => u.UserId == userId && u.ContactId == friendId);
         }
-        
+
         public async Task<int> CreateMessagingGroup(bool isGroup, string name)
         {
             var group = new MessageGroup

@@ -9,31 +9,28 @@ namespace Messaging_App.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "UserMessageGroupGroupId",
-                table: "Users",
+                "UserMessageGroupGroupId",
+                "Users",
                 nullable: true);
 
             migrationBuilder.AddColumn<int>(
-                name: "UserMessageGroupUserId",
-                table: "Users",
+                "UserMessageGroupUserId",
+                "Users",
                 nullable: true);
 
             migrationBuilder.CreateTable(
-                name: "UserMessageGroups",
-                columns: table => new
+                "UserMessageGroups",
+                table => new
                 {
                     UserId = table.Column<int>(nullable: false),
                     GroupId = table.Column<int>(nullable: false),
                     IsAdmin = table.Column<bool>(nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserMessageGroups", x => new { x.UserId, x.GroupId });
-                });
+                constraints: table => { table.PrimaryKey("PK_UserMessageGroups", x => new {x.UserId, x.GroupId}); });
 
             migrationBuilder.CreateTable(
-                name: "MessageGroups",
-                columns: table => new
+                "MessageGroups",
+                table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
@@ -46,16 +43,16 @@ namespace Messaging_App.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_MessageGroups", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MessageGroups_UserMessageGroups_UserMessageGroupUserId_UserM~",
-                        columns: x => new { x.UserMessageGroupUserId, x.UserMessageGroupGroupId },
-                        principalTable: "UserMessageGroups",
-                        principalColumns: new[] { "UserId", "GroupId" },
+                        "FK_MessageGroups_UserMessageGroups_UserMessageGroupUserId_UserM~",
+                        x => new {x.UserMessageGroupUserId, x.UserMessageGroupGroupId},
+                        "UserMessageGroups",
+                        new[] {"UserId", "GroupId"},
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Messages",
-                columns: table => new
+                "Messages",
+                table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
@@ -68,74 +65,74 @@ namespace Messaging_App.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Messages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Messages_MessageGroups_GroupId",
-                        column: x => x.GroupId,
-                        principalTable: "MessageGroups",
-                        principalColumn: "Id",
+                        "FK_Messages_MessageGroups_GroupId",
+                        x => x.GroupId,
+                        "MessageGroups",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Messages_Users_SenderId",
-                        column: x => x.SenderId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
+                        "FK_Messages_Users_SenderId",
+                        x => x.SenderId,
+                        "Users",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_UserMessageGroupUserId_UserMessageGroupGroupId",
-                table: "Users",
-                columns: new[] { "UserMessageGroupUserId", "UserMessageGroupGroupId" });
+                "IX_Users_UserMessageGroupUserId_UserMessageGroupGroupId",
+                "Users",
+                new[] {"UserMessageGroupUserId", "UserMessageGroupGroupId"});
 
             migrationBuilder.CreateIndex(
-                name: "IX_MessageGroups_UserMessageGroupUserId_UserMessageGroupGroupId",
-                table: "MessageGroups",
-                columns: new[] { "UserMessageGroupUserId", "UserMessageGroupGroupId" });
+                "IX_MessageGroups_UserMessageGroupUserId_UserMessageGroupGroupId",
+                "MessageGroups",
+                new[] {"UserMessageGroupUserId", "UserMessageGroupGroupId"});
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_GroupId",
-                table: "Messages",
-                column: "GroupId");
+                "IX_Messages_GroupId",
+                "Messages",
+                "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_SenderId",
-                table: "Messages",
-                column: "SenderId");
+                "IX_Messages_SenderId",
+                "Messages",
+                "SenderId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Users_UserMessageGroups_UserMessageGroupUserId_UserMessageGr~",
-                table: "Users",
-                columns: new[] { "UserMessageGroupUserId", "UserMessageGroupGroupId" },
-                principalTable: "UserMessageGroups",
-                principalColumns: new[] { "UserId", "GroupId" },
+                "FK_Users_UserMessageGroups_UserMessageGroupUserId_UserMessageGr~",
+                "Users",
+                new[] {"UserMessageGroupUserId", "UserMessageGroupGroupId"},
+                "UserMessageGroups",
+                principalColumns: new[] {"UserId", "GroupId"},
                 onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Users_UserMessageGroups_UserMessageGroupUserId_UserMessageGr~",
-                table: "Users");
+                "FK_Users_UserMessageGroups_UserMessageGroupUserId_UserMessageGr~",
+                "Users");
 
             migrationBuilder.DropTable(
-                name: "Messages");
+                "Messages");
 
             migrationBuilder.DropTable(
-                name: "MessageGroups");
+                "MessageGroups");
 
             migrationBuilder.DropTable(
-                name: "UserMessageGroups");
+                "UserMessageGroups");
 
             migrationBuilder.DropIndex(
-                name: "IX_Users_UserMessageGroupUserId_UserMessageGroupGroupId",
-                table: "Users");
+                "IX_Users_UserMessageGroupUserId_UserMessageGroupGroupId",
+                "Users");
 
             migrationBuilder.DropColumn(
-                name: "UserMessageGroupGroupId",
-                table: "Users");
+                "UserMessageGroupGroupId",
+                "Users");
 
             migrationBuilder.DropColumn(
-                name: "UserMessageGroupUserId",
-                table: "Users");
+                "UserMessageGroupUserId",
+                "Users");
         }
     }
 }

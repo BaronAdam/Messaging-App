@@ -1,5 +1,4 @@
 using System;
-using Messaging_App.Domain.Models;
 
 namespace Messaging_App.Domain.DTOs
 {
