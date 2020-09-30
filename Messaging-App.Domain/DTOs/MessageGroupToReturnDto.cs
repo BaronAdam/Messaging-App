@@ -9,5 +9,6 @@ namespace Messaging_App.Domain.DTOs
         public string LastSender { get; set; }
         public string LastMessage { get; set; }
         public DateTime? LastSent { get; set; }
+        public bool IsGroup { get; set; }
     }
 }

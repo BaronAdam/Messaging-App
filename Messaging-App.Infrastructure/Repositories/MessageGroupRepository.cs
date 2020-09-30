@@ -87,9 +87,9 @@ namespace Messaging_App.Infrastructure.Repositories
         {
             var groups = await _context.UserMessageGroups.Where(g => g.GroupId == groupId).ToListAsync();
 
-            IEnumerable<int> ids = new List<int>();
+            List<int> ids = new List<int>();
 
-            foreach (var group in groups) ids = ids.Append(@group.UserId);
+            foreach (var group in groups) ids.Add(group.UserId);
 
             return ids;
         }

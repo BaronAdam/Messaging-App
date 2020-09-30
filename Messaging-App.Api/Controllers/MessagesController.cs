@@ -182,7 +182,8 @@ namespace Messaging_App.Api.Controllers
                     Name = groupName,
                     LastMessage = content,
                     LastSender = lastName,
-                    LastSent = message.DateSent
+                    LastSent = message.DateSent,
+                    IsGroup = messageGroup.IsGroup
                 };
 
                 groups.Add(group);
