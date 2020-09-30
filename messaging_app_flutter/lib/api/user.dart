@@ -39,4 +39,19 @@ class User {
 
     return '200';
   }
+
+  static Future<String> getFriends(userId, token) async {
+    Uri uri = Uri.http(kApiUrl, '/api/users/friends/$userId');
+
+    var response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode != 200) return null;
+
+    return response.body;
+  }
 }

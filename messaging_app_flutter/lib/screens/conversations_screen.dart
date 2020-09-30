@@ -37,7 +37,7 @@ class _ConversationsScreen extends State<ConversationsScreen> {
 
     if (isFirstTime) {
       ui = buildConversationsUI(_userId, _token);
-      setState(() {});
+      isFirstTime = false;
     }
 
     Future createGroup() async {
@@ -128,7 +128,7 @@ class _ConversationsScreen extends State<ConversationsScreen> {
                 _userId,
                 _token,
               );
-              ui = buildListGroups(result);
+              ui = buildListGroups(result, _userId, _token);
               setState(() {});
             },
           ),
@@ -145,7 +145,7 @@ class _ConversationsScreen extends State<ConversationsScreen> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
+          padding: EdgeInsets.only(left: 16.0, right: 16.0),
           child: ui,
         ),
       ),

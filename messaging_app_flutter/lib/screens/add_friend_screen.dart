@@ -77,7 +77,8 @@ class _AddFriendScreen extends State<AddFriendScreen> {
                     _input,
                   );
 
-                  container = displayUser(result, _userId, _token, context);
+                  container =
+                      buildAddFriendsUi(result, _userId, _token, context);
                   setState(() {});
                 },
               ),

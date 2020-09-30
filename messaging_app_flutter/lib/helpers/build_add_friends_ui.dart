@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:messaging_app_flutter/api/user.dart';
 import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
 
-Container displayUser(result, userId, token, context) {
+Container buildAddFriendsUi(result, userId, token, context) {
   Widget child;
 
   if (result == '400') {
@@ -62,8 +62,6 @@ Container displayUser(result, userId, token, context) {
                   userId,
                   decoded['id'],
                 );
-
-                print(response);
 
                 if (response == '200') {
                   Navigator.pop(context);

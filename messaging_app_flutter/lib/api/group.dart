@@ -50,4 +50,58 @@ class Group {
 
     return null;
   }
+
+  static Future<bool> editGroupName(userId, token, groupId, name) async {
+    Uri uri = Uri.http(kApiUrl, '/api/users/$userId/group');
+
+    var response = await http.patch(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(
+        {
+          'id': int.parse(groupId),
+          'name': name,
+        },
+      ),
+    );
+
+    if (response.statusCode != 200) return false;
+
+    return true;
+  }
+
+  static Future<String> getMembersForGroup(userId, groupId, token) async {
+    Uri uri = Uri.http(kApiUrl, '/api/users/$userId/group/members/id/$groupId');
+
+    var response = await http.get(uri, headers: {
+      'Authorization': 'Bearer $token',
+    });
+
+    if (response.statusCode != 200) return null;
+
+    return response.body;
+  }
+
+  static Future<bool> addMemberToGroup(
+      userId, groupId, List<int> userIds, token) async {
+    Uri uri = Uri.http(kApiUrl, '/api/users/$userId/group/add/$groupId');
+
+    var response = await http.post(uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'ids': userIds,
+        }));
+
+    print(response.body);
+
+    if (response.statusCode != 200) return false;
+
+    return true;
+  }
 }
