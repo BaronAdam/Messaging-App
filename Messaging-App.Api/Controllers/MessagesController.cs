@@ -122,7 +122,7 @@ namespace Messaging_App.Api.Controllers
             messageForCreationDto.SenderId = userId;
             messageForCreationDto.MessageSent = DateTime.Now;
             messageForCreationDto.IsPhoto = true;
-            messageForCreationDto.Content = null;
+            messageForCreationDto.Content = "Photo";
 
             var file = messageForCreationDto.File;
 
