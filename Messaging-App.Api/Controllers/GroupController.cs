@@ -135,7 +135,7 @@ namespace Messaging_App.Api.Controllers
         }
         
         [HttpGet("members/id/{groupId}")]
-        [ProducesResponseType((int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<int>), (int) HttpStatusCode.OK)]
         [ProducesResponseType((int) HttpStatusCode.Unauthorized)]
         [ProducesResponseType((int) HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> GetGroupMembers(int userId, int groupId)
@@ -151,8 +151,8 @@ namespace Messaging_App.Api.Controllers
             return Ok(userIds);
         }
         
-        [HttpGet("/members/admins/{groupId}")]
-        [ProducesResponseType((int) HttpStatusCode.OK)]
+        [HttpGet("members/admins/{groupId}")]
+        [ProducesResponseType(typeof(IEnumerable<int>), (int) HttpStatusCode.OK)]
         [ProducesResponseType((int) HttpStatusCode.Unauthorized)]
         [ProducesResponseType((int) HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> GetAdminIds(int userId, int groupId)
