@@ -40,7 +40,7 @@ namespace Messaging_App.Api.Controllers
             _userRepository = userRepository;
 
             var account = new Account(
-                cloudinaryOptions.Value.ApiKey,
+                cloudinaryOptions.Value.CloudName,
                 cloudinaryOptions.Value.ApiKey,
                 cloudinaryOptions.Value.ApiSecret);
 
@@ -91,39 +91,56 @@ namespace Messaging_App.Api.Controllers
 
             messageForCreationDto.SenderId = userId;
             messageForCreationDto.MessageSent = DateTime.Now;
+            messageForCreationDto.IsPhoto = false;
+            messageForCreationDto.Url = null;
+            messageForCreationDto.File = null;
+            messageForCreationDto.PublicId = null;
 
             var group = await _groupRepository.GetMessageGroup(messageForCreationDto.GroupId);
 
             if (group == null) return BadRequest("Could not find user/group");
 
-            if (messageForCreationDto.IsPhoto)
-            {
-                messageForCreationDto.Content = null;
-
-                var file = messageForCreationDto.File;
-
-                if (!(file.Length > 0)) return BadRequest("There was an error with the file");
-
-                await using var stream = file.OpenReadStream();
-                var uploadParameters = new ImageUploadParams
-                {
-                    File = new FileDescription(Guid.NewGuid().ToString(), stream),
-                    Transformation = new Transformation().Quality(50)
-                };
-                var result = _cloudinary.Upload(uploadParameters);
-
-                messageForCreationDto.Url = result.Url.ToString();
-                messageForCreationDto.PublicId = result.PublicId;
-            }
-            else
-            {
-                messageForCreationDto.Url = null;
-                messageForCreationDto.File = null;
-                messageForCreationDto.PublicId = null;
-            }
-
             var message = _mapper.Map<Message>(messageForCreationDto);
             
+            _appRepository.Add(message);
+
+            if (!await _appRepository.SaveAll()) return StatusCode((int) HttpStatusCode.InternalServerError);
+
+            var messageToReturn = _mapper.Map<MessageToReturnDto>(message);
+            return CreatedAtRoute("GetMessage", new {userId, id = message.Id}, messageToReturn);
+        }
+
+        [HttpPost("file")]
+        [ProducesResponseType(typeof(MessageToReturnDto), (int) HttpStatusCode.Created)]
+        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int) HttpStatusCode.Unauthorized)]
+        [ProducesResponseType((int) HttpStatusCode.InternalServerError)]
+        public async Task<IActionResult> CreatePhotoMessage(int userId, [FromForm] MessageForCreationDto messageForCreationDto)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
+
+            messageForCreationDto.SenderId = userId;
+            messageForCreationDto.MessageSent = DateTime.Now;
+            messageForCreationDto.IsPhoto = true;
+            messageForCreationDto.Content = null;
+
+            var file = messageForCreationDto.File;
+
+            if (!(file.Length > 0)) return BadRequest("There was an error with the file");
+
+            await using var stream = file.OpenReadStream();
+            var uploadParameters = new ImageUploadParams
+            {
+                File = new FileDescription(Guid.NewGuid().ToString(), stream),
+                Transformation = new Transformation().Quality(50)
+            };
+            var result = await _cloudinary.UploadAsync(uploadParameters);
+            
+            messageForCreationDto.Url = result.Url.ToString();
+            messageForCreationDto.PublicId = result.PublicId;
+
+            var message = _mapper.Map<Message>(messageForCreationDto);
+
             _appRepository.Add(message);
 
             if (!await _appRepository.SaveAll()) return StatusCode((int) HttpStatusCode.InternalServerError);
