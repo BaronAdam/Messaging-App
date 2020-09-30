@@ -150,5 +150,22 @@ namespace Messaging_App.Api.Controllers
 
             return Ok(userIds);
         }
+        
+        [HttpGet("/members/admins/{groupId}")]
+        [ProducesResponseType((int) HttpStatusCode.OK)]
+        [ProducesResponseType((int) HttpStatusCode.Unauthorized)]
+        [ProducesResponseType((int) HttpStatusCode.InternalServerError)]
+        public async Task<IActionResult> GetAdminIds(int userId, int groupId)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
+            
+            var userGroup = await _groupRepository.GetUserMessageGroup(userId, groupId);
+            
+            if (!userGroup.IsAdmin) return Unauthorized();
+
+            var userIds = await _groupRepository.GetAdminsForGroup(groupId);
+
+            return Ok(userIds);
+        }
     }
 }

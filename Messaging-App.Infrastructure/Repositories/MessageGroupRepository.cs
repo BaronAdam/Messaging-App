@@ -93,5 +93,16 @@ namespace Messaging_App.Infrastructure.Repositories
 
             return ids;
         }
+
+        public async Task<IEnumerable<int>> GetAdminsForGroup(int groupId)
+        {
+            var groups = await _context.UserMessageGroups.Where(g => g.GroupId == groupId && g.IsAdmin).ToListAsync();
+
+            List<int> ids = new List<int>();
+            
+            foreach (var group in groups) ids.Add(group.UserId);
+
+            return ids;
+        }
     }
 }
