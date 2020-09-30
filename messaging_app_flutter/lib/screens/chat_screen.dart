@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:messaging_app_flutter/api/group.dart';
@@ -175,10 +177,54 @@ class _ChatScreenState extends State<ChatScreen> {
                       decoration: kMessageTextFieldDecoration,
                     ),
                   ),
-                  FlatButton(
+                  IconButton(
+                    icon: Icon(
+                      Icons.photo,
+                      color: kAppColor,
+                    ),
                     onPressed: () async {
+                      FilePickerResult result =
+                          await FilePicker.platform.pickFiles(
+                        type: FileType.image,
+                        allowMultiple: false,
+                      );
+
+                      if (result != null) {
+                        File file = File(result.files.single.path);
+                        await Messages.sendPhotoMessage(
+                          _userId,
+                          _groupId,
+                          file.path,
+                          _token,
+                        );
+
+                        var response = await Messages.getMessagesForGroup(
+                          _userId,
+                          _groupId,
+                          _token,
+                        );
+
+                        if (response == null) {
+                          showNewDialog(
+                            'Error',
+                            'There was an error while processing your request',
+                            DialogType.WARNING,
+                            context,
+                          );
+                          return;
+                        }
+
+                        ui = buildChats(_userId, response);
+                        setState(() {});
+                      }
+                    },
+                  ),
+                  IconButton(
+                    onPressed: () async {
+                      if (messageText == '' || messageText == null) return;
+
                       messageTextController.clear();
-                      var result = await Messages.sendTextMessage(
+                      await Messages.sendTextMessage(
                         _userId,
                         _groupId,
                         messageText,
@@ -191,12 +237,22 @@ class _ChatScreenState extends State<ChatScreen> {
                         _token,
                       );
 
+                      if (response == null) {
+                        showNewDialog(
+                          'Error',
+                          'There was an error while processing your request',
+                          DialogType.WARNING,
+                          context,
+                        );
+                        return;
+                      }
+
                       ui = buildChats(_userId, response);
                       setState(() {});
                     },
-                    child: Text(
-                      'Send',
-                      style: kSendButtonTextStyle,
+                    icon: Icon(
+                      Icons.send,
+                      color: kAppColor,
                     ),
                   ),
                 ],
@@ -215,10 +271,11 @@ Expanded buildChats(userId, data) {
   for (var element in decoded) {
     bool isMe = userId == element['senderId'].toString();
     messageBubbles.add(MessageBubble(
-      sender: element['senderName'],
-      text: element['content'],
-      isMe: isMe,
-    ));
+        sender: element['senderName'],
+        text: element['content'],
+        isMe: isMe,
+        isPhoto: element['isPhoto'],
+        url: element['url']));
   }
 
   return Expanded(
@@ -271,14 +328,18 @@ class MessagesBuilder extends StatelessWidget {
 }
 
 class MessageBubble extends StatelessWidget {
-  MessageBubble({this.sender, this.text, this.isMe});
+  MessageBubble({this.sender, this.text, this.isMe, this.isPhoto, this.url});
 
   final String sender;
   final String text;
   final bool isMe;
+  final bool isPhoto;
+  final String url;
 
   @override
   Widget build(BuildContext context) {
+    String message = text == null ? '' : text;
+
     return Padding(
       padding: EdgeInsets.all(10.0),
       child: Column(
@@ -307,16 +368,50 @@ class MessageBubble extends StatelessWidget {
             color: isMe ? kAppColor : Colors.white,
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-              child: Text(
-                text,
-                style: TextStyle(
-                  color: isMe ? Colors.white : Colors.black54,
-                  fontSize: 15.0,
-                ),
-              ),
+              child: !isPhoto
+                  ? Text(
+                      message,
+                      style: TextStyle(
+                        color: isMe ? Colors.white : Colors.black54,
+                        fontSize: 15.0,
+                      ),
+                    )
+                  : GestureDetector(
+                      child: Image.network(
+                        url,
+                        width: 250,
+                      ),
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) {
+                          return DetailScreen(url);
+                        }));
+                      },
+                    ),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class DetailScreen extends StatelessWidget {
+  DetailScreen(this.url);
+
+  final String url;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: GestureDetector(
+        child: Center(
+          child: Image.network(
+            url,
+          ),
+        ),
+        onTap: () {
+          Navigator.pop(context);
+        },
       ),
     );
   }

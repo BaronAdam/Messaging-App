@@ -63,7 +63,6 @@ class Messages {
         .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
       var customHeaders = {
         'Authorization': 'Bearer $token',
-        'Content-Type': 'multipart/form-data',
       };
       options.headers.addAll(customHeaders);
       return options;
@@ -74,12 +73,28 @@ class Messages {
       'file': await MultipartFile.fromFile(filePath, filename: "upload")
     });
 
-    var response = await dio.post(
-      uri.toString(),
-      data: formData,
-    );
+    var httpResponse;
 
-    if (response.statusCode != 200) return false;
+    try {
+      httpResponse = await dio.post(
+        uri.toString(),
+        data: formData,
+      );
+    } on DioError catch (e) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx and is also not 304.
+      if (e.response != null) {
+        print(e.response.data);
+        print(e.response.headers);
+        print(e.response.request);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.request);
+        print(e.message);
+      }
+    }
+
+    if (httpResponse.statusCode != 200) return false;
 
     return true;
   }
