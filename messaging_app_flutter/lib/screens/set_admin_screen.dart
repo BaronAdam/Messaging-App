@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:messaging_app_flutter/api/combined.dart';
-import 'package:messaging_app_flutter/helpers/build_add_friends_to_group_screen_ui.dart';
+import 'package:messaging_app_flutter/helpers/build_set_admin_ui.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
 
-class AddFriendsToGroupScreen extends StatefulWidget {
-  static const String id = 'add_friends_to_group_screen';
+class SetAdminScreen extends StatefulWidget {
+  static const String id = 'set_admin_screen';
   @override
-  _AddFriendsToGroupScreenState createState() =>
-      _AddFriendsToGroupScreenState();
+  _SetAdminScreenState createState() => _SetAdminScreenState();
 }
 
-class _AddFriendsToGroupScreenState extends State<AddFriendsToGroupScreen> {
+class _SetAdminScreenState extends State<SetAdminScreen> {
   Widget ui;
   bool isFirstTime;
 
@@ -23,7 +22,7 @@ class _AddFriendsToGroupScreenState extends State<AddFriendsToGroupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final AddFriendsToGroupScreenArguments args =
+    final SetAdminScreenArguments args =
         ModalRoute.of(context).settings.arguments;
     String _token = args.token;
     String _userId = args.userId;
@@ -31,7 +30,7 @@ class _AddFriendsToGroupScreenState extends State<AddFriendsToGroupScreen> {
     String _groupName = args.groupName;
 
     if (isFirstTime) {
-      ui = buildAddFriendsToGroupUi(_userId, _groupId, _token);
+      ui = buildSetAdminUi(_userId, _groupId, _token);
       isFirstTime = false;
     }
 
@@ -51,7 +50,7 @@ class _AddFriendsToGroupScreenState extends State<AddFriendsToGroupScreen> {
           IconButton(
             icon: Icon(Icons.refresh),
             onPressed: () async {
-              var response = await Combined.getFriendsAndGroupInfo(
+              var response = await Combined.getMembersAndAdminInfo(
                 _userId,
                 _groupId,
                 _token,
@@ -61,19 +60,20 @@ class _AddFriendsToGroupScreenState extends State<AddFriendsToGroupScreen> {
                 return;
               }
 
-              ui = buildFriendsList(
+              ui = buildMembersList(
                 response,
                 _userId,
                 _groupId,
                 _token,
                 context,
               );
+
               setState(() {});
             },
           ),
         ],
         title: Text(
-          'Add friends to: $_groupName',
+          'Set admins in: $_groupName',
           style: TextStyle(color: Colors.black),
         ),
         actionsIconTheme: IconThemeData(color: Colors.black),

@@ -40,3 +40,17 @@ class AddFriendsToGroupScreenArguments {
     this.groupName,
   );
 }
+
+class SetAdminScreenArguments {
+  final String token;
+  final String userId;
+  final String groupId;
+  final String groupName;
+
+  SetAdminScreenArguments(
+    this.token,
+    this.userId,
+    this.groupId,
+    this.groupName,
+  );
+}

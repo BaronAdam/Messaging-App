@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:messaging_app_flutter/constants.dart';
 import 'package:http/http.dart' as http;
 
@@ -49,6 +50,36 @@ class Messages {
         }));
 
     if (response.statusCode != 201) return false;
+
+    return true;
+  }
+
+  static Future<bool> sendPhotoMessage(userId, groupId, filePath, token) async {
+    Uri uri = Uri.http(kApiUrl, '/api/users/$userId/messages/file');
+
+    Dio dio = Dio();
+
+    dio.interceptors
+        .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
+      var customHeaders = {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'multipart/form-data',
+      };
+      options.headers.addAll(customHeaders);
+      return options;
+    }));
+
+    FormData formData = new FormData.fromMap({
+      'groupId': groupId,
+      'file': await MultipartFile.fromFile(filePath, filename: "upload")
+    });
+
+    var response = await dio.post(
+      uri.toString(),
+      data: formData,
+    );
+
+    if (response.statusCode != 200) return false;
 
     return true;
   }

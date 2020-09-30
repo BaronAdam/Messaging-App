@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:messaging_app_flutter/screens/add_friends_to_group_screen.dart';
 
+import 'screens/add_friends_to_group_screen.dart';
+import 'screens/set_admin_screen.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/registration_screen.dart';
@@ -25,6 +26,7 @@ class MessagingApp extends StatelessWidget {
         AddFriendScreen.id: (context) => AddFriendScreen(),
         ChatScreen.id: (context) => ChatScreen(),
         AddFriendsToGroupScreen.id: (context) => AddFriendsToGroupScreen(),
+        SetAdminScreen.id: (context) => SetAdminScreen(),
       },
     );
   }

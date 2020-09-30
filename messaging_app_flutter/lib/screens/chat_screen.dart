@@ -9,6 +9,7 @@ import 'package:messaging_app_flutter/api/messages.dart';
 import 'package:messaging_app_flutter/constants.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
 import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
+import 'package:messaging_app_flutter/screens/set_admin_screen.dart';
 
 import 'add_friends_to_group_screen.dart';
 
@@ -108,6 +109,19 @@ class _ChatScreenState extends State<ChatScreen> {
                       context,
                       AddFriendsToGroupScreen.id,
                       arguments: AddFriendsToGroupScreenArguments(
+                          _token, _userId, _groupId, _groupName),
+                    );
+                  },
+                )
+              : Container(),
+          _isGroup
+              ? IconButton(
+                  icon: Icon(Icons.admin_panel_settings),
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      SetAdminScreen.id,
+                      arguments: SetAdminScreenArguments(
                           _token, _userId, _groupId, _groupName),
                     );
                   },

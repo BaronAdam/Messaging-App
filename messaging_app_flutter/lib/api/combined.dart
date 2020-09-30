@@ -15,4 +15,26 @@ class Combined {
       'members': requestGroup,
     });
   }
+
+  static Future<String> getMembersAndAdminInfo(userId, groupId, token) async {
+    var requestMembers = await Group.getMembersForGroup(userId, groupId, token);
+    var requestAdmins = await Group.getAdminsForGroup(userId, groupId, token);
+
+    if (requestAdmins == null || requestMembers == null) return null;
+
+    List decodedMemberIds = jsonDecode(requestMembers);
+
+    List members = [];
+
+    for (var memberId in decodedMemberIds) {
+      members.add(await User.getUser(memberId, token));
+    }
+
+    return jsonEncode(
+      {
+        'users': members,
+        'admins': requestAdmins,
+      },
+    );
+  }
 }

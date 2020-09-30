@@ -54,4 +54,19 @@ class User {
 
     return response.body;
   }
+
+  static Future<String> getUser(userId, token) async {
+    Uri uri = Uri.http(kApiUrl, '/api/users/$userId');
+
+    var response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode != 200) return null;
+
+    return response.body;
+  }
 }

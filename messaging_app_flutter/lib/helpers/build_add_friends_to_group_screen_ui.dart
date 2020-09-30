@@ -33,7 +33,7 @@ Widget buildAddFriendsToGroupUi(userId, groupId, token) {
 ListView buildFriendsList(data, userId, groupId, token, context) {
   if (data == null) {
     return ListView(
-      children: [Text('There was an error while processing your request')],
+      children: [Text('There was an error while processing your request.')],
     );
   }
 
@@ -72,7 +72,7 @@ ListView buildFriendsList(data, userId, groupId, token, context) {
                           showNewDialog(
                             'Success',
                             'Added ${friend['name']} to group',
-                            DialogType.WARNING,
+                            DialogType.SUCCES,
                             context,
                           );
                         } else {
@@ -111,31 +111,3 @@ ListView buildFriendsList(data, userId, groupId, token, context) {
     children: list,
   );
 }
-
-// if (response == '200') {
-// Navigator.pop(context);
-// } else if (response == '401') {
-// child = Container();
-// showNewDialog(
-// 'Unauthorized',
-// 'You cannot perform this operation',
-// DialogType.WARNING,
-// context,
-// );
-// } else if (response == '500') {
-// child = Container();
-// showNewDialog(
-// 'Internal Server Error',
-// 'There was an server error while performing this operation',
-// DialogType.WARNING,
-// context,
-// );
-// } else {
-// child = Container();
-// showNewDialog(
-// 'Error',
-// response,
-// DialogType.WARNING,
-// context,
-// );
-// }

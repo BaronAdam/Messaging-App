@@ -104,4 +104,40 @@ class Group {
 
     return true;
   }
+
+  static Future<String> getAdminsForGroup(userId, groupId, token) async {
+    Uri uri =
+        Uri.http(kApiUrl, '/api/users/$userId/group/members/admins/$groupId');
+
+    var response = await http.get(uri, headers: {
+      'Authorization': 'Bearer $token',
+    });
+
+    if (response.statusCode != 200) return null;
+
+    return response.body;
+  }
+
+  static Future<bool> changeAdminStatus(
+      userId, groupId, memberId, token) async {
+    Uri uri = Uri.http(kApiUrl, '/api/users/$userId/group/admin');
+
+    var response = await http.patch(uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'userId': memberId,
+          'groupId': int.parse(groupId),
+        }));
+
+    print(response.body);
+
+    if (response.statusCode != 200) return false;
+
+    return true;
+  }
 }
+
+//api/users/{userId}/Group/members/admins/{groupId}
