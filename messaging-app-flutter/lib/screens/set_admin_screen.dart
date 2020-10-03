@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:messaging_app_flutter/DTOs/members_and_admins_dto.dart';
 import 'package:messaging_app_flutter/DTOs/user_for_single_dto.dart';
 import 'package:messaging_app_flutter/api/group.dart';
-import 'package:messaging_app_flutter/api/repository/admin_repository.dart';
+import 'package:messaging_app_flutter/api/repositories/group_repository.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
 import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
 
@@ -88,7 +88,7 @@ class UserListFutureBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: AdminRepository.getMembersAndAdminInfo(userId, groupId, token),
+      future: GroupRepository.getMembersAndAdminInfo(userId, groupId, token),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
@@ -106,12 +106,7 @@ class UserListFutureBuilder extends StatelessWidget {
               );
             }
             return buildWidgetList(
-              snapshot.data,
-              userId,
-              groupId,
-              token,
-              context,
-            );
+                snapshot.data, userId, groupId, token, context);
         }
       },
     );
