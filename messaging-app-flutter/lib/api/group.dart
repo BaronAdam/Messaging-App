@@ -132,12 +132,8 @@ class Group {
           'groupId': int.parse(groupId),
         }));
 
-    print(response.body);
-
     if (response.statusCode != 200) return false;
 
     return true;
   }
 }
-
-//api/users/{userId}/Group/members/admins/{groupId}
