@@ -1,7 +1,12 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:messaging_app_flutter/api/combined.dart';
-import 'package:messaging_app_flutter/helpers/build_add_friends_to_group_screen_ui.dart';
+import 'package:messaging_app_flutter/DTOs/member_and_friends_dto.dart';
+import 'package:messaging_app_flutter/DTOs/user_for_single_dto.dart';
+import 'package:messaging_app_flutter/api/group.dart';
+import 'package:messaging_app_flutter/api/repositories/group_repository.dart';
+import 'package:messaging_app_flutter/constants.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
+import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
 
 class AddFriendsToGroupScreen extends StatefulWidget {
   static const String id = 'add_friends_to_group_screen';
@@ -25,13 +30,13 @@ class _AddFriendsToGroupScreenState extends State<AddFriendsToGroupScreen> {
   Widget build(BuildContext context) {
     final AddFriendsToGroupScreenArguments args =
         ModalRoute.of(context).settings.arguments;
-    String _token = args.token;
-    String _userId = args.userId;
-    String _groupId = args.groupId;
-    String _groupName = args.groupName;
+    String token = args.token;
+    String userId = args.userId;
+    String groupId = args.groupId;
+    String groupName = args.groupName;
 
     if (isFirstTime) {
-      ui = buildAddFriendsToGroupUi(_userId, _groupId, _token);
+      ui = UserListFutureBuilder(userId, groupId, token);
       isFirstTime = false;
     }
 
@@ -47,33 +52,8 @@ class _AddFriendsToGroupScreenState extends State<AddFriendsToGroupScreen> {
             Navigator.pop(context);
           },
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: () async {
-              var response = await Combined.getFriendsAndGroupInfo(
-                _userId,
-                _groupId,
-                _token,
-              );
-
-              if (response == null) {
-                return;
-              }
-
-              ui = buildFriendsList(
-                response,
-                _userId,
-                _groupId,
-                _token,
-                context,
-              );
-              setState(() {});
-            },
-          ),
-        ],
         title: Text(
-          'Add friends to: $_groupName',
+          'Add friends to: $groupName',
           style: TextStyle(color: Colors.black),
         ),
         actionsIconTheme: IconThemeData(color: Colors.black),
@@ -94,6 +74,165 @@ class _AddFriendsToGroupScreenState extends State<AddFriendsToGroupScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class UserListFutureBuilder extends StatelessWidget {
+  final userId;
+  final groupId;
+  final token;
+
+  UserListFutureBuilder(this.userId, this.groupId, this.token);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: GroupRepository.getFriendsAndMembers(
+        userId,
+        groupId,
+        token,
+      ),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return Center(
+              child: CircularProgressIndicator(
+                backgroundColor: kAppColor,
+              ),
+            );
+          default:
+            if (snapshot.data == null) {
+              return ListView(
+                children: [
+                  Text('There was an error while processing your request.'),
+                ],
+              );
+            }
+            return buildFriendsList(
+                snapshot.data, userId, groupId, token, context);
+        }
+      },
+    );
+  }
+}
+
+ListView buildFriendsList(
+    MembersAndFriendsDto data, userId, groupId, token, context) {
+  List<Widget> list = [];
+
+  for (var friend in data.friends) {
+    list.add(
+      UserBuilder(friend, userId, groupId, token, data.members),
+    );
+  }
+
+  return ListView(
+    children: list,
+  );
+}
+
+class UserBuilder extends StatefulWidget {
+  final UserForSingleDto friend;
+  final String userId;
+  final String groupId;
+  final String token;
+  final List<int> members;
+
+  UserBuilder(
+    this.friend,
+    this.userId,
+    this.groupId,
+    this.token,
+    this.members,
+  );
+
+  @override
+  _UserBuilderState createState() =>
+      _UserBuilderState(friend, userId, groupId, token, members);
+}
+
+class _UserBuilderState extends State<UserBuilder> {
+  final UserForSingleDto friend;
+  final String userId;
+  final String groupId;
+  final String token;
+  final List<int> members;
+
+  _UserBuilderState(
+    this.friend,
+    this.userId,
+    this.groupId,
+    this.token,
+    this.members,
+  );
+
+  bool isntInFriends = false;
+
+  @override
+  initState() {
+    isntInFriends = !members.contains(friend.id);
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              friend.name,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+            Spacer(),
+            isntInFriends
+                ? IconButton(
+                    icon: Icon(Icons.add),
+                    onPressed: () async {
+                      var response = await Group.addMemberToGroup(
+                        userId,
+                        groupId,
+                        [friend.id],
+                        token,
+                      );
+                      if (response) {
+                        setState(() {
+                          isntInFriends = false;
+                        });
+                      } else {
+                        showNewDialog(
+                          'Error',
+                          'There was an error while processing your request.',
+                          DialogType.WARNING,
+                          context,
+                        );
+                      }
+                    },
+                  )
+                : IconButton(
+                    icon: Icon(
+                      Icons.done,
+                      color: Colors.green,
+                    ),
+                    onPressed: null,
+                  ),
+          ],
+        ),
+        Text(friend.username),
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Divider(
+            color: Colors.black87,
+            thickness: 0.5,
+          ),
+        )
+      ],
     );
   }
 }
