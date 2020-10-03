@@ -12,11 +12,7 @@ class User {
       },
     );
 
-    if (response.statusCode == 400) return '400';
-
-    if (response.statusCode == 401) return '401';
-
-    if (response.statusCode == 500) return '500';
+    if (response.statusCode != 200) return null;
 
     return response.body;
   }
