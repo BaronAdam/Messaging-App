@@ -1,13 +1,16 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:messaging_app_flutter/DTOs/message_group_to_return_dto.dart';
 import 'package:messaging_app_flutter/api/group.dart';
 import 'package:messaging_app_flutter/api/messages.dart';
-import 'package:messaging_app_flutter/helpers/build_conversations_ui.dart';
+import 'package:messaging_app_flutter/constants.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
 import 'package:messaging_app_flutter/screens/add_friend_screen.dart';
+import 'package:messaging_app_flutter/screens/chat_screen.dart';
 
 class ConversationsScreen extends StatefulWidget {
   static const String id = 'conversations_screen';
@@ -32,64 +35,12 @@ class _ConversationsScreen extends State<ConversationsScreen> {
     final ConversationsScreenArguments args =
         ModalRoute.of(context).settings.arguments;
 
-    String _userId = JwtDecoder.decode(args.token)['nameid'];
-    String _token = args.token;
+    String userId = JwtDecoder.decode(args.token)['nameid'];
+    String token = args.token;
 
     if (isFirstTime) {
-      ui = buildConversationsUI(_userId, _token);
+      ui = ConversationsListFutureBuilder(userId, token);
       isFirstTime = false;
-    }
-
-    Future createGroup() async {
-      final text = await showTextInputDialog(
-        context: context,
-        textFields: [
-          DialogTextField(hintText: 'Enter new group name'),
-        ],
-        title: 'Create new group',
-        message:
-            'In the box below enter a name for a new group you want to create.',
-        okLabel: 'OK',
-        cancelLabel: 'Cancel',
-        isDestructiveAction: false,
-        style: AdaptiveStyle.adaptive,
-        actionsOverflowDirection: VerticalDirection.up,
-      );
-
-      if (text != null && text[0] != null) {
-        var result = await Group.addGroup(_userId, _token, text[0]);
-
-        if (result == null) {
-          showNewDialog(
-            'Group created',
-            'Successfully created group: ${text[0]}',
-            DialogType.SUCCES,
-            context,
-          );
-          ui = buildConversationsUI(_userId, _token);
-        } else if (result == '401') {
-          showNewDialog(
-            'Could not create group',
-            'Wrong user account',
-            DialogType.WARNING,
-            context,
-          );
-        } else if (result == '500') {
-          showNewDialog(
-            'Internal server error',
-            'A server error occurred while processing your request. Try again later',
-            DialogType.ERROR,
-            context,
-          );
-        } else {
-          showNewDialog(
-            'Group name is required',
-            result,
-            DialogType.WARNING,
-            context,
-          );
-        }
-      }
     }
 
     return Scaffold(
@@ -117,7 +68,7 @@ class _ConversationsScreen extends State<ConversationsScreen> {
               Navigator.pushNamed(
                 context,
                 AddFriendScreen.id,
-                arguments: AddFriendScreenArguments(_token, _userId),
+                arguments: AddFriendScreenArguments(token, userId),
               );
             },
           ),
@@ -125,17 +76,31 @@ class _ConversationsScreen extends State<ConversationsScreen> {
             icon: Icon(Icons.refresh),
             onPressed: () async {
               var result = await Messages.getChats(
-                _userId,
-                _token,
+                userId,
+                token,
               );
-              ui = buildListGroups(result, _userId, _token);
+
+              if (!checkResponse(result, context)) return;
+
+              ui = buildWidgetList(result, userId, token);
+
               setState(() {});
             },
           ),
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () async {
-              await createGroup();
+              await createGroup(userId, token, context);
+              var result = await Messages.getChats(
+                userId,
+                token,
+              );
+
+              if (!checkResponse(result, context)) return;
+
+              ui = buildWidgetList(result, userId, token);
+
+              setState(() {});
             },
           ),
         ],
@@ -151,4 +116,209 @@ class _ConversationsScreen extends State<ConversationsScreen> {
       ),
     );
   }
+}
+
+Future createGroup(userId, token, context) async {
+  final text = await showTextInputDialog(
+    context: context,
+    textFields: [
+      DialogTextField(hintText: 'Enter new group name'),
+    ],
+    title: 'Create new group',
+    message:
+        'In the box below enter a name for a new group you want to create.',
+    okLabel: 'OK',
+    cancelLabel: 'Cancel',
+    isDestructiveAction: false,
+    style: AdaptiveStyle.adaptive,
+    actionsOverflowDirection: VerticalDirection.up,
+  );
+
+  if (text != null && text[0] != null) {
+    var result = await Group.addGroup(userId, token, text[0]);
+
+    if (result == null) {
+      showNewDialog(
+        'Group created',
+        'Successfully created group: ${text[0]}',
+        DialogType.SUCCES,
+        context,
+      );
+    } else if (result == '401') {
+      showNewDialog(
+        'Could not create group',
+        'Wrong user account',
+        DialogType.WARNING,
+        context,
+      );
+    } else if (result == '500') {
+      showNewDialog(
+        'Internal server error',
+        'A server error occurred while processing your request. Try again later',
+        DialogType.ERROR,
+        context,
+      );
+    } else {
+      showNewDialog(
+        'Group name is required',
+        result,
+        DialogType.WARNING,
+        context,
+      );
+    }
+  }
+}
+
+bool checkResponse(response, context) {
+  if (response == null) {
+    showNewDialog(
+      'Error',
+      'There was an error while processing your request.',
+      DialogType.WARNING,
+      context,
+    );
+    return false;
+  }
+
+  return true;
+}
+
+class ConversationsListFutureBuilder extends StatelessWidget {
+  final userId;
+  final token;
+
+  ConversationsListFutureBuilder(this.userId, this.token);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: Messages.getChats(
+        userId,
+        token,
+      ),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return Center(
+              child: CircularProgressIndicator(
+                backgroundColor: kAppColor,
+              ),
+            );
+          default:
+            return buildWidgetList(snapshot.data, userId, token);
+        }
+      },
+    );
+  }
+}
+
+class ConversationBuilder extends StatelessWidget {
+  const ConversationBuilder({
+    @required this.object,
+    @required this.formattedDate,
+    @required this.id,
+    @required this.name,
+    @required this.userId,
+    @required this.token,
+    this.isGroup,
+  });
+
+  final MessageGroupToReturnDto object;
+  final formattedDate;
+  final String id;
+  final String name;
+  final String userId;
+  final String token;
+  final bool isGroup;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        Navigator.pushNamed(
+          context,
+          ChatScreen.id,
+          arguments: ChatScreenArguments(token, userId, id, name, isGroup),
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.only(top: 8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              object.name,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Row(
+              children: [
+                Text(
+                  object.lastSender != ''
+                      ? object.lastSender + ': '
+                      : 'Group chat empty.',
+                ),
+                Text(
+                  object.lastMessage,
+                ),
+                Spacer(),
+                Text(
+                  formattedDate,
+                  style: TextStyle(
+                    color: Colors.black45,
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Divider(
+                color: Colors.black87,
+                thickness: 0.5,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+ListView buildWidgetList(List<MessageGroupToReturnDto> data, userId, token) {
+  List<Widget> widgets = [];
+
+  for (var item in data) {
+    var date = DateTime.parse(item.lastSent);
+
+    var formattedDate;
+
+    if (date.compareTo(DateTime.now().subtract(Duration(days: 365 * 100))) <
+        0) {
+      formattedDate = '';
+    } else {
+      formattedDate = formatDate(
+        date,
+        [dd, '.', mm, '.', yyyy],
+      );
+    }
+
+    widgets.add(
+      ConversationBuilder(
+        object: item,
+        formattedDate: formattedDate,
+        id: item.id.toString(),
+        name: item.name,
+        userId: userId,
+        token: token,
+        isGroup: item.isGroup,
+      ),
+    );
+  }
+
+  return ListView(
+    children: widgets,
+  );
 }

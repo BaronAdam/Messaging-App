@@ -1,34 +1,62 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:messaging_app_flutter/DTOs/message_group_to_return_dto.dart';
 import 'package:messaging_app_flutter/constants.dart';
 import 'package:http/http.dart' as http;
 
 class Messages {
-  static Future<String> getChats(userId, token) async {
+  static Future<List<MessageGroupToReturnDto>> getChats(userId, token) async {
     Uri uri = Uri.http(kApiUrl, '/api/users/$userId/messages');
 
-    var response = await http.get(
-      uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-    );
+    var response;
+
+    try {
+      response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+    } catch (e) {
+      print('Messages.getChats http request: $e');
+      return null;
+    }
 
     if (response.statusCode != 200) return null;
 
-    return response.body;
+    List<MessageGroupToReturnDto> list = [];
+
+    try {
+      var decoded = jsonDecode(response.body);
+
+      for (var item in decoded) {
+        list.add(MessageGroupToReturnDto.fromJson(item));
+      }
+    } catch (e) {
+      print('Messages.getChats converting json: $e');
+      return null;
+    }
+
+    return list;
   }
 
   static Future<String> getMessagesForGroup(userId, groupId, token) async {
     Uri uri = Uri.http(kApiUrl, '/api/users/$userId/messages/thread/$groupId');
 
-    var response = await http.get(
-      uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-    );
+    var response;
+
+    try {
+      response = await http.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+    } catch (e) {
+      print('Messages.getMessagesForGroup http request: $e');
+      return null;
+    }
 
     if (response.statusCode != 200) return null;
 
@@ -38,16 +66,23 @@ class Messages {
   static Future<bool> sendTextMessage(userId, groupId, message, token) async {
     Uri uri = Uri.http(kApiUrl, '/api/users/$userId/messages/');
 
-    var response = await http.post(uri,
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'groupId': int.parse(groupId),
-          'content': message,
-          'isPhoto': false
-        }));
+    var response;
+
+    try {
+      response = await http.post(uri,
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode({
+            'groupId': int.parse(groupId),
+            'content': message,
+            'isPhoto': false
+          }));
+    } catch (e) {
+      print('Messages.sendTextMessage http request: $e');
+      return false;
+    }
 
     if (response.statusCode != 201) return false;
 
@@ -81,14 +116,11 @@ class Messages {
         data: formData,
       );
     } on DioError catch (e) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx and is also not 304.
       if (e.response != null) {
         print(e.response.data);
         print(e.response.headers);
         print(e.response.request);
       } else {
-        // Something happened in setting up or sending the request that triggered an Error
         print(e.request);
         print(e.message);
       }
