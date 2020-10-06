@@ -27,7 +27,7 @@ namespace Messaging_App.Infrastructure.Repositories
             var messages = _context.Messages
                 .Include(m => m.Sender)
                 .Include(m => m.Group)
-                .Where(m => m.GroupId == groupId && m.SenderId == userId)
+                .Where(m => m.GroupId == groupId)
                 .OrderByDescending(m => m.DateSent)
                 .AsQueryable();
 
