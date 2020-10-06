@@ -40,7 +40,15 @@ namespace Messaging_App.Api
 
             services.ConfigureDependencyInjection();
 
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", x => x
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+            });
+
+            services.AddSignalR();
 
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
 

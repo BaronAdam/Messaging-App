@@ -36,4 +36,5 @@ const kTextFieldDecoration = InputDecoration(
   ),
 );
 
-const kApiUrl = '10.0.2.2:5000'; // localhost points to emulator's localhost
+// const kApiUrl = '10.0.2.2:5000'; // localhost points to emulator's localhost
+const kApiUrl = '10.0.0.100:5000'; // global ip
