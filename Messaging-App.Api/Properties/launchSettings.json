@@ -26,5 +26,12 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
+  },
+  "LettuceEncrypt": {
+    "AcceptTermsOfService": true,
+
+    "DomainNames": [ "abaron.tk", "www.abaron.tk" ],
+
+    "EmailAddress": "adam.baron452@gmail.com"
   }
 }
