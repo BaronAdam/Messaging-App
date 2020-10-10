@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:messaging_app_flutter/screens/answer_call_screen.dart';
+import 'package:messaging_app_flutter/screens/call_screen.dart';
 
 import 'screens/add_friends_to_group_screen.dart';
 import 'screens/set_admin_screen.dart';
@@ -27,6 +29,8 @@ class MessagingApp extends StatelessWidget {
         ChatScreen.id: (context) => ChatScreen(),
         AddFriendsToGroupScreen.id: (context) => AddFriendsToGroupScreen(),
         SetAdminScreen.id: (context) => SetAdminScreen(),
+        CallScreen.id: (context) => CallScreen(),
+        AnswerCallScreen.id: (context) => AnswerCallScreen(),
       },
     );
   }

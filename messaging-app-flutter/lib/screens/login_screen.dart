@@ -1,12 +1,19 @@
+import 'dart:convert';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:messaging_app_flutter/api/auth.dart';
 import 'package:messaging_app_flutter/components/rounded_button.dart';
 import 'package:messaging_app_flutter/constants.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
 import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
+import 'package:messaging_app_flutter/screens/answer_call_screen.dart';
 import 'package:messaging_app_flutter/screens/conversations_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:signalr_client/http_connection_options.dart';
+import 'package:signalr_client/hub_connection.dart';
+import 'package:signalr_client/hub_connection_builder.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'login_screen';
@@ -97,12 +104,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         context,
                       );
                     } else if (token != null) {
+                      var id = JwtDecoder.decode(token)['nameid'];
+                      HubConnection hubConnection =
+                          await openHubConnection(id, token, context);
                       loginTextController.clear();
                       passwordTextController.clear();
                       Navigator.pushNamed(
                         context,
                         ConversationsScreen.id,
-                        arguments: ConversationsScreenArguments(token),
+                        arguments: ConversationsScreenArguments(
+                            token, id, hubConnection),
                       );
                     }
 
@@ -120,4 +131,26 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+}
+
+Future<HubConnection> openHubConnection(userId, token, context) async {
+  String url = 'http://$kApiUrl/Caller';
+
+  var options = HttpConnectionOptions(accessTokenFactory: () async => token);
+
+  HubConnection hubConnection =
+      HubConnectionBuilder().withUrl(url, options: options).build();
+
+  hubConnection.onclose((error) => print('Connection Closed'));
+
+  hubConnection.on('incomingCall', (callingUser) {
+    Navigator.pushNamed(context, AnswerCallScreen.id,
+        arguments: AnswerCallScreenArguments(callingUser[0], hubConnection));
+  });
+
+  await hubConnection.start();
+
+  hubConnection.invoke("Join", args: <Object>[int.parse(userId)]);
+
+  return hubConnection;
 }

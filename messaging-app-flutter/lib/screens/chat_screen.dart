@@ -11,7 +11,9 @@ import 'package:messaging_app_flutter/api/messages.dart';
 import 'package:messaging_app_flutter/constants.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
 import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
+import 'package:messaging_app_flutter/screens/call_screen.dart';
 import 'package:messaging_app_flutter/screens/set_admin_screen.dart';
+import 'package:signalr_client/hub_connection.dart';
 
 import 'add_friends_to_group_screen.dart';
 
@@ -38,14 +40,15 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final ChatScreenArguments args = ModalRoute.of(context).settings.arguments;
-    String _token = args.token;
-    String _userId = args.userId;
-    String _groupId = args.groupId;
-    String _groupName = args.groupName;
-    bool _isGroup = args.isGroup;
+    String token = args.token;
+    String userId = args.userId;
+    String groupId = args.groupId;
+    String groupName = args.groupName;
+    bool isGroup = args.isGroup;
+    HubConnection hubConnection = args.hubConnection;
 
     if (isFirstTime) {
-      ui = MessagesBuilder(_userId, _groupId, _token);
+      ui = MessagesBuilder(userId, groupId, token);
       isFirstTime = false;
     }
 
@@ -65,8 +68,7 @@ class _ChatScreenState extends State<ChatScreen> {
       );
 
       if (text != null && text[0] != null) {
-        var result =
-            await Group.editGroupName(_userId, _token, _groupId, text[0]);
+        var result = await Group.editGroupName(userId, token, groupId, text[0]);
 
         if (!result)
           showNewDialog(
@@ -88,7 +90,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          _groupName,
+          groupName,
           style: TextStyle(
             color: Colors.black,
           ),
@@ -103,7 +105,7 @@ class _ChatScreenState extends State<ChatScreen> {
           },
         ),
         actions: [
-          _isGroup
+          isGroup
               ? IconButton(
                   icon: Icon(Icons.person_add),
                   onPressed: () {
@@ -111,12 +113,12 @@ class _ChatScreenState extends State<ChatScreen> {
                       context,
                       AddFriendsToGroupScreen.id,
                       arguments: AddFriendsToGroupScreenArguments(
-                          _token, _userId, _groupId, _groupName),
+                          token, userId, groupId, groupName),
                     );
                   },
                 )
               : Container(),
-          _isGroup
+          isGroup
               ? IconButton(
                   icon: Icon(Icons.admin_panel_settings),
                   onPressed: () {
@@ -124,12 +126,12 @@ class _ChatScreenState extends State<ChatScreen> {
                       context,
                       SetAdminScreen.id,
                       arguments: SetAdminScreenArguments(
-                          _token, _userId, _groupId, _groupName),
+                          token, userId, groupId, groupName),
                     );
                   },
                 )
               : Container(),
-          _isGroup
+          isGroup
               ? IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () {
@@ -138,18 +140,65 @@ class _ChatScreenState extends State<ChatScreen> {
                 )
               : IconButton(
                   icon: Icon(Icons.phone),
-                  onPressed: () {},
+                  onPressed: () async {
+                    var response =
+                        await Group.getMembersForGroup(userId, groupId, token);
+
+                    if (response == null) {
+                      showNewDialog(
+                        'Error',
+                        'There was an error while processing your request',
+                        DialogType.WARNING,
+                        context,
+                      );
+                      return;
+                    }
+
+                    var decoded;
+
+                    try {
+                      decoded = jsonDecode(response);
+                    } catch (e) {
+                      showNewDialog(
+                        'Error',
+                        'There was an error while processing your request',
+                        DialogType.WARNING,
+                        context,
+                      );
+                      return;
+                    }
+
+                    if (hubConnection.state ==
+                        HubConnectionState.Disconnected) {
+                      await hubConnection.start();
+                    }
+
+                    var calleeId = decoded[0].toString() == userId
+                        ? decoded[1]
+                        : decoded[0];
+
+                    Navigator.pushNamed(
+                      context,
+                      CallScreen.id,
+                      arguments: CallScreenArguments(
+                        calleeId.toString(),
+                        groupName,
+                        hubConnection,
+                        false,
+                      ),
+                    );
+                  },
                 ),
           IconButton(
             icon: Icon(Icons.refresh),
             onPressed: () async {
               var response = await Messages.getMessagesForGroup(
-                _userId,
-                _groupId,
-                _token,
+                userId,
+                groupId,
+                token,
               );
 
-              ui = buildChats(_userId, response);
+              ui = buildChats(userId, response);
               setState(() {});
             },
           ),
@@ -192,16 +241,16 @@ class _ChatScreenState extends State<ChatScreen> {
                       if (result != null) {
                         File file = File(result.files.single.path);
                         await Messages.sendPhotoMessage(
-                          _userId,
-                          _groupId,
+                          userId,
+                          groupId,
                           file.path,
-                          _token,
+                          token,
                         );
 
                         var response = await Messages.getMessagesForGroup(
-                          _userId,
-                          _groupId,
-                          _token,
+                          userId,
+                          groupId,
+                          token,
                         );
 
                         if (response == null) {
@@ -214,7 +263,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           return;
                         }
 
-                        ui = buildChats(_userId, response);
+                        ui = buildChats(userId, response);
                         setState(() {});
                       }
                     },
@@ -225,16 +274,16 @@ class _ChatScreenState extends State<ChatScreen> {
 
                       messageTextController.clear();
                       await Messages.sendTextMessage(
-                        _userId,
-                        _groupId,
+                        userId,
+                        groupId,
                         messageText,
-                        _token,
+                        token,
                       );
 
                       var response = await Messages.getMessagesForGroup(
-                        _userId,
-                        _groupId,
-                        _token,
+                        userId,
+                        groupId,
+                        token,
                       );
 
                       if (response == null) {
@@ -247,7 +296,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         return;
                       }
 
-                      ui = buildChats(_userId, response);
+                      ui = buildChats(userId, response);
                       setState(() {});
                     },
                     icon: Icon(
@@ -347,7 +396,7 @@ class MessageBubble extends StatelessWidget {
             isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            sender,
+            isMe ? 'You' : sender,
             style: TextStyle(
               fontSize: 12.0,
               color: Colors.black54,
