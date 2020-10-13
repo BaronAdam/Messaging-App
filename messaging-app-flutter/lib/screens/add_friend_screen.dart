@@ -153,17 +153,17 @@ class AddFriendWidgetBuilder extends StatelessWidget {
             Spacer(),
             isInFriends
                 ? IconButton(
-                    icon: Icon(Icons.person_add),
-                    onPressed: () async {
-                      await addFriend(userId, token, decodedData, context);
-                    },
-                  )
-                : IconButton(
                     icon: Icon(
                       Icons.done,
                       color: Colors.green,
                     ),
-                    onPressed: null),
+                    onPressed: null)
+                : IconButton(
+                    icon: Icon(Icons.person_add),
+                    onPressed: () async {
+                      await addFriend(userId, token, decodedData, context);
+                    },
+                  ),
           ],
         ),
         Text(decodedData.username),
@@ -205,7 +205,7 @@ Future addFriend(userId, token, decoded, context) async {
   String response = await User.addFriend(
     token,
     userId,
-    decoded['id'],
+    decoded.id,
   );
 
   displayResultOfAddFriend(response, context);

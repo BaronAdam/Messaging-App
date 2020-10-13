@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:messaging_app_flutter/components/round_icon_button.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
 import 'package:signalr_client/hub_connection.dart';
@@ -29,6 +30,12 @@ class _CallScreenState extends State<CallScreen> {
   bool isInCall = false;
 
   HubConnection hubConnection;
+  RTCPeerConnection peerConnection;
+  var configuration = <String, dynamic>{
+    'iceServers': [
+      {'url': 'stun:stun.l.google.com:19302'},
+    ]
+  };
 
   @override
   void initState() {
@@ -260,5 +267,3 @@ String formatTime(int hours, int minutes, int seconds) {
       ? '$minutesString:$secondsString'
       : '$hours:$minutesString:$secondsString';
 }
-
-void addMethodsToHub() {}

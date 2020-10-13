@@ -9,3 +9,5 @@ services:
       MYSQL_DATABASE: app
       MYSQL_USER: adam
       MYSQL_PASSWORD: password
+    volumes: 
+      - ./sql-data/db:/var/lib/mysql
