@@ -123,7 +123,7 @@ namespace Messaging_App.Api.Controllers
         }
 
         [HttpGet("friends/{userId}")]
-        [ProducesResponseType(typeof(UserForListDto), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(List<UserForListDto>), (int) HttpStatusCode.OK)]
         [ProducesResponseType((int) HttpStatusCode.Unauthorized)]
         [ProducesResponseType((int) HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> GetFriends(int userId)
