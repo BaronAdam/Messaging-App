@@ -4,7 +4,6 @@ import {AlertifyService} from '../services/alertify.service';
 import {AuthService} from './auth.service';
 import {MessageGroup} from './interfaces/message-group';
 import {Constants} from '../constants';
-import {User} from './interfaces/user';
 import {Message} from './interfaces/message';
 
 @Injectable({

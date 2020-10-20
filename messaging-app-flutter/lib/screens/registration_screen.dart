@@ -51,13 +51,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
               TextField(
                 textAlign: TextAlign.center,
-                controller: emailTextController,
-                keyboardType: TextInputType.emailAddress,
+                controller: loginTextController,
                 onChanged: (value) {
-                  _email = value;
+                  _login = value;
                 },
                 decoration: kTextFieldDecoration.copyWith(
-                  hintText: 'Enter your email',
+                  hintText: 'Username',
                 ),
               ),
               SizedBox(
@@ -65,12 +64,26 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
               TextField(
                 textAlign: TextAlign.center,
-                controller: loginTextController,
+                controller: nameTextController,
                 onChanged: (value) {
-                  _login = value;
+                  _name = value;
                 },
                 decoration: kTextFieldDecoration.copyWith(
-                  hintText: 'Enter your login',
+                  hintText: 'Name',
+                ),
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+              TextField(
+                textAlign: TextAlign.center,
+                controller: emailTextController,
+                keyboardType: TextInputType.emailAddress,
+                onChanged: (value) {
+                  _email = value;
+                },
+                decoration: kTextFieldDecoration.copyWith(
+                  hintText: 'Email Address',
                 ),
               ),
               SizedBox(
@@ -84,20 +97,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   _password = value;
                 },
                 decoration: kTextFieldDecoration.copyWith(
-                  hintText: 'Enter your password',
-                ),
-              ),
-              SizedBox(
-                height: 8.0,
-              ),
-              TextField(
-                textAlign: TextAlign.center,
-                controller: nameTextController,
-                onChanged: (value) {
-                  _name = value;
-                },
-                decoration: kTextFieldDecoration.copyWith(
-                  hintText: 'Enter your name',
+                  hintText: 'Password',
                 ),
               ),
               SizedBox(

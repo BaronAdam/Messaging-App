@@ -1,0 +1,20 @@
+#background {
+  height: 100vh;
+  background: rgb(255,255,255);
+  background: linear-gradient(145deg, rgba(255,255,255,1) 25%, rgba(138,214,255,1) 100%);
+}
+
+#card-right {
+  height: 75vh;
+  background: #2CABEE;
+  color: white;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+#card-left {
+  height: 75vh;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+

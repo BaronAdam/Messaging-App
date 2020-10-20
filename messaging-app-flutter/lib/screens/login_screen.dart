@@ -60,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   _login = value;
                 },
                 decoration: kTextFieldDecoration.copyWith(
-                  hintText: 'Enter your login',
+                  hintText: 'Username',
                 ),
               ),
               SizedBox(
@@ -74,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   _password = value;
                 },
                 decoration: kTextFieldDecoration.copyWith(
-                  hintText: 'Enter your password',
+                  hintText: 'Password',
                 ),
               ),
               SizedBox(
