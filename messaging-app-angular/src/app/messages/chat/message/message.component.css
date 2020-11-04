@@ -1,0 +1,22 @@
+.sender {
+  font-size: 10pt;
+  color: #3F3F3F;
+}
+
+.content-white {
+  color: black;
+  border-radius: 0 25px 25px 25px;
+  background-color: white;
+  font-size: 12pt;
+}
+
+.content-color {
+  color: white;
+  border-radius: 25px 0 25px 25px;
+  background-color: #2CABEE;
+  font-size: 12pt;
+}
+
+.message-container {
+  width: 72vw;
+}

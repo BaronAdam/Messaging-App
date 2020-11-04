@@ -1,0 +1,25 @@
+<div class="row m-3 message-container">
+  <div class="col-12">
+    <div class="row w-100 m-0 p-0" *ngIf="isMe">
+      <div class="row w-100 d-flex align-items-center justify-content-end m-0">
+        <div class="sender">
+          {{message.senderName}}
+        </div>
+      </div>
+      <div class="row w-100 d-flex align-items-center justify-content-end m-0">
+        <div class="content-color shadow pr-3 pl-3 pt-1 pb-1">{{message.content}}</div>
+      </div>
+    </div>
+    <div class="row w-100 m-0 p-0" *ngIf="!isMe">
+      <div class="row w-100 d-flex align-items-center justify-content-start m-0">
+        <div class="sender">
+          {{message.senderName}}
+        </div>
+      </div>
+      <div class="row w-100 d-flex align-items-center justify-content-start m-0">
+        <div class="content-white shadow pr-3 pl-3 pt-1 pb-1">{{message.content}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+

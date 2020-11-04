@@ -9,6 +9,15 @@
 #register-button:hover {
   background-color: #2CABEE;
   color: white;
+  outline: 0 none;
+  box-shadow: 0 0 8px white;
+}
+
+#register-button:hover:disabled {
+  background-color: white;
+  color: #2CABEE;
+  outline: 0 none;
+  box-shadow: none;
 }
 
 input, :focus {

@@ -1,0 +1,72 @@
+#top-bar-chat {
+  height: 10vh;
+}
+
+#content-chat {
+  height: 83vh;
+}
+
+#bottom-bar {
+  height: 7vh;
+}
+
+button {
+  background: transparent;
+  border: none;
+  color: #2CABEE;
+  text-align: center;
+  height: 50px;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+button:focus {
+  color: #1C9BDE;
+}
+
+mat-icon {
+  vertical-align: middle;
+  horiz-align: center;
+  color: #1C9BDE;
+}
+
+input {
+  width: 35vw;
+  border-radius: 25px;
+  border-color: #2CABEE;
+}
+
+input:focus, button:focus {
+  outline: 0 none;
+  box-shadow: 0 0 8px #2CABEE;
+}
+
+.title {
+  font-size: xx-large;
+}
+
+#messages {
+  overflow: auto;
+  max-height: 83vh;
+}
+
+#messages::-webkit-scrollbar-track
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  border-radius: 10px;
+  background-color: #F5F5F5;
+}
+
+#messages::-webkit-scrollbar
+{
+  width: 6px;
+  height: 6px;
+  background-color: #F5F5F5;
+}
+
+#messages::-webkit-scrollbar-thumb
+{
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  background-color: #1C9BDE;
+}

@@ -5,6 +5,8 @@ import {AuthService} from './auth.service';
 import {MessageGroup} from './interfaces/message-group';
 import {Constants} from '../constants';
 import {Message} from './interfaces/message';
+import {map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,9 @@ export class MessageService {
   userId: number;
   httpOptions: object;
 
-  constructor(private http: HttpClient, private alertify: AlertifyService) {
+  constructor(private http: HttpClient, private alertify: AlertifyService) {}
+
+  private setUserIdAndToken(): void {
     this.userId = JSON.parse(localStorage.getItem('currentUser')).id;
     this.httpOptions = {
       headers: new HttpHeaders({
@@ -22,7 +26,7 @@ export class MessageService {
     };
   }
 
-  private alertUser(error): void {
+  alertUser(error): void {
     if (error.status === 500) {
       this.alertify.error('There was an server error while processing your request');
     }
@@ -31,38 +35,32 @@ export class MessageService {
     }
   }
 
-  async getChats(): Promise<Array<MessageGroup>> {
+  getChats(): Observable<Array<MessageGroup>> {
+    this.setUserIdAndToken();
     const apiUrl = `${Constants.SERVER_URL}api/users/${this.userId}/messages`;
 
-    this.http.get(apiUrl, this.httpOptions).subscribe((responseData: Array<MessageGroup>) => {
-      return responseData;
-    }, error => {
-      this.alertUser(error);
-    });
-
-    return null;
+    return this.http.get(apiUrl, this.httpOptions)
+      .pipe(map((responseData: Array<MessageGroup>) => {
+        return responseData;
+      }));
   }
 
-  async getMessagesForGroup(groupId: number): Promise<Array<Message>> {
+  getMessagesForGroup(groupId: number): Observable<Array<Message>> {
+    this.setUserIdAndToken();
     const apiUrl = `${Constants.SERVER_URL}api/users/${this.userId}/messages/thread/${groupId}`;
 
-    this.http.get(apiUrl, this.httpOptions).subscribe((responseData: Array<Message>) => {
-      return responseData;
-    }, error => {
-      this.alertUser(error);
-    });
-
-    return null;
+    return this.http.get(apiUrl, this.httpOptions)
+      .pipe(map((responseData: Array<Message>) => {
+        return responseData;
+        })
+      );
   }
 
-  async sendTextMessage(groupId: number, message: string): Promise<boolean> {
+  sendTextMessage(groupId: number, message: string): Observable<void> {
+    this.setUserIdAndToken();
     const apiUrl = `${Constants.SERVER_URL}api/users/${this.userId}/messages`;
 
-    this.http.post(apiUrl, {groupId, content: message, isPhoto: false}, this.httpOptions).subscribe(() => {
-      return true;
-    }, error => {
-      this.alertUser(error);
-    });
-    return false;
+    return this.http.post(apiUrl, {groupId, content: message, isPhoto: false}, this.httpOptions)
+      .pipe(map(() => {}));
   }
 }

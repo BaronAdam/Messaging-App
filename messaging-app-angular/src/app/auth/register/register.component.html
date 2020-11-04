@@ -1,4 +1,4 @@
-<form #loginForm="ngForm" (ngSubmit)="register(loginForm.value)">
+<form #registerForm="ngForm" (ngSubmit)="register(registerForm.value)">
   <div class="row pl-4 pt-5 pr-4">
     <div class="col pl-4">
       <input type="text" class="form-control" id="register-username" required ngModel name="username" placeholder="Username">
@@ -16,7 +16,7 @@
     </div>
   </div>
   <div class="row pl-5 pt-5 pr-5">
-    <button class="btn btn-primary" type="submit" [disabled]="!loginForm.valid" id="register-button">
+    <button class="btn btn-primary" type="submit" [disabled]="!registerForm.valid" id="register-button">
       Register
     </button>
   </div>
