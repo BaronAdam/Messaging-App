@@ -66,25 +66,34 @@ export class AuthService {
 
   private displayErrors(error): void {
     const errors: ErrorResponseRegister = error.error.errors;
-    if (errors.Email != null) {
+    let wasShown = false;
+
+    if (errors?.Email != null) {
       for (const err of errors.Email) {
         this.alertify.error(err);
       }
+      wasShown = true;
     }
-    if (errors.Password != null) {
+    if (errors?.Password != null) {
       for (const err of errors.Password) {
         this.alertify.error(err);
       }
+      wasShown = true;
     }
-    if (errors.Username != null) {
+    if (errors?.Username != null) {
       for (const err of errors.Username) {
         this.alertify.error(err);
       }
+      wasShown = true;
     }
-    if (errors.Name != null) {
+    if (errors?.Name != null) {
       for (const err of errors.Name) {
         this.alertify.error(err);
       }
+      wasShown = true;
+    }
+    if (!wasShown) {
+      this.alertify.error(error.error);
     }
   }
 
@@ -92,7 +101,9 @@ export class AuthService {
     const apiUrl = `${Constants.SERVER_URL}api/auth/register`;
     this.http
       .post(apiUrl, body)
-      .subscribe(() => {}, error => {
+      .subscribe(() => {
+        this.alertify.success('Successfully registered');
+      }, error => {
         if (error.status === 500) {
           this.alertify.error('There was an server error while processing your request');
         }

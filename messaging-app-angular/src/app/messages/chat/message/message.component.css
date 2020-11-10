@@ -7,14 +7,17 @@
   color: black;
   border-radius: 0 25px 25px 25px;
   background-color: white;
+}
+
+.content {
   font-size: 12pt;
+  min-height: 32px;
 }
 
 .content-color {
   color: white;
   border-radius: 25px 0 25px 25px;
   background-color: #2CABEE;
-  font-size: 12pt;
 }
 
 .message-container {

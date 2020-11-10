@@ -4,6 +4,8 @@ import {AlertifyService} from '../services/alertify.service';
 import {AuthService} from './auth.service';
 import {Constants} from '../constants';
 import {User} from './interfaces/user';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +23,7 @@ export class UserService {
     };
   }
 
-  private alertUser(error): void {
+  public alertUser(error): void {
     if (error.status === 500) {
       this.alertify.error('There was an server error while processing your request');
     }
@@ -30,39 +32,28 @@ export class UserService {
     }
   }
 
-  async findUser(searchPhrase: string): Promise<User> {
-    const apiUrl = `${Constants.SERVER_URL}api/users/find${searchPhrase}`;
+  findUser(searchPhrase: string): Observable<User> {
+    const apiUrl = `${Constants.SERVER_URL}api/users/find/${searchPhrase}`;
 
-    this.http.get(apiUrl, this.httpOptions).subscribe((responseData: User) => {
-      return responseData;
-    }, error => {
-      this.alertUser(error);
-    });
-
-    return null;
+    return this.http.get(apiUrl, this.httpOptions)
+      .pipe(map((responseData: User) => {
+        return responseData;
+      }));
   }
 
-  async addFriend(friendId: number): Promise<boolean> {
+  addFriend(friendId: number): Observable<any> {
     const apiUrl = `${Constants.SERVER_URL}api/users/${this.userId}/friend/${friendId}`;
 
-    this.http.post(apiUrl, this.httpOptions).subscribe(() => {
-      return true;
-    }, error => {
-      this.alertUser(error);
-    });
-    return false;
+    return this.http.post(apiUrl, {}, this.httpOptions);
   }
 
-  async getFriends(): Promise<Array<User>> {
+  getFriends(): Observable<Array<User>> {
     const apiUrl = `${Constants.SERVER_URL}api/users/friends/${this.userId}`;
 
-    this.http.get(apiUrl, this.httpOptions).subscribe((responseData: Array<User>) => {
+    return this.http.get(apiUrl, this.httpOptions)
+      .pipe(map((responseData: Array<User>) => {
       return responseData;
-    }, error => {
-      this.alertUser(error);
-    });
-
-    return null;
+    }));
   }
 
   async getUser(userId): Promise<User> {

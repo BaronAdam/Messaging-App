@@ -7,7 +7,10 @@
         </div>
       </div>
       <div class="row w-100 d-flex align-items-center justify-content-end m-0">
-        <div class="content-color shadow pr-3 pl-3 pt-1 pb-1">{{message.content}}</div>
+        <div *ngIf="!message.isPhoto" class="content-color content shadow pr-3 pl-3 pt-1 pb-1">{{message.content}}</div>
+        <div *ngIf="message.isPhoto" class="content-color content shadow pr-3 pl-3 pt-1 pb-1">
+          <img src="{{message.url}}" alt="{{message.content}}">
+        </div>
       </div>
     </div>
     <div class="row w-100 m-0 p-0" *ngIf="!isMe">
@@ -16,8 +19,11 @@
           {{message.senderName}}
         </div>
       </div>
-      <div class="row w-100 d-flex align-items-center justify-content-start m-0">
-        <div class="content-white shadow pr-3 pl-3 pt-1 pb-1">{{message.content}}</div>
+      <div class="row w-75 d-flex align-items-center justify-content-start m-0">
+        <div *ngIf="!message.isPhoto" class="content-white content shadow pr-3 pl-3 pt-1 pb-1">{{message.content}}</div>
+        <div *ngIf="message.isPhoto" class="content-white content shadow pr-3 pl-3 pt-1 pb-1">
+          <img src="{{message.url}}" alt="{{message.content}}">
+        </div>
       </div>
     </div>
   </div>

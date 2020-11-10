@@ -6,14 +6,14 @@ import {
   OnInit,
   Output,
   ViewChild,
-  ViewChildren,
   ViewContainerRef
 } from '@angular/core';
 import {MessageGroup} from '../../../api/interfaces/message-group';
 import {MessageService} from '../../../api/message.service';
 import {GroupComponent} from './group/group.component';
 import {DatePipe} from '@angular/common';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {AddFriendDialogComponent} from './add-friend-dialog/add-friend-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-conversations',
@@ -27,7 +27,8 @@ export class ConversationsComponent implements OnInit {
   @Output() selectedChat = new EventEmitter<MessageGroup>();
   @Input() private sendMessage: EventEmitter<any>;
 
-  constructor(private messageService: MessageService, private resolver: ComponentFactoryResolver, private datePipe: DatePipe) {}
+  constructor(private messageService: MessageService, private resolver: ComponentFactoryResolver, private datePipe: DatePipe,
+              private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.fetchData();
@@ -65,6 +66,6 @@ export class ConversationsComponent implements OnInit {
   }
 
   addFriend(): void {
-
+    const dialogRef = this.dialog.open(AddFriendDialogComponent);
   }
 }

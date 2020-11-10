@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
@@ -16,6 +17,12 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GroupComponent } from './messages/conversations/group/group.component';
 import {DatePipe} from '@angular/common';
 import { MessageComponent } from './messages/chat/message/message.component';
+import { AddFriendDialogComponent } from './messages/conversations/add-friend-dialog/add-friend-dialog.component';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {Overlay} from '@angular/cdk/overlay';
+import {MatFormFieldModule, MatLabel} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+
 
 const appRoutes: Routes = [
   { path: 'messages', component: MessagesComponent },
@@ -33,6 +40,7 @@ const appRoutes: Routes = [
     ChatComponent,
     GroupComponent,
     MessageComponent,
+    AddFriendDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,9 +48,13 @@ const appRoutes: Routes = [
     FormsModule,
     RouterModule.forRoot(appRoutes),
     MatIconModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatButtonModule,
     NoopAnimationsModule,
+    MatDialogModule,
   ],
-  providers: [DatePipe],
+  providers: [DatePipe, MatDialog, Overlay],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
