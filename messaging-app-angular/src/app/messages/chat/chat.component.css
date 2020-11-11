@@ -10,24 +10,34 @@
   height: 7vh;
 }
 
-button {
+.button-blue {
+  color: #2CABEE;
+}
+
+.button-blue:focus {
+  color: #1C9BDE;
+}
+
+.button-base {
   background: transparent;
   border: none;
-  color: #2CABEE;
   text-align: center;
   height: 50px;
   outline: 0 !important;
   box-shadow: none !important;
 }
 
-button:focus {
-  color: #1C9BDE;
+.button-red {
+  color: red;
+}
+
+.button-red:focus {
+  color: red;
 }
 
 mat-icon {
   vertical-align: middle;
   horiz-align: center;
-  color: #1C9BDE;
 }
 
 input {

@@ -1,0 +1,12 @@
+<div class="dialog-container">
+  <h1 mat-dialog-title>Change Name</h1>
+  <form #changeGroupForm="ngForm" (ngSubmit)="changeName(changeGroupForm.value)">
+    <div class="col">
+      <input class="form-control mb-2 mt-2" cdkFocusInitial id="groupName" ngModel name="groupName" placeholder="Enter group name">
+      <div class="justify-content-center" mat-dialog-actions>
+        <button class="btn btn-primary mb-4" id="button" type="submit" [disabled]="!changeGroupForm.valid">Apply</button>
+      </div>
+    </div>
+  </form>
+</div>
+

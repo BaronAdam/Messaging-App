@@ -1,0 +1,21 @@
+<div class="dialog-container">
+  <h1 mat-dialog-title>Set Admins</h1>
+  <div *ngIf="admins !== undefined && members !== undefined">
+    <div class="row" *ngFor="let member of members">
+      <div class="col">
+        <div class="row pl-2 mr-2">
+          <div class="col-11 name ">{{member.name}}</div>
+          <div class="col-1 add-icon">
+            <button *ngIf="!admins.includes(member.id)" class="button-add" (click)="setAdmin(member.id)">
+              <mat-icon style="color: green">add</mat-icon>
+            </button>
+            <button *ngIf="admins.includes(member.id)" class="button-add" (click)="setAdmin(member.id)">
+              <mat-icon style="color: red">remove</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="row pl-4 small-text">{{member.username}}</div>
+      </div>
+    </div>
+  </div>
+</div>

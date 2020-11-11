@@ -22,6 +22,10 @@ import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import {Overlay} from '@angular/cdk/overlay';
 import {MatFormFieldModule, MatLabel} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
+import { AddGroupDialogComponent } from './messages/conversations/add-group-dialog/add-group-dialog.component';
+import { ChangeGroupNameDialogComponent } from './messages/chat/change-group-name-dialog/change-group-name-dialog.component';
+import { AddFriendToGroupDialogComponent } from './messages/chat/add-friend-to-group-dialog/add-friend-to-group-dialog.component';
+import { SetAdminsInGroupComponent } from './messages/chat/set-admins-in-group-dialog/set-admins-in-group.component';
 
 
 const appRoutes: Routes = [
@@ -41,6 +45,10 @@ const appRoutes: Routes = [
     GroupComponent,
     MessageComponent,
     AddFriendDialogComponent,
+    AddGroupDialogComponent,
+    ChangeGroupNameDialogComponent,
+    AddFriendToGroupDialogComponent,
+    SetAdminsInGroupComponent,
   ],
   imports: [
     BrowserModule,

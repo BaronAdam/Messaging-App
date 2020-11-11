@@ -1,0 +1,17 @@
+<div class="dialog-container">
+  <h1 mat-dialog-title>Add Friend</h1>
+  <div *ngIf="members !== undefined && friends !== undefined">
+    <div class="row" *ngFor="let friend of friends">
+      <div class="col">
+        <div class="row pl-2 mr-2">
+          <div class="col-11 name ">{{friend.name}}</div>
+          <div class="col-1 add-icon">
+            <button *ngIf="!members.includes(friend.id)" class="button-add" (click)="addToGroup(friend.id)"><mat-icon >add</mat-icon></button>
+            <button *ngIf="members.includes(friend.id)" class="button-add" disabled><mat-icon>done</mat-icon></button>
+          </div>
+        </div>
+        <div class="row pl-4 small-text">{{friend.username}}</div>
+      </div>
+    </div>
+  </div>
+</div>

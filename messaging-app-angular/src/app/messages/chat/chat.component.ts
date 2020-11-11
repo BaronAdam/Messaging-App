@@ -14,6 +14,11 @@ import {MessageService} from '../../../api/message.service';
 import {Message} from '../../../api/interfaces/message';
 import {MessageComponent} from './message/message.component';
 import {delay} from 'rxjs/operators';
+import {Router} from '@angular/router';
+import {MatDialog} from '@angular/material/dialog';
+import {ChangeGroupNameDialogComponent} from './change-group-name-dialog/change-group-name-dialog.component';
+import {AddFriendToGroupDialogComponent} from './add-friend-to-group-dialog/add-friend-to-group-dialog.component';
+import {SetAdminsInGroupComponent} from './set-admins-in-group-dialog/set-admins-in-group.component';
 
 @Component({
   selector: 'app-chat',
@@ -28,7 +33,8 @@ export class ChatComponent implements OnInit {
   @ViewChild('messagesContainer') scrollContainer: ElementRef;
   @Output() messageSent = new EventEmitter<any>();
 
-  constructor(private messageService: MessageService, private resolver: ComponentFactoryResolver) {}
+  constructor(private messageService: MessageService, private resolver: ComponentFactoryResolver, private router: Router,
+              private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.fetchData();
@@ -76,5 +82,25 @@ export class ChatComponent implements OnInit {
         left: 0
         });
     } catch (err) { }
+  }
+
+  logOut(): void {
+    localStorage.clear();
+    this.router.navigate(['/']);
+  }
+
+  changeName(): void {
+    this.dialog.open(ChangeGroupNameDialogComponent, {data: {id: this.group.id}}).afterClosed()
+      .subscribe(() => {
+      setTimeout(() => this.refresh(), 100);
+    });
+  }
+
+  addFriendToGroup(): void {
+    this.dialog.open(AddFriendToGroupDialogComponent, {data: {id: this.group.id}});
+  }
+
+  setAdmins(): void {
+    this.dialog.open(SetAdminsInGroupComponent, {data: {id: this.group.id}});
   }
 }

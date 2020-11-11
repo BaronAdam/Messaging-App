@@ -3,6 +3,8 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {AlertifyService} from '../services/alertify.service';
 import {AuthService} from './auth.service';
 import {Constants} from '../constants';
+import {map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +13,9 @@ export class GroupService {
   userId: number;
   httpOptions: object;
 
-  constructor(private http: HttpClient, private alertify: AlertifyService) {
+  constructor(private http: HttpClient, private alertify: AlertifyService) {}
+
+  setVariables(): void {
     this.userId = JSON.parse(localStorage.getItem('currentUser')).id;
     this.httpOptions = {
       headers: new HttpHeaders({
@@ -19,7 +23,8 @@ export class GroupService {
       })
     };
   }
-  private alertUser(error): void {
+
+  alertUser(error): void {
     if (error.status === 500) {
       this.alertify.error('There was an server error while processing your request');
     }
@@ -28,7 +33,8 @@ export class GroupService {
     }
   }
 
-  async addGroup(name: string): Promise<boolean> {
+  addGroup(name: string): void {
+    this.setVariables();
     const apiUrl = `${Constants.SERVER_URL}api/users/${this.userId}/group/add`;
 
     this.http.post(apiUrl, {name}, this.httpOptions).subscribe(() => {
@@ -36,67 +42,53 @@ export class GroupService {
     }, error => {
       this.alertUser(error);
     });
-
-    return false;
   }
 
-  async editGroupName(id: number, name: string): Promise<boolean> {
+  editGroupName(id: number, name: string): void {
+    this.setVariables();
     const apiUrl = `${Constants.SERVER_URL}api/users/${this.userId}/group`;
 
-    this.http.post(apiUrl, {id, name}, this.httpOptions).subscribe(() => {
-      return true;
+    this.http.patch(apiUrl, {id, name}, this.httpOptions)
+      .subscribe(() => {
     }, error => {
       this.alertUser(error);
     });
-
-    return false;
   }
 
-  async getMembersForGroup(groupId: number): Promise<Array<number>> {
+  getMembersForGroup(groupId: number): Observable<Array<number>> {
+    this.setVariables();
     const apiUrl = `${Constants.SERVER_URL}api/users/${this.userId}/group/members/id/${groupId}`;
 
-    this.http.get(apiUrl, this.httpOptions).subscribe((responseData: Array<number>) => {
-      return responseData;
-    }, error => {
-      this.alertUser(error);
-    });
-
-    return null;
+    return this.http.get(apiUrl, this.httpOptions)
+      .pipe(map((responseData: Array<number>) => {
+        return responseData;
+      }));
   }
 
-  async addMembersToGroup(groupId: number, userIds: Array<number>): Promise<boolean> {
+  addMembersToGroup(groupId: number, userIds: Array<number>): Observable<any> {
+    this.setVariables();
     const apiUrl = `${Constants.SERVER_URL}api/users/${this.userId}/group/add/${groupId}`;
 
-    this.http.post(apiUrl, {ids: userIds}, this.httpOptions).subscribe(() => {
-      return true;
-    }, error => {
-      this.alertUser(error);
-    });
-
-    return false;
+    return this.http.post(apiUrl, {ids: userIds}, this.httpOptions);
   }
 
-  async getAdminsForGroup(groupId: number): Promise<Array<number>> {
+  getAdminsForGroup(groupId: number): Observable<Array<number>> {
+    this.setVariables();
     const apiUrl = `${Constants.SERVER_URL}api/users/${this.userId}/group/members/admins/${groupId}`;
 
-    this.http.get(apiUrl, this.httpOptions).subscribe((responseData: Array<number>) => {
-      return responseData;
-    }, error => {
-      this.alertUser(error);
-    });
-
-    return null;
+    return this.http.get(apiUrl, this.httpOptions)
+      .pipe(map((responseData: Array<number>) => {
+        return responseData;
+      }));
   }
 
-  async changeAdminStatus(memberId: number, groupId: number): Promise<boolean> {
+  changeAdminStatus(memberId: number, groupId: number): void {
+    this.setVariables();
     const apiUrl = `${Constants.SERVER_URL}api/users/${this.userId}/group/admin`;
 
-    this.http.post(apiUrl, {userId: memberId, groupId}, this.httpOptions).subscribe(() => {
-      return true;
-    }, error => {
+    this.http.patch(apiUrl, {userId: memberId, groupId}, this.httpOptions)
+      .subscribe(() => {}, error => {
       this.alertUser(error);
     });
-
-    return false;
   }
 }

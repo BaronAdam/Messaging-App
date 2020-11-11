@@ -13,7 +13,7 @@ export class AddFriendDialogComponent implements OnInit {
   public user: User = undefined;
   public isInFriends: boolean = undefined;
 
-  constructor(public dialogRef: MatDialogRef<AddFriendDialogComponent>, private userService: UserService) { }
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
   }
@@ -21,7 +21,6 @@ export class AddFriendDialogComponent implements OnInit {
   search(formData: {searchPhrase: string}): void {
     this.searchString = formData.searchPhrase;
     this.findUser();
-
   }
 
   findUser(): void {

@@ -14,6 +14,7 @@ import {GroupComponent} from './group/group.component';
 import {DatePipe} from '@angular/common';
 import {AddFriendDialogComponent} from './add-friend-dialog/add-friend-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
+import {AddGroupDialogComponent} from './add-group-dialog/add-group-dialog.component';
 
 @Component({
   selector: 'app-conversations',
@@ -66,6 +67,14 @@ export class ConversationsComponent implements OnInit {
   }
 
   addFriend(): void {
-    const dialogRef = this.dialog.open(AddFriendDialogComponent);
+    this.dialog.open(AddFriendDialogComponent).afterClosed().subscribe(() => {
+      setTimeout(() => this.fetchData(), 100);
+    });
+  }
+
+  addGroup(): void {
+    this.dialog.open(AddGroupDialogComponent).afterClosed().subscribe(() => {
+      setTimeout(() => this.fetchData(), 100);
+    });
   }
 }

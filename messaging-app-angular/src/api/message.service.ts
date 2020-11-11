@@ -17,7 +17,7 @@ export class MessageService {
 
   constructor(private http: HttpClient, private alertify: AlertifyService) {}
 
-  private setUserIdAndToken(): void {
+  setVariables(): void {
     this.userId = JSON.parse(localStorage.getItem('currentUser')).id;
     this.httpOptions = {
       headers: new HttpHeaders({
@@ -36,7 +36,7 @@ export class MessageService {
   }
 
   getChats(): Observable<Array<MessageGroup>> {
-    this.setUserIdAndToken();
+    this.setVariables();
     const apiUrl = `${Constants.SERVER_URL}api/users/${this.userId}/messages`;
 
     return this.http.get(apiUrl, this.httpOptions)
@@ -46,7 +46,7 @@ export class MessageService {
   }
 
   getMessagesForGroup(groupId: number): Observable<Array<Message>> {
-    this.setUserIdAndToken();
+    this.setVariables();
     const apiUrl = `${Constants.SERVER_URL}api/users/${this.userId}/messages/thread/${groupId}`;
 
     return this.http.get(apiUrl, this.httpOptions)
@@ -57,7 +57,7 @@ export class MessageService {
   }
 
   sendTextMessage(groupId: number, message: string): Observable<void> {
-    this.setUserIdAndToken();
+    this.setVariables();
     const apiUrl = `${Constants.SERVER_URL}api/users/${this.userId}/messages`;
 
     return this.http.post(apiUrl, {groupId, content: message, isPhoto: false}, this.httpOptions)

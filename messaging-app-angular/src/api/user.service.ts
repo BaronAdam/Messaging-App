@@ -14,7 +14,9 @@ export class UserService {
   userId: number;
   httpOptions: object;
 
-  constructor(private http: HttpClient, private alertify: AlertifyService) {
+  constructor(private http: HttpClient, private alertify: AlertifyService) {}
+
+  setVariables(): void {
     this.userId = JSON.parse(localStorage.getItem('currentUser')).id;
     this.httpOptions = {
       headers: new HttpHeaders({
@@ -33,6 +35,7 @@ export class UserService {
   }
 
   findUser(searchPhrase: string): Observable<User> {
+    this.setVariables();
     const apiUrl = `${Constants.SERVER_URL}api/users/find/${searchPhrase}`;
 
     return this.http.get(apiUrl, this.httpOptions)
@@ -42,12 +45,14 @@ export class UserService {
   }
 
   addFriend(friendId: number): Observable<any> {
+    this.setVariables();
     const apiUrl = `${Constants.SERVER_URL}api/users/${this.userId}/friend/${friendId}`;
 
     return this.http.post(apiUrl, {}, this.httpOptions);
   }
 
   getFriends(): Observable<Array<User>> {
+    this.setVariables();
     const apiUrl = `${Constants.SERVER_URL}api/users/friends/${this.userId}`;
 
     return this.http.get(apiUrl, this.httpOptions)
@@ -56,15 +61,13 @@ export class UserService {
     }));
   }
 
-  async getUser(userId): Promise<User> {
+  getUser(userId): Observable<User> {
+    this.setVariables();
     const apiUrl = `${Constants.SERVER_URL}api/users/${userId}`;
 
-    this.http.get(apiUrl, this.httpOptions).subscribe((responseData: User) => {
-      return responseData;
-    }, error => {
-      this.alertUser(error);
-    });
-
-    return null;
+    return this.http.get(apiUrl, this.httpOptions)
+      .pipe(map((responseData: User) => {
+        return responseData;
+      }));
   }
 }

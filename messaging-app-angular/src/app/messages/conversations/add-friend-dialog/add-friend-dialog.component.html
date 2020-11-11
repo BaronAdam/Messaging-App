@@ -2,7 +2,7 @@
   <h1 mat-dialog-title>Add Friend</h1>
   <form #searchForm="ngForm" (ngSubmit)="search(searchForm.value)">
     <div class="col">
-      <input class="form-control mb-2 mt-2" [(ngModel)]="searchString" cdkFocusInitial name="searchPhrase" placeholder="Enter username or email address">
+      <input class="form-control mb-2 mt-2" cdkFocusInitial ngModel id="searchPhrase" name="searchPhrase" placeholder="Enter username or email address">
       <div class="justify-content-center" mat-dialog-actions>
         <button class="btn btn-primary mb-4" id="button" type="submit" [disabled]="!searchForm.valid">Search</button>
       </div>
