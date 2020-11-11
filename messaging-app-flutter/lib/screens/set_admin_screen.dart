@@ -46,7 +46,7 @@ class _SetAdminScreenState extends State<SetAdminScreen> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Colors.black,
+            color: kAppColor,
           ),
           onPressed: () {
             Navigator.pop(context);

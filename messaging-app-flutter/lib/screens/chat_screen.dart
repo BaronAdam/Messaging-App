@@ -98,7 +98,7 @@ class _ChatScreenState extends State<ChatScreen> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Colors.black,
+            color: kAppColor,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -107,7 +107,10 @@ class _ChatScreenState extends State<ChatScreen> {
         actions: [
           isGroup
               ? IconButton(
-                  icon: Icon(Icons.person_add),
+                  icon: Icon(
+                    Icons.person_add,
+                    color: kAppColor,
+                  ),
                   onPressed: () {
                     Navigator.pushNamed(
                       context,
@@ -120,7 +123,10 @@ class _ChatScreenState extends State<ChatScreen> {
               : Container(),
           isGroup
               ? IconButton(
-                  icon: Icon(Icons.admin_panel_settings),
+                  icon: Icon(
+                    Icons.admin_panel_settings,
+                    color: kAppColor,
+                  ),
                   onPressed: () {
                     Navigator.pushNamed(
                       context,
@@ -133,13 +139,19 @@ class _ChatScreenState extends State<ChatScreen> {
               : Container(),
           isGroup
               ? IconButton(
-                  icon: Icon(Icons.edit),
+                  icon: Icon(
+                    Icons.edit,
+                    color: kAppColor,
+                  ),
                   onPressed: () {
                     editGroup();
                   },
                 )
               : IconButton(
-                  icon: Icon(Icons.phone),
+                  icon: Icon(
+                    Icons.phone,
+                    color: kAppColor,
+                  ),
                   onPressed: () async {
                     var response =
                         await Group.getMembersForGroup(userId, groupId, token);
@@ -190,7 +202,10 @@ class _ChatScreenState extends State<ChatScreen> {
                   },
                 ),
           IconButton(
-            icon: Icon(Icons.refresh),
+            icon: Icon(
+              Icons.refresh,
+              color: kAppColor,
+            ),
             onPressed: () async {
               var response = await Messages.getMessagesForGroup(
                 userId,

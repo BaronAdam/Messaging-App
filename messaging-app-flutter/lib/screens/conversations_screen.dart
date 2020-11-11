@@ -63,7 +63,7 @@ class _ConversationsScreen extends State<ConversationsScreen> {
         leading: IconButton(
           icon: Icon(
             Icons.exit_to_app,
-            color: Colors.black,
+            color: Colors.red,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -77,7 +77,10 @@ class _ConversationsScreen extends State<ConversationsScreen> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.person_add),
+            icon: Icon(
+              Icons.person_add,
+              color: kAppColor,
+            ),
             onPressed: () {
               Navigator.pushNamed(
                 context,
@@ -87,7 +90,10 @@ class _ConversationsScreen extends State<ConversationsScreen> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.refresh),
+            icon: Icon(
+              Icons.refresh,
+              color: kAppColor,
+            ),
             onPressed: () async {
               var result = await Messages.getChats(
                 userId,
@@ -102,7 +108,10 @@ class _ConversationsScreen extends State<ConversationsScreen> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.add),
+            icon: Icon(
+              Icons.add,
+              color: kAppColor,
+            ),
             onPressed: () async {
               await createGroup(userId, token, context);
               var result = await Messages.getChats(
