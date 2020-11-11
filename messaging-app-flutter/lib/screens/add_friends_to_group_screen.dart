@@ -225,13 +225,6 @@ class _UserBuilderState extends State<UserBuilder> {
           ],
         ),
         Text(friend.username),
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Divider(
-            color: Colors.black87,
-            thickness: 0.5,
-          ),
-        )
       ],
     );
   }

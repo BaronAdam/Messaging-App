@@ -62,7 +62,7 @@ class _ConversationsScreen extends State<ConversationsScreen> {
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: Icon(
-            Icons.close,
+            Icons.exit_to_app,
             color: Colors.black,
           ),
           onPressed: () {
