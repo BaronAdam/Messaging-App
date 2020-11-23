@@ -1,8 +1,8 @@
 <div class="row shadow-sm" id="top-bar-chat">
-  <div class="col-6 h-100 bg-white d-flex title align-items-center">{{group.name}}</div>
-  <div class="col-6 h-100 bg-white d-flex align-items-center justify-content-end">
+  <div class="col-4 h-100 bg-white d-flex title align-items-center">{{group.name}}</div>
+  <div class="col-8 h-100 bg-white d-flex align-items-center justify-content-end">
     <div class="row" *ngIf="!group.isGroup">
-      <button class="m-2 button-base button-blue" id="call">
+      <button class="m-2 button-base button-blue" id="call" (click)="callUser()">
         <mat-icon>call</mat-icon>
         Call User
       </button>

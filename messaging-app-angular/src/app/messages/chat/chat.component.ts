@@ -19,6 +19,8 @@ import {MatDialog} from '@angular/material/dialog';
 import {ChangeGroupNameDialogComponent} from './change-group-name-dialog/change-group-name-dialog.component';
 import {AddFriendToGroupDialogComponent} from './add-friend-to-group-dialog/add-friend-to-group-dialog.component';
 import {SetAdminsInGroupComponent} from './set-admins-in-group-dialog/set-admins-in-group.component';
+import {GroupService} from '../../../api/group.service';
+import {CallDialogComponent} from './call-dialog/call-dialog.component';
 
 @Component({
   selector: 'app-chat',
@@ -34,7 +36,7 @@ export class ChatComponent implements OnInit {
   @Output() messageSent = new EventEmitter<any>();
 
   constructor(private messageService: MessageService, private resolver: ComponentFactoryResolver, private router: Router,
-              private dialog: MatDialog) {}
+              private dialog: MatDialog, private groupService: GroupService) {}
 
   ngOnInit(): void {
     this.fetchData();
@@ -102,5 +104,21 @@ export class ChatComponent implements OnInit {
 
   setAdmins(): void {
     this.dialog.open(SetAdminsInGroupComponent, {data: {id: this.group.id}});
+  }
+
+  callUser(): void {
+    this.groupService.getMembersForGroup(this.group.id)
+      .subscribe((responseData: Array<number>) => {
+        for (const id of responseData) {
+          if (id !== parseInt(JSON.parse(localStorage.getItem('currentUser')).id, 10)) {
+            this.dialog.open(CallDialogComponent, {
+              data: {id, name: this.group.name},
+              disableClose: true,
+              panelClass: 'call-dialog-container' });
+          }
+        }
+      }, error => {
+        this.groupService.alertUser(error);
+      });
   }
 }

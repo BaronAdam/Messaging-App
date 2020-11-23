@@ -4,3 +4,13 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.call-dialog-container .mat-dialog-container {
+  background: rgb(183,28,28);
+  background: linear-gradient(45deg, rgba(183,28,28,1) 0%, rgba(26,35,126,1) 100%);
+}
+
+.mat-dialog-container {
+  border-radius: 25px !important;
+}

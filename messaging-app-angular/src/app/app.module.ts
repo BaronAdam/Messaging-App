@@ -26,6 +26,7 @@ import { AddGroupDialogComponent } from './messages/conversations/add-group-dial
 import { ChangeGroupNameDialogComponent } from './messages/chat/change-group-name-dialog/change-group-name-dialog.component';
 import { AddFriendToGroupDialogComponent } from './messages/chat/add-friend-to-group-dialog/add-friend-to-group-dialog.component';
 import { SetAdminsInGroupComponent } from './messages/chat/set-admins-in-group-dialog/set-admins-in-group.component';
+import { CallDialogComponent } from './messages/chat/call-dialog/call-dialog.component';
 
 
 const appRoutes: Routes = [
@@ -49,6 +50,7 @@ const appRoutes: Routes = [
     ChangeGroupNameDialogComponent,
     AddFriendToGroupDialogComponent,
     SetAdminsInGroupComponent,
+    CallDialogComponent,
   ],
   imports: [
     BrowserModule,
