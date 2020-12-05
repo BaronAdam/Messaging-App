@@ -63,4 +63,15 @@ export class MessageService {
     return this.http.post(apiUrl, {groupId, content: message, isPhoto: false}, this.httpOptions)
       .pipe(map(() => {}));
   }
+
+  sendImage(groupId: number, file: File): Observable<void> {
+    this.setVariables();
+    const apiUrl = `${Constants.SERVER_URL}api/users/${this.userId}/messages/file`;
+    const data = new FormData();
+    data.append('groupId', groupId.toString());
+    data.append('file', file);
+
+    return this.http.post(apiUrl, data, this.httpOptions)
+      .pipe(map(() => {}));
+  }
 }

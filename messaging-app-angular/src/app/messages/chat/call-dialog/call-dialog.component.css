@@ -1,5 +1,5 @@
 .dialog-container {
-  width: 280px;
+  width: 350px;
   color: white;
 }
 
@@ -20,11 +20,11 @@ mat-dialog-content {
 }
 
 .spacer {
-  height: 150px;
+  height: 270px;
 }
 
 .spacer-small {
-  height: 50px;
+  height: 70px;
 }
 
 .button-hangup {

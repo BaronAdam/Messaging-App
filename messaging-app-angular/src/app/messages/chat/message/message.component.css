@@ -23,3 +23,8 @@
 .message-container {
   width: 72vw;
 }
+
+img {
+  max-width: 50vw !important;
+  max-height: 40vh !important;
+}

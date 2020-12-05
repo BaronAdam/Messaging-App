@@ -121,4 +121,15 @@ export class ChatComponent implements OnInit {
         this.groupService.alertUser(error);
       });
   }
+
+  fileChanged(event): void {
+    const file = event.target.files[0];
+
+    this.messageService.sendImage(this.group.id, file).subscribe(() => {
+      this.refresh();
+    }, error => {
+      console.log(error)
+      this.messageService.alertUser(error);
+    });
+  }
 }
