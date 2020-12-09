@@ -29,11 +29,13 @@ import { SetAdminsInGroupComponent } from './messages/chat/set-admins-in-group-d
 import { CallDialogComponent } from './messages/chat/call-dialog/call-dialog.component';
 import { PictureDialogComponent } from './messages/chat/picture-dialog/picture-dialog.component';
 import { AnswerCallDialogComponent } from './messages/chat/answer-call-dialog/answer-call-dialog.component';
+import { MobileComponent } from './mobile/mobile.component';
 
 
 const appRoutes: Routes = [
   { path: 'messages', component: MessagesComponent },
-  { path: '', component: AuthComponent }
+  { path: '', component: AuthComponent },
+  { path: 'mobile', component: MobileComponent }
 ];
 
 @NgModule({
@@ -55,6 +57,7 @@ const appRoutes: Routes = [
     CallDialogComponent,
     PictureDialogComponent,
     AnswerCallDialogComponent,
+    MobileComponent,
   ],
   imports: [
     BrowserModule,
