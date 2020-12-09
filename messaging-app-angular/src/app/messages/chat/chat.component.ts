@@ -21,6 +21,7 @@ import {AddFriendToGroupDialogComponent} from './add-friend-to-group-dialog/add-
 import {SetAdminsInGroupComponent} from './set-admins-in-group-dialog/set-admins-in-group.component';
 import {GroupService} from '../../../api/group.service';
 import {CallDialogComponent} from './call-dialog/call-dialog.component';
+import {HubConnectionService} from '../../../api/hub-connection.service';
 
 @Component({
   selector: 'app-chat',
@@ -36,7 +37,7 @@ export class ChatComponent implements OnInit {
   @Output() messageSent = new EventEmitter<any>();
 
   constructor(private messageService: MessageService, private resolver: ComponentFactoryResolver, private router: Router,
-              private dialog: MatDialog, private groupService: GroupService) {}
+              private dialog: MatDialog, private groupService: GroupService, private hubService: HubConnectionService) {}
 
   ngOnInit(): void {
     this.fetchData();
@@ -88,6 +89,9 @@ export class ChatComponent implements OnInit {
 
   logOut(): void {
     localStorage.clear();
+
+    this.hubService.close();
+
     this.router.navigate(['/']);
   }
 
@@ -112,7 +116,7 @@ export class ChatComponent implements OnInit {
         for (const id of responseData) {
           if (id !== parseInt(JSON.parse(localStorage.getItem('currentUser')).id, 10)) {
             this.dialog.open(CallDialogComponent, {
-              data: {id, name: this.group.name},
+              data: {id, name: this.group.name, isNewCall: true},
               disableClose: true,
               panelClass: 'call-dialog-container' });
           }

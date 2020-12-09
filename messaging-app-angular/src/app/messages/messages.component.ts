@@ -2,8 +2,8 @@ import {Component, ComponentFactoryResolver, ComponentRef, EventEmitter, OnInit,
 import {AuthService} from '../../api/auth.service';
 import {Router} from '@angular/router';
 import {MessageGroup} from '../../api/interfaces/message-group';
-import {GroupComponent} from './conversations/group/group.component';
 import {ChatComponent} from './chat/chat.component';
+import {HubConnectionService} from '../../api/hub-connection.service';
 
 @Component({
   selector: 'app-messages',
@@ -16,12 +16,14 @@ export class MessagesComponent implements OnInit {
   @ViewChild('chat', { read: ViewContainerRef }) container;
   public sendMessage: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(private router: Router, private resolver: ComponentFactoryResolver) { }
+  constructor(private router: Router, private resolver: ComponentFactoryResolver, private hubService: HubConnectionService) { }
 
   ngOnInit(): void {
     if (AuthService.getToken() == null) {
       this.router.navigate(['/']);
     }
+    
+    this.hubService.startConnection();
   }
 
   onSelectedGroup(selectedGroup: MessageGroup): void {

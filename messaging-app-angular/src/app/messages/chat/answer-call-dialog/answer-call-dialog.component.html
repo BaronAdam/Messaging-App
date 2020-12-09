@@ -1,0 +1,22 @@
+<div class="dialog-container">
+  <div class="col">
+    <div class="spacer-small"></div>
+    <div class="row name justify-content-center">
+      {{data.name}}
+    </div>
+    <div class="row time justify-content-center">
+      Incoming call
+    </div>
+    <div class="spacer"></div>
+    <div class="row buttons justify-content-center">
+      <button class="button-hangup button-base" (click)="endCall()">
+        <mat-icon>call_end</mat-icon>
+      </button>
+      <div class="horizontal-spacer"></div>
+      <button class="button-answer button-base" (click)="answerCall()">
+        <mat-icon>call</mat-icon>
+      </button>
+    </div>
+    <div class="spacer-small"></div>
+  </div>
+</div>

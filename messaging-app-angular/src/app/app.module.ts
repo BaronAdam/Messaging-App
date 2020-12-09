@@ -28,6 +28,7 @@ import { AddFriendToGroupDialogComponent } from './messages/chat/add-friend-to-g
 import { SetAdminsInGroupComponent } from './messages/chat/set-admins-in-group-dialog/set-admins-in-group.component';
 import { CallDialogComponent } from './messages/chat/call-dialog/call-dialog.component';
 import { PictureDialogComponent } from './messages/chat/picture-dialog/picture-dialog.component';
+import { AnswerCallDialogComponent } from './messages/chat/answer-call-dialog/answer-call-dialog.component';
 
 
 const appRoutes: Routes = [
@@ -53,6 +54,7 @@ const appRoutes: Routes = [
     SetAdminsInGroupComponent,
     CallDialogComponent,
     PictureDialogComponent,
+    AnswerCallDialogComponent,
   ],
   imports: [
     BrowserModule,
