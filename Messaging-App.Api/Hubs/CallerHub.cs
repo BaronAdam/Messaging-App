@@ -119,7 +119,14 @@ namespace Messaging_App.Api.Hubs
                 return;
             }
 
-            _callOffers.RemoveAll(c => c.Caller.ConnectionId == targetUser.ConnectionId);
+            try
+            {
+                _callOffers.RemoveAll(c => c.Caller.ConnectionId == targetUser.ConnectionId);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
 
             _userCalls.Add(new UserCall
             {
@@ -148,8 +155,7 @@ namespace Messaging_App.Api.Hubs
                 await Clients.Caller.CallDeclined(null, "The user you called has left.");
                 return;
             }
-
-
+            
             var callingUser = _users.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
             var targetUser = _users.SingleOrDefault(u => u.ConnectionId == targetConnectionId);
 
@@ -178,7 +184,14 @@ namespace Messaging_App.Api.Hubs
                 if (currentCall.Users.Count < 2) _userCalls.Remove(currentCall);
             }
 
-            _callOffers.RemoveAll(c => c.Caller.ConnectionId == callingUser.ConnectionId);
+            try
+            {
+                _callOffers.RemoveAll(c => c.Caller.ConnectionId == callingUser.ConnectionId);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private UserCall GetUserCall(string id)
