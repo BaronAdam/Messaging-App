@@ -123,14 +123,14 @@ namespace Messaging_App.Api.Controllers
         }
 
         [HttpGet("friends/{userId}")]
-        [ProducesResponseType(typeof(UserForListDto), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(List<UserForListDto>), (int) HttpStatusCode.OK)]
         [ProducesResponseType((int) HttpStatusCode.Unauthorized)]
         [ProducesResponseType((int) HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> GetFriends(int userId)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
             
-            var friendIds = await _userRepository.GetUserContacts(userId, true);
+            var friendIds = await _userRepository.GetUserContacts(userId, false);
             
             var friends = new List<UserForSingleDto>();
 

@@ -1,0 +1,66 @@
+<div class="row shadow-sm" id="top-bar-chat">
+  <div class="col-4 h-100 bg-white d-flex title align-items-center">{{group.name}}</div>
+  <div class="col-8 h-100 bg-white d-flex align-items-center justify-content-end">
+    <div class="row" *ngIf="!group.isGroup">
+      <button class="m-2 button-base button-blue" id="call" (click)="callUser()">
+        <mat-icon>call</mat-icon>
+        Call User
+      </button>
+    </div>
+    <div class="row" *ngIf="group.isGroup">
+      <button class="m-2 button-base button-blue" id="add-users" (click)="addFriendToGroup()">
+        <mat-icon>person_add</mat-icon>
+        Add Users
+      </button>
+      <button class="m-2 button-base button-blue" id="set-admins" (click)="setAdmins()">
+        <mat-icon>admin_panel_settings</mat-icon>
+        Set Admins
+      </button>
+      <button class="m-2 button-base button-blue" id="edit-name" (click)="changeName()">
+        <mat-icon>create</mat-icon>
+        Edit Name
+      </button>
+    </div>
+    <button class="m-2 button-base button-blue" id="refresh" (click)="refresh()">
+      <mat-icon>refresh</mat-icon>
+      Refresh
+    </button>
+    <button class="m-2 button-base button-red" id="logOut" (click)="logOut()">
+      <mat-icon>exit_to_app</mat-icon>
+      Log Out
+    </button>
+  </div>
+</div>
+<div class="row shadow-sm" id="content-chat">
+  <div class="col overflow-auto" id="messages" #messagesContainer>
+    <div class="row" #messages></div>
+  </div>
+</div>
+<form #sendMessageForm="ngForm" (ngSubmit)="sendTextMessage(sendMessageForm.value)">
+  <div class="row shadow-sm" id="bottom-bar">
+    <div class="col-3">
+      <div class="d-flex h-100 w-100 align-items-center justify-content-end">
+        <input
+          style="display: none"
+          type="file" (change)="fileChanged($event)"
+          accept="image/*"
+          #fileInput>
+        <button class="button-blue button-base" id="send-photo" type="button" (click)="fileInput.click()">
+          <mat-icon>photo</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="d-flex w-100 h-100 align-items-center justify-content-center">
+        <input type="text" class="form-control" id="message" required ngModel name="message" #textMessage placeholder="Type Your message here!">
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="d-flex h-100 align-items-center">
+        <button class="button-blue button-base" type="submit" [disabled]="!sendMessageForm.valid" id="send-button">
+          <mat-icon>send</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</form>

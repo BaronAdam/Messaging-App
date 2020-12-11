@@ -46,7 +46,7 @@ class _AddFriendsToGroupScreenState extends State<AddFriendsToGroupScreen> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Colors.black,
+            color: kAppColor,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -225,13 +225,6 @@ class _UserBuilderState extends State<UserBuilder> {
           ],
         ),
         Text(friend.username),
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Divider(
-            color: Colors.black87,
-            thickness: 0.5,
-          ),
-        )
       ],
     );
   }

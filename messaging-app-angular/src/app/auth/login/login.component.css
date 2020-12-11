@@ -1,0 +1,31 @@
+#button {
+  background: #2CABEE;
+  border-color: #2CABEE;
+  width: 100%;
+  border-radius: 25px;
+}
+
+#button:hover {
+  background: white;
+  color: #2CABEE;
+  outline: 0 none;
+  box-shadow: 0 0 8px #2CABEE;
+}
+
+#button:hover:disabled {
+  background: #2CABEE;
+  color: white;
+  outline: 0 none;
+  box-shadow: none;
+}
+
+input {
+  border-radius: 25px;
+  border-color: #2CABEE;
+  text-align: center;
+}
+
+input:focus, button:focus {
+  outline: 0 none;
+  box-shadow: 0 0 8px #2CABEE;
+}

@@ -1,0 +1,38 @@
+#register-button {
+  background: white;
+  border-color: white;
+  color: #2CABEE;
+  width: 100%;
+  border-radius: 25px;
+}
+
+#register-button:hover {
+  background-color: #2CABEE;
+  color: white;
+  outline: 0 none;
+  box-shadow: 0 0 8px white;
+}
+
+#register-button:hover:disabled {
+  background-color: white;
+  color: #2CABEE;
+  outline: 0 none;
+  box-shadow: none;
+}
+
+input, :focus {
+  border-radius: 25px;
+  background-color: #2CABEE;
+  border-color: white;
+  color: white;
+  text-align: center;
+}
+
+input:focus, button:focus {
+  outline: 0 none;
+  box-shadow: 0 0 8px white;
+}
+
+::placeholder {
+  color: #E0E0E0;
+}

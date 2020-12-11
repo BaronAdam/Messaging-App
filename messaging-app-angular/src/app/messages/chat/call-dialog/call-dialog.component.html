@@ -1,0 +1,18 @@
+<div class="dialog-container">
+  <div class="col">
+    <div class="spacer-small"></div>
+    <div class="row name justify-content-center">
+      {{data.name}}
+    </div>
+    <div class="row time justify-content-center">
+      {{display}}
+    </div>
+    <div class="spacer"></div>
+    <div class="row buttons justify-content-center">
+      <button class="button-hangup" (click)="endCall()">
+        <mat-icon>call_end</mat-icon>
+      </button>
+    </div>
+    <div class="spacer-small"></div>
+  </div>
+</div>

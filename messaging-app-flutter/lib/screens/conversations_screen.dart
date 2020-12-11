@@ -1,6 +1,7 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:date_format/date_format.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:messaging_app_flutter/DTOs/message_group_to_return_dto.dart';
 import 'package:messaging_app_flutter/api/group.dart';
@@ -11,6 +12,8 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
 import 'package:messaging_app_flutter/screens/add_friend_screen.dart';
 import 'package:messaging_app_flutter/screens/chat_screen.dart';
+import 'package:signalr_client/hub_connection.dart';
+import 'package:signalr_client/hub_connection_builder.dart';
 
 class ConversationsScreen extends StatefulWidget {
   static const String id = 'conversations_screen';
@@ -22,6 +25,7 @@ class ConversationsScreen extends StatefulWidget {
 class _ConversationsScreen extends State<ConversationsScreen> {
   Widget ui;
   bool isFirstTime;
+  HubConnection hubConnection;
 
   @override
   void initState() {
@@ -31,15 +35,25 @@ class _ConversationsScreen extends State<ConversationsScreen> {
   }
 
   @override
+  Future<void> dispose() async {
+    Future.delayed(Duration.zero, () async {
+      hubConnection.off('incomingCall');
+      await hubConnection.stop();
+    });
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final ConversationsScreenArguments args =
         ModalRoute.of(context).settings.arguments;
 
-    String userId = JwtDecoder.decode(args.token)['nameid'];
+    String userId = args.userId;
     String token = args.token;
+    hubConnection = args.hubConnection;
 
     if (isFirstTime) {
-      ui = ConversationsListFutureBuilder(userId, token);
+      ui = ConversationsListFutureBuilder(userId, token, hubConnection);
       isFirstTime = false;
     }
 
@@ -48,8 +62,8 @@ class _ConversationsScreen extends State<ConversationsScreen> {
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: Icon(
-            Icons.close,
-            color: Colors.black,
+            Icons.exit_to_app,
+            color: Colors.red,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -63,7 +77,10 @@ class _ConversationsScreen extends State<ConversationsScreen> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.person_add),
+            icon: Icon(
+              Icons.person_add,
+              color: kAppColor,
+            ),
             onPressed: () {
               Navigator.pushNamed(
                 context,
@@ -73,7 +90,10 @@ class _ConversationsScreen extends State<ConversationsScreen> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.refresh),
+            icon: Icon(
+              Icons.refresh,
+              color: kAppColor,
+            ),
             onPressed: () async {
               var result = await Messages.getChats(
                 userId,
@@ -82,13 +102,16 @@ class _ConversationsScreen extends State<ConversationsScreen> {
 
               if (!checkResponse(result, context)) return;
 
-              ui = buildWidgetList(result, userId, token);
+              ui = buildWidgetList(result, userId, token, hubConnection);
 
               setState(() {});
             },
           ),
           IconButton(
-            icon: Icon(Icons.add),
+            icon: Icon(
+              Icons.add,
+              color: kAppColor,
+            ),
             onPressed: () async {
               await createGroup(userId, token, context);
               var result = await Messages.getChats(
@@ -98,7 +121,7 @@ class _ConversationsScreen extends State<ConversationsScreen> {
 
               if (!checkResponse(result, context)) return;
 
-              ui = buildWidgetList(result, userId, token);
+              ui = buildWidgetList(result, userId, token, hubConnection);
 
               setState(() {});
             },
@@ -109,10 +132,7 @@ class _ConversationsScreen extends State<ConversationsScreen> {
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(left: 16.0, right: 16.0),
-          child: ui,
-        ),
+        child: ui,
       ),
     );
   }
@@ -186,8 +206,9 @@ bool checkResponse(response, context) {
 class ConversationsListFutureBuilder extends StatelessWidget {
   final userId;
   final token;
+  final HubConnection hubConnection;
 
-  ConversationsListFutureBuilder(this.userId, this.token);
+  ConversationsListFutureBuilder(this.userId, this.token, this.hubConnection);
 
   @override
   Widget build(BuildContext context) {
@@ -205,7 +226,12 @@ class ConversationsListFutureBuilder extends StatelessWidget {
               ),
             );
           default:
-            return buildWidgetList(snapshot.data, userId, token);
+            return buildWidgetList(
+              snapshot.data,
+              userId,
+              token,
+              hubConnection,
+            );
         }
       },
     );
@@ -221,6 +247,7 @@ class ConversationBuilder extends StatelessWidget {
     @required this.userId,
     @required this.token,
     this.isGroup,
+    @required this.hubConnection,
   });
 
   final MessageGroupToReturnDto object;
@@ -230,6 +257,7 @@ class ConversationBuilder extends StatelessWidget {
   final String userId;
   final String token;
   final bool isGroup;
+  final HubConnection hubConnection;
 
   @override
   Widget build(BuildContext context) {
@@ -239,11 +267,18 @@ class ConversationBuilder extends StatelessWidget {
         Navigator.pushNamed(
           context,
           ChatScreen.id,
-          arguments: ChatScreenArguments(token, userId, id, name, isGroup),
+          arguments: ChatScreenArguments(
+            token,
+            userId,
+            id,
+            name,
+            isGroup,
+            hubConnection,
+          ),
         );
       },
       child: Container(
-        padding: EdgeInsets.only(top: 8.0),
+        padding: EdgeInsets.only(top: 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -251,7 +286,7 @@ class ConversationBuilder extends StatelessWidget {
               object.name,
               style: TextStyle(
                 fontSize: 20,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
               ),
             ),
             Row(
@@ -273,12 +308,9 @@ class ConversationBuilder extends StatelessWidget {
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Divider(
-                color: Colors.black87,
-                thickness: 0.5,
-              ),
+            SizedBox(
+              width: double.infinity,
+              height: 16,
             )
           ],
         ),
@@ -287,7 +319,12 @@ class ConversationBuilder extends StatelessWidget {
   }
 }
 
-ListView buildWidgetList(List<MessageGroupToReturnDto> data, userId, token) {
+ListView buildWidgetList(
+  List<MessageGroupToReturnDto> data,
+  userId,
+  token,
+  hubConnection,
+) {
   List<Widget> widgets = [];
 
   for (var item in data) {
@@ -314,11 +351,13 @@ ListView buildWidgetList(List<MessageGroupToReturnDto> data, userId, token) {
         userId: userId,
         token: token,
         isGroup: item.isGroup,
+        hubConnection: hubConnection,
       ),
     );
   }
 
   return ListView(
     children: widgets,
+    padding: EdgeInsets.symmetric(horizontal: 16),
   );
 }

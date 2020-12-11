@@ -1,0 +1,21 @@
+<div class="dialog-container">
+  <h1 mat-dialog-title>Add Friend</h1>
+  <form #searchForm="ngForm" (ngSubmit)="search(searchForm.value)">
+    <div class="col">
+      <input class="form-control mb-2 mt-2" cdkFocusInitial ngModel id="searchPhrase" name="searchPhrase" placeholder="Enter username or email address">
+      <div class="justify-content-center" mat-dialog-actions>
+        <button class="btn btn-primary mb-4" id="button" type="submit" [disabled]="!searchForm.valid">Search</button>
+      </div>
+      <div *ngIf="user !== undefined && isInFriends !== undefined" class="w-100 mt-2 row">
+        <div class="col-11 name pl-4">{{user.name}}</div>
+        <div class="col-1 add-icon">
+          <button *ngIf="!isInFriends" class="button-add" (click)="addFriend()"><mat-icon >person_add</mat-icon></button>
+          <mat-icon *ngIf="isInFriends">done</mat-icon>
+        </div>
+      </div>
+      <div *ngIf="user !== undefined && isInFriends !== undefined" class="row pl-4 small-text">{{user.username}}</div>
+      <div *ngIf="user !== undefined && isInFriends !== undefined" class="row pl-4 small-text">{{user.email}}</div>
+    </div>
+  </form>
+</div>
+

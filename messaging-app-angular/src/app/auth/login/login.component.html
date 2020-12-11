@@ -1,0 +1,13 @@
+<form #loginForm="ngForm" (ngSubmit)="login(loginForm.value)">
+  <div class="row pl-5 pt-5 pr-5">
+    <input type="text" class="form-control" id="username" required ngModel name="username" placeholder="Username">
+  </div>
+  <div class="row pl-5 pt-5 pr-5">
+    <input type="password" class="form-control" id="password" required ngModel name="password" placeholder="Password">
+  </div>
+  <div class="row pl-5 pt-5 pr-5 justify-content-end">
+    <button class="btn btn-primary" type="submit" [disabled]="!loginForm.valid" id="button">
+      Log In
+    </button>
+  </div>
+</form>

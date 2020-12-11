@@ -1,9 +1,13 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
 using Messaging_App.Api.Configuration;
 using Messaging_App.Api.Helpers;
+using Messaging_App.Api.Hubs;
 using Messaging_App.Infrastructure.Persistence;
+using Messaging_App.Infrastructure.WebRtcModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -40,7 +44,22 @@ namespace Messaging_App.Api
 
             services.ConfigureDependencyInjection();
 
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", x => x
+                    .WithOrigins("http://localhost:4200")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
+
+            services.AddSignalR();
+            
+            // services.AddLettuceEncrypt();
+            
+            services.AddSingleton<List<UserForCalls>>();
+            services.AddSingleton<List<UserCall>>();
+            services.AddSingleton<List<CallOffer>>();
 
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
 
@@ -54,6 +73,21 @@ namespace Messaging_App.Api
                             .GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
                         ValidateIssuer = false,
                         ValidateAudience = false
+                    };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+                            
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                path.StartsWithSegments("/caller"))
+                            {
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
                     };
                 });
         }
@@ -87,10 +121,16 @@ namespace Messaging_App.Api
 
             app.UseRouting();
 
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors(x => x
+                .WithOrigins("http://localhost:4200")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSignalR(routes => routes.MapHub<CallerHub>("/Caller"));
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

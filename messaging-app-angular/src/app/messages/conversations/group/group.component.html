@@ -1,0 +1,14 @@
+<div class="row main-row mb-2">
+  <div class="col-12 d-block" (click)="openChat()">
+    <div class="row">
+      <div class="col-12 name">{{group.name}}</div>
+    </div>
+    <div class="row" *ngIf="group.lastSender !== ''">
+      <div class="col-8 message">{{group.lastSender}}: {{group.lastMessage}}</div>
+      <div class="col-4 date">{{group.lastSent}}</div>
+    </div>
+    <div class="row" *ngIf="group.lastSender === ''">
+      <div class="col-8 message">Group chat empty</div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<form #registerForm="ngForm" (ngSubmit)="register(registerForm.value)">
+  <div class="row pl-4 pt-5 pr-4">
+    <div class="col pl-4">
+      <input type="text" class="form-control" id="register-username" required ngModel name="username" placeholder="Username">
+    </div>
+    <div class="col pr-4">
+      <input type="text" class="form-control" id="register-name" required ngModel name="name" placeholder="Name">
+    </div>
+  </div>
+  <div class="row pl-4 pt-5 pr-4">
+    <div class="col pl-4">
+      <input type="email" class="form-control" id="register-email" required ngModel name="email" placeholder="Email Address">
+    </div>
+    <div class="col pr-4">
+      <input type="password" class="form-control" id="register-password" required ngModel name="password" placeholder="Password">
+    </div>
+  </div>
+  <div class="row pl-5 pt-5 pr-5">
+    <button class="btn btn-primary" type="submit" [disabled]="!registerForm.valid" id="register-button">
+      Register
+    </button>
+  </div>
+</form>

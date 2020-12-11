@@ -1,0 +1,27 @@
+.dialog-container {
+  width: 400px;
+}
+
+.name {
+  font-weight: bold;
+}
+
+.small-text {
+  font-size: 10pt;
+}
+
+.button-add {
+  background: transparent;
+  border: none;
+  text-align: center;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+.button-add:focus {
+  color: black;
+}
+
+.button-add:disabled {
+  color: black;
+}

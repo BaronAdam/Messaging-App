@@ -1,0 +1,30 @@
+.sender {
+  font-size: 10pt;
+  color: #3F3F3F;
+}
+
+.content-white {
+  color: black;
+  border-radius: 0 25px 25px 25px;
+  background-color: white;
+}
+
+.content {
+  font-size: 12pt;
+  min-height: 32px;
+}
+
+.content-color {
+  color: white;
+  border-radius: 25px 0 25px 25px;
+  background-color: #2CABEE;
+}
+
+.message-container {
+  width: 72vw;
+}
+
+img {
+  max-width: 50vw !important;
+  max-height: 40vh !important;
+}

@@ -1,0 +1,15 @@
+<div class="col-12">
+  <div class="row">
+  <div class="col-3" id="conversations">
+    <app-conversations (selectedChat)="onSelectedGroup($event)" [sendMessage]="sendMessage"></app-conversations>
+  </div>
+  <div class="col-9 bg-white" id="chat">
+    <div class="col-12" #chat>
+      <div class="row"></div>
+    </div>
+    <div class="d-flex w-100 h-100 align-items-center justify-content-center" *ngIf="selectedGroup === undefined">
+      Select chat or consider adding friends.
+    </div>
+  </div>
+  </div>
+</div>

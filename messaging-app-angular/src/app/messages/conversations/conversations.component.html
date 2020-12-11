@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-12 top-bar-conversations bg-white shadow-sm">
+    <div class="d-flex h-100 w-100 align-items-center justify-content-center">
+      <button (click)="addFriend()"><mat-icon class="mr-2">person_add</mat-icon>Add Friend</button>
+      <button (click)="addGroup()" class="ml-5"><mat-icon class="mr-2">add</mat-icon>Add Group</button>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12 mt-3 overflow-auto" id="container-groups" >
+    <div class="row" #container></div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+.name {
+  font-size: larger;
+}
+
+.message {
+  font-size: small;
+}
+
+.date {
+  font-size: small;
+  color: #3F3F3F;
+  text-align: right;
+}
+
+.main-row {
+  border-radius: 10px;
+}
