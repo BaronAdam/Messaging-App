@@ -15,9 +15,8 @@ export class SetAdminsInGroupComponent implements OnInit {
   admins: Array<number> = undefined;
   memberIds: Array<number>;
 
-  constructor(private groupService: GroupService,
-              private userService: UserService,
-              @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
+  constructor(private groupService: GroupService, private userService: UserService,
+              @Inject(MAT_DIALOG_DATA) public data: DialogData, public dialogRef: MatDialogRef<SetAdminsInGroupComponent>) { }
 
   ngOnInit(): void {
     this.getMemberIds();
@@ -30,6 +29,7 @@ export class SetAdminsInGroupComponent implements OnInit {
         this.getAdmins();
     }, error => {
       this.groupService.alertUser(error);
+      this.dialogRef.close();
     });
   }
 

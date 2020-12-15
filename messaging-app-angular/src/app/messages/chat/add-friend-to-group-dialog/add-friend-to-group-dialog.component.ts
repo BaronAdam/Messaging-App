@@ -2,7 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {GroupService} from '../../../../api/group.service';
 import {User} from '../../../../api/interfaces/user';
 import {UserService} from '../../../../api/user.service';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {DialogData} from '../dialog-data';
 
 @Component({
@@ -15,7 +15,7 @@ export class AddFriendToGroupDialogComponent implements OnInit {
   members: Array<number> = undefined;
 
   constructor(private groupService: GroupService, private userService: UserService,
-              @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
+              @Inject(MAT_DIALOG_DATA) public data: DialogData, public dialogRef: MatDialogRef<AddFriendToGroupDialogComponent>) { }
 
   ngOnInit(): void {
     this.getFriends();
@@ -35,6 +35,7 @@ export class AddFriendToGroupDialogComponent implements OnInit {
         this.members = responseData;
       }, error => {
         this.groupService.alertUser(error);
+        this.dialogRef.close();
       });
   }
 
