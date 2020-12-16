@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit, OnDestroy} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {CallDialogData} from '../call-dialog-data';
-import {HubConnectionService} from '../../../../api/hub-connection.service';
+import {WebrtcHubService} from '../../../../api/webrtc-hub.service';
 
 @Component({
   selector: 'app-call-dialog',
@@ -11,7 +11,7 @@ import {HubConnectionService} from '../../../../api/hub-connection.service';
 export class CallDialogComponent implements OnInit, OnDestroy {
 
   constructor(public dialogRef: MatDialogRef<CallDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: CallDialogData,
-              private hubService: HubConnectionService) { }
+              private hubService: WebrtcHubService) { }
 
   time = 0;
   display = '0:00';
@@ -21,24 +21,28 @@ export class CallDialogComponent implements OnInit, OnDestroy {
     const hub = this.hubService.getHubReference();
 
     hub.on('callAccepted', (data) => {
-      const acceptingUser = data[0];
+      const acceptingUser = data;
       this.startTimer();
-      // TODO: setup webRTC
+
+      this.hubService.initializeCall(acceptingUser.connectionId)
+        .catch((err) => console.log(`Error while creating offer: ${err}`));
     });
 
     hub.on('callDeclined', (data) => {
+      this.hubService.closeConnection(data.connectionId);
       this.dialogRef.close();
     });
 
-    hub.on('receiveSignal', (data) => {
-      const signalingUser = data[0];
-      const signal = data[1];
-
-      // TODO: webRTC
+    hub.on('receiveSignal', (signalingUser, signal) => {
+      this.setAudioStream(this.hubService);
+      this.hubService.newSignal(signalingUser.connectionId, signal);
     });
 
     hub.on('callEnded', (data) => {
-      // TODO: webRTC close
+      this.hubService.closeConnection(data.connectionId);
+      const audio: HTMLAudioElement = document.querySelector('.partner');
+      audio.src = '';
+
       this.dialogRef.close();
     });
 
@@ -55,6 +59,14 @@ export class CallDialogComponent implements OnInit, OnDestroy {
 
     if (!this.data.isNewCall) {
       this.startTimer();
+    }
+  }
+
+  setAudioStream(hubService): void {
+    const stream = hubService.getStream();
+    const audio: HTMLAudioElement = document.querySelector('.partner');
+    if (audio.srcObject !== stream) {
+      audio.srcObject = stream;
     }
   }
 

@@ -21,7 +21,7 @@ import {AddFriendToGroupDialogComponent} from './add-friend-to-group-dialog/add-
 import {SetAdminsInGroupComponent} from './set-admins-in-group-dialog/set-admins-in-group.component';
 import {GroupService} from '../../../api/group.service';
 import {CallDialogComponent} from './call-dialog/call-dialog.component';
-import {HubConnectionService} from '../../../api/hub-connection.service';
+import {WebrtcHubService} from '../../../api/webrtc-hub.service';
 
 @Component({
   selector: 'app-chat',
@@ -37,7 +37,7 @@ export class ChatComponent implements OnInit {
   @Output() messageSent = new EventEmitter<any>();
 
   constructor(private messageService: MessageService, private resolver: ComponentFactoryResolver, private router: Router,
-              private dialog: MatDialog, private groupService: GroupService, private hubService: HubConnectionService) {}
+              private dialog: MatDialog, private groupService: GroupService, private hubService: WebrtcHubService) {}
 
   ngOnInit(): void {
     this.fetchData();

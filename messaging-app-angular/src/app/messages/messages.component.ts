@@ -3,7 +3,7 @@ import {AuthService} from '../../api/auth.service';
 import {Router} from '@angular/router';
 import {MessageGroup} from '../../api/interfaces/message-group';
 import {ChatComponent} from './chat/chat.component';
-import {HubConnectionService} from '../../api/hub-connection.service';
+import {WebrtcHubService} from '../../api/webrtc-hub.service';
 
 @Component({
   selector: 'app-messages',
@@ -16,13 +16,13 @@ export class MessagesComponent implements OnInit {
   @ViewChild('chat', { read: ViewContainerRef }) container;
   public sendMessage: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(private router: Router, private resolver: ComponentFactoryResolver, private hubService: HubConnectionService) { }
+  constructor(private router: Router, private resolver: ComponentFactoryResolver, private hubService: WebrtcHubService) { }
 
   ngOnInit(): void {
     if (AuthService.getToken() == null) {
       this.router.navigate(['/']);
     }
-    
+
     this.hubService.startConnection();
   }
 

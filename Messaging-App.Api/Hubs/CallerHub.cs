@@ -145,26 +145,23 @@ namespace Messaging_App.Api.Hubs
 
             await base.OnDisconnectedAsync(exception);
         }
-
-        public async Task SendSignal(string signal, int id)
+        
+        public async Task SendSignal(string signal, string targetConnectionId)
         {
-            var targetConnectionId = _users.SingleOrDefault(u => u.Id == id)?.ConnectionId;
-
-            if (targetConnectionId == null)
+            var callingUser = _users.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
+            var targetUser = _users.SingleOrDefault(u => u.ConnectionId == targetConnectionId);
+            
+            if (callingUser == null || targetUser == null)
             {
-                await Clients.Caller.CallDeclined(null, "The user you called has left.");
                 return;
             }
             
-            var callingUser = _users.SingleOrDefault(u => u.ConnectionId == Context.ConnectionId);
-            var targetUser = _users.SingleOrDefault(u => u.ConnectionId == targetConnectionId);
-
-            if (callingUser == null || targetUser == null) return;
-
             var userCall = GetUserCall(callingUser.ConnectionId);
 
             if (userCall != null && userCall.Users.Exists(u => u.ConnectionId == targetUser.ConnectionId))
+            {
                 await Clients.Client(targetConnectionId).ReceiveSignal(callingUser, signal);
+            }
         }
 
         public async Task HangUp()

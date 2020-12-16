@@ -170,34 +170,6 @@ class _CallScreenState extends State<CallScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Spacer(),
-                      isOnSpeaker
-                          ? RoundIconButton(
-                              onPressed: () {
-                                setState(() {
-                                  isOnSpeaker = false;
-                                });
-                              },
-                              fillColor: Colors.white,
-                              borderColor: Colors.white,
-                              icon: Icon(
-                                Icons.volume_up,
-                                color: Colors.black,
-                              ),
-                              isElevated: true)
-                          : RoundIconButton(
-                              onPressed: () {
-                                setState(() {
-                                  isOnSpeaker = true;
-                                });
-                              },
-                              fillColor: Color(0),
-                              borderColor: Colors.white,
-                              icon: Icon(
-                                Icons.volume_up,
-                                color: Colors.white,
-                              ),
-                              isElevated: false),
-                      Spacer(),
                       RoundIconButton(
                         icon: Icon(
                           Icons.call_end,
@@ -211,34 +183,6 @@ class _CallScreenState extends State<CallScreen> {
                         },
                         isElevated: true,
                       ),
-                      Spacer(),
-                      isMicrophoneMuted
-                          ? RoundIconButton(
-                              onPressed: () {
-                                setState(() {
-                                  isMicrophoneMuted = false;
-                                });
-                              },
-                              fillColor: Colors.white,
-                              borderColor: Colors.white,
-                              icon: Icon(
-                                Icons.mic_off,
-                                color: Colors.black,
-                              ),
-                              isElevated: true)
-                          : RoundIconButton(
-                              onPressed: () {
-                                setState(() {
-                                  isMicrophoneMuted = true;
-                                });
-                              },
-                              fillColor: Color(0),
-                              borderColor: Colors.white,
-                              icon: Icon(
-                                Icons.mic_off,
-                                color: Colors.white,
-                              ),
-                              isElevated: false),
                       Spacer(),
                     ],
                   ),

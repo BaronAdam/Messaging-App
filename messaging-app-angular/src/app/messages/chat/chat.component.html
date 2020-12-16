@@ -36,7 +36,7 @@
     <div class="row" #messages></div>
   </div>
 </div>
-<form #sendMessageForm="ngForm" (ngSubmit)="sendTextMessage(sendMessageForm.value)">
+<form #sendMessageForm="ngForm" (ngSubmit)="sendTextMessage(sendMessageForm.value); sendMessageForm.reset()">
   <div class="row shadow-sm" id="bottom-bar">
     <div class="col-3">
       <div class="d-flex h-100 w-100 align-items-center justify-content-end">

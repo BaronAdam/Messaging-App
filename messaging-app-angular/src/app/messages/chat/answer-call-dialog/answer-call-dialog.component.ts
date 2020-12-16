@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {CallDialogData} from '../call-dialog-data';
-import {HubConnectionService} from '../../../../api/hub-connection.service';
+import {WebrtcHubService} from '../../../../api/webrtc-hub.service';
 import {CallDialogComponent} from '../call-dialog/call-dialog.component';
 
 @Component({
@@ -12,7 +12,7 @@ import {CallDialogComponent} from '../call-dialog/call-dialog.component';
 export class AnswerCallDialogComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<AnswerCallDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: CallDialogData,
-              private hubService: HubConnectionService, private dialog: MatDialog) {
+              private hubService: WebrtcHubService, private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
