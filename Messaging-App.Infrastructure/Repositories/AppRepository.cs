@@ -34,19 +34,5 @@ namespace Messaging_App.Infrastructure.Repositories
         {
             return await _context.Contacts.FirstOrDefaultAsync(u => u.UserId == userId && u.ContactId == friendId);
         }
-
-        public async Task<int> CreateMessagingGroup(bool isGroup, string name)
-        {
-            var group = new MessageGroup
-            {
-                IsGroup = isGroup,
-                Name = name
-            };
-
-            var result = await _context.MessageGroups.AddAsync(group);
-            await _context.SaveChangesAsync();
-
-            return result.Entity.Id;
-        }
     }
 }

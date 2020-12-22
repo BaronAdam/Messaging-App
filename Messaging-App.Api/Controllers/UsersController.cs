@@ -109,7 +109,7 @@ namespace Messaging_App.Api.Controllers
 
                 var name = user.Name + " & " + friend.Name;
 
-                var groupId = await _appRepository.CreateMessagingGroup(false, name);
+                var groupId = await _groupRepository.CreateMessagingGroup(false, name);
 
                 if (!await _groupRepository.CreateMessagingThread(new List<int> {id, friendId}, groupId, true))
                     return BadRequest("There was an error while creating new group.");

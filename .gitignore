@@ -8,3 +8,4 @@ Messaging-App.Infrastructure/bin/
 Messaging-App.Infrastructure/obj/
 .idea/
 *.info
+.vscode/
