@@ -1,21 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:signalr_client/hub_connection.dart';
+
 import 'package:messaging_app_flutter/api/group.dart';
 import 'package:messaging_app_flutter/api/messages.dart';
 import 'package:messaging_app_flutter/constants.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
 import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
-import 'package:messaging_app_flutter/screens/call_screen.dart';
-import 'package:messaging_app_flutter/screens/set_admin_screen.dart';
-import 'package:signalr_client/hub_connection.dart';
-
-import 'add_friends_to_group_screen.dart';
+import 'package:messaging_app_flutter/screens/CallScreen/call_screen.dart';
+import 'package:messaging_app_flutter/screens/SetAdminScreen/set_admin_screen.dart';
+import 'package:messaging_app_flutter/screens/AddFriendsToGroupScreen/add_friends_to_group_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   static const String id = 'chat_screen';

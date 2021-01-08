@@ -3,17 +3,16 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:signalr_client/hub_connection.dart';
+
 import 'package:messaging_app_flutter/DTOs/message_group_to_return_dto.dart';
 import 'package:messaging_app_flutter/api/group.dart';
 import 'package:messaging_app_flutter/api/messages.dart';
 import 'package:messaging_app_flutter/constants.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
-import 'package:messaging_app_flutter/screens/add_friend_screen.dart';
-import 'package:messaging_app_flutter/screens/chat_screen.dart';
-import 'package:signalr_client/hub_connection.dart';
-import 'package:signalr_client/hub_connection_builder.dart';
+import 'package:messaging_app_flutter/screens/AddFriendScreen/add_friend_screen.dart';
+import 'package:messaging_app_flutter/screens/ChatScreen/chat_screen.dart';
 
 class ConversationsScreen extends StatefulWidget {
   static const String id = 'conversations_screen';

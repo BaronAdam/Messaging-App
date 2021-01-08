@@ -1,21 +1,21 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:messaging_app_flutter/DTOs/member_and_friends_dto.dart';
+
+import 'package:messaging_app_flutter/DTOs/members_and_admins_dto.dart';
 import 'package:messaging_app_flutter/DTOs/user_for_single_dto.dart';
 import 'package:messaging_app_flutter/api/group.dart';
 import 'package:messaging_app_flutter/api/repositories/group_repository.dart';
-import 'package:messaging_app_flutter/constants.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
 import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
+import 'package:messaging_app_flutter/constants.dart';
 
-class AddFriendsToGroupScreen extends StatefulWidget {
-  static const String id = 'add_friends_to_group_screen';
+class SetAdminScreen extends StatefulWidget {
+  static const String id = 'set_admin_screen';
   @override
-  _AddFriendsToGroupScreenState createState() =>
-      _AddFriendsToGroupScreenState();
+  _SetAdminScreenState createState() => _SetAdminScreenState();
 }
 
-class _AddFriendsToGroupScreenState extends State<AddFriendsToGroupScreen> {
+class _SetAdminScreenState extends State<SetAdminScreen> {
   Widget ui;
   bool isFirstTime;
 
@@ -28,7 +28,7 @@ class _AddFriendsToGroupScreenState extends State<AddFriendsToGroupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final AddFriendsToGroupScreenArguments args =
+    final SetAdminScreenArguments args =
         ModalRoute.of(context).settings.arguments;
     String token = args.token;
     String userId = args.userId;
@@ -53,7 +53,7 @@ class _AddFriendsToGroupScreenState extends State<AddFriendsToGroupScreen> {
           },
         ),
         title: Text(
-          'Add friends to: $groupName',
+          'Set admins in: $groupName',
           style: TextStyle(color: Colors.black),
         ),
         actionsIconTheme: IconThemeData(color: Colors.black),
@@ -88,11 +88,7 @@ class UserListFutureBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: GroupRepository.getFriendsAndMembers(
-        userId,
-        groupId,
-        token,
-      ),
+      future: GroupRepository.getMembersAndAdminInfo(userId, groupId, token),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
@@ -105,11 +101,11 @@ class UserListFutureBuilder extends StatelessWidget {
             if (snapshot.data == null) {
               return ListView(
                 children: [
-                  Text('There was an error while processing your request.'),
+                  Text('There was an error while processing your request.')
                 ],
               );
             }
-            return buildFriendsList(
+            return buildWidgetList(
                 snapshot.data, userId, groupId, token, context);
         }
       },
@@ -117,115 +113,119 @@ class UserListFutureBuilder extends StatelessWidget {
   }
 }
 
-ListView buildFriendsList(
-    MembersAndFriendsDto data, userId, groupId, token, context) {
-  List<Widget> list = [];
-
-  for (var friend in data.friends) {
-    list.add(
-      UserBuilder(friend, userId, groupId, token, data.members),
-    );
-  }
-
-  return ListView(
-    children: list,
-  );
-}
-
 class UserBuilder extends StatefulWidget {
-  final UserForSingleDto friend;
+  final UserForSingleDto member;
+  final List<int> adminIds;
   final String userId;
   final String groupId;
   final String token;
-  final List<int> members;
 
   UserBuilder(
-    this.friend,
-    this.userId,
-    this.groupId,
-    this.token,
-    this.members,
-  );
+      this.member, this.adminIds, this.userId, this.groupId, this.token);
 
   @override
   _UserBuilderState createState() =>
-      _UserBuilderState(friend, userId, groupId, token, members);
+      _UserBuilderState(member, userId, groupId, token, adminIds);
 }
 
 class _UserBuilderState extends State<UserBuilder> {
-  final UserForSingleDto friend;
+  final UserForSingleDto member;
+  final List<int> adminIds;
   final String userId;
   final String groupId;
   final String token;
-  final List<int> members;
 
   _UserBuilderState(
-    this.friend,
-    this.userId,
-    this.groupId,
-    this.token,
-    this.members,
+      this.member, this.userId, this.groupId, this.token, this.adminIds);
+
+  static const removeIcon = Icon(
+    Icons.remove,
+    color: Colors.red,
   );
 
-  bool isntInFriends = false;
+  static const addIcon = Icon(
+    Icons.add,
+    color: Colors.green,
+  );
 
+  bool isAdmin;
   @override
   initState() {
-    isntInFriends = !members.contains(friend.id);
+    isAdmin = adminIds.contains(member.id);
 
     super.initState();
   }
 
+  bool isFirstTime = true;
+  Widget icon;
+
   @override
   Widget build(BuildContext context) {
+    if (isFirstTime) {
+      icon = adminIds.contains(member.id) ? removeIcon : addIcon;
+      isFirstTime = false;
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
             Text(
-              friend.name,
+              member.username,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
               ),
             ),
             Spacer(),
-            isntInFriends
-                ? IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: () async {
-                      var response = await Group.addMemberToGroup(
-                        userId,
-                        groupId,
-                        [friend.id],
-                        token,
-                      );
-                      if (response) {
-                        setState(() {
-                          isntInFriends = false;
-                        });
-                      } else {
-                        showNewDialog(
-                          'Error',
-                          'There was an error while processing your request.',
-                          DialogType.WARNING,
-                          context,
-                        );
-                      }
-                    },
-                  )
-                : IconButton(
-                    icon: Icon(
-                      Icons.done,
-                      color: Colors.green,
-                    ),
-                    onPressed: null,
-                  ),
+            IconButton(
+              icon: icon,
+              onPressed: () async {
+                var result = await Group.changeAdminStatus(
+                  userId,
+                  groupId,
+                  member.id,
+                  token,
+                );
+
+                if (result) {
+                  isAdmin = !isAdmin;
+                  icon = isAdmin ? removeIcon : addIcon;
+                  setState(() {});
+                } else {
+                  showNewDialog(
+                    'Error',
+                    'There was an error while processing your request.',
+                    DialogType.WARNING,
+                    context,
+                  );
+                }
+              },
+            )
           ],
         ),
-        Text(friend.username),
+        Text(member.username),
       ],
     );
   }
+}
+
+ListView buildWidgetList(
+  MembersAndAdminsDto data,
+  userId,
+  groupId,
+  token,
+  context,
+) {
+  List<Widget> list = [];
+
+  for (var member in data.members) {
+    if (member.id == int.parse(userId)) continue;
+
+    list.add(UserBuilder(member, data.adminIds, userId, groupId, token));
+  }
+  return ListView(
+    children: list,
+  );
 }

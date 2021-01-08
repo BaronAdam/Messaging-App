@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:messaging_app_flutter/components/rounded_button.dart';
 import 'package:messaging_app_flutter/constants.dart';
-import 'package:messaging_app_flutter/screens/login_screen.dart';
-import 'package:messaging_app_flutter/screens/registration_screen.dart';
+import 'package:messaging_app_flutter/screens/LoginScreen/login_screen.dart';
+import 'package:messaging_app_flutter/screens/RegisterScreen/register_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const String id = 'welcome_screen';

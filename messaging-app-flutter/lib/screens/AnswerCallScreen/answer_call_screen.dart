@@ -1,10 +1,10 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:signalr_client/hub_connection.dart';
+
 import 'package:messaging_app_flutter/components/round_icon_button.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
-import 'package:messaging_app_flutter/screens/call_screen.dart';
-import 'package:signalr_client/hub_connection.dart';
+import 'package:messaging_app_flutter/screens/CallScreen/call_screen.dart';
 
 class AnswerCallScreen extends StatefulWidget {
   static const String id = 'answer_call_string';

@@ -1,19 +1,18 @@
-import 'dart:convert';
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:signalr_client/http_connection_options.dart';
+import 'package:signalr_client/hub_connection.dart';
+import 'package:signalr_client/hub_connection_builder.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+
 import 'package:messaging_app_flutter/api/auth.dart';
 import 'package:messaging_app_flutter/components/rounded_button.dart';
 import 'package:messaging_app_flutter/constants.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
 import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
-import 'package:messaging_app_flutter/screens/answer_call_screen.dart';
-import 'package:messaging_app_flutter/screens/conversations_screen.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:signalr_client/http_connection_options.dart';
-import 'package:signalr_client/hub_connection.dart';
-import 'package:signalr_client/hub_connection_builder.dart';
+import 'package:messaging_app_flutter/screens/AnswerCallScreen/answer_call_screen.dart';
+import 'package:messaging_app_flutter/screens/ConversationsScreen/conversations_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'login_screen';
