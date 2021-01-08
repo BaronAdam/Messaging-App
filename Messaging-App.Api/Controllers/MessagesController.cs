@@ -90,7 +90,7 @@ namespace Messaging_App.Api.Controllers
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
 
             messageForCreationDto.SenderId = userId;
-            messageForCreationDto.MessageSent = DateTime.Now;
+            messageForCreationDto.MessageSent = DateTime.UtcNow;
             messageForCreationDto.IsPhoto = false;
             messageForCreationDto.Url = null;
             messageForCreationDto.File = null;
@@ -120,7 +120,7 @@ namespace Messaging_App.Api.Controllers
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
 
             messageForCreationDto.SenderId = userId;
-            messageForCreationDto.MessageSent = DateTime.Now;
+            messageForCreationDto.MessageSent = DateTime.UtcNow;
             messageForCreationDto.IsPhoto = true;
             messageForCreationDto.Content = "Photo";
 
