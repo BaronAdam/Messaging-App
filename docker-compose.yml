@@ -10,4 +10,4 @@ services:
       MYSQL_USER: adam
       MYSQL_PASSWORD: password
     volumes: 
-      - ./sql-data/db:/var/lib/mysql
+      - ./sql-data/db1:/var/lib/mysql1
