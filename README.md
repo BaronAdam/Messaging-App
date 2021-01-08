@@ -1,5 +1,5 @@
 # Messaging-App
-Bachelor's degree application.
+Engineer's degree application.
 
 ## Adding migrations
 ```bash
