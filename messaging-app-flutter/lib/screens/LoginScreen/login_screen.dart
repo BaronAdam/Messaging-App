@@ -82,53 +82,58 @@ class _LoginScreenState extends State<LoginScreen> {
               RoundedButton(
                 title: 'Log In',
                 color: kAppColor,
-                onPressed: () async {
-                  setState(() {
-                    showSpinner = true;
-                  });
-                  try {
-                    final String token = await Auth.login(_login, _password);
-                    if (token == '401') {
-                      showNewDialog(
-                        'Could not login',
-                        'Wrong login or/and password',
-                        DialogType.WARNING,
-                        context,
-                      );
-                    } else if (token == '500') {
-                      showNewDialog(
-                        'Internal server error',
-                        'A server error occurred while processing your request. Try again later',
-                        DialogType.ERROR,
-                        context,
-                      );
-                    } else if (token != null) {
-                      var id = JwtDecoder.decode(token)['nameid'];
-                      HubConnection hubConnection =
-                          await openHubConnection(id, token, context);
-                      loginTextController.clear();
-                      passwordTextController.clear();
-                      Navigator.pushNamed(
-                        context,
-                        ConversationsScreen.id,
-                        arguments: ConversationsScreenArguments(
-                            token, id, hubConnection),
-                      );
-                    }
-
-                    setState(() {
-                      showSpinner = false;
-                    });
-                  } catch (e) {
-                    print(e);
-                  }
-                },
+                onPressed: logIn,
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void logIn() async {
+    setState(() {
+      showSpinner = true;
+    });
+    try {
+      final String token = await Auth.login(_login, _password);
+
+      handleResponse(token);
+
+      setState(() {
+        showSpinner = false;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void handleResponse(token) async {
+    if (token == '401') {
+      showNewDialog(
+        'Could not login',
+        'Wrong login or/and password',
+        DialogType.WARNING,
+        context,
+      );
+    } else if (token == '500') {
+      showNewDialog(
+        'Internal server error',
+        'A server error occurred while processing your request. Try again later',
+        DialogType.ERROR,
+        context,
+      );
+    } else if (token != null) {
+      var id = JwtDecoder.decode(token)['nameid'];
+      HubConnection hubConnection = await openHubConnection(id, token, context);
+      loginTextController.clear();
+      passwordTextController.clear();
+      Navigator.pushNamed(
+        context,
+        ConversationsScreen.id,
+        arguments: ConversationsScreenArguments(token, id, hubConnection),
+      );
+    }
   }
 }
 

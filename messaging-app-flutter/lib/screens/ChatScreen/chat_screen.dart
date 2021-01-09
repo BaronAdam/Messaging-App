@@ -5,6 +5,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:messaging_app_flutter/screens/ChatScreen/messages_builder.dart';
 import 'package:signalr_client/hub_connection.dart';
 
 import 'package:messaging_app_flutter/api/group.dart';
@@ -25,9 +26,10 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final messageTextController = TextEditingController();
 
-  String messageText;
+  String messageText, userId, token, groupId, groupName;
   Widget ui;
   bool isFirstTime;
+  HubConnection hubConnection;
 
   @override
   void initState() {
@@ -39,51 +41,16 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final ChatScreenArguments args = ModalRoute.of(context).settings.arguments;
-    String token = args.token;
-    String userId = args.userId;
-    String groupId = args.groupId;
-    String groupName = args.groupName;
+    token = args.token;
+    userId = args.userId;
+    groupId = args.groupId;
+    groupName = args.groupName;
     bool isGroup = args.isGroup;
-    HubConnection hubConnection = args.hubConnection;
+    hubConnection = args.hubConnection;
 
     if (isFirstTime) {
-      ui = MessagesBuilder(userId, groupId, token);
+      fetchMessages();
       isFirstTime = false;
-    }
-
-    Future editGroup() async {
-      final text = await showTextInputDialog(
-        context: context,
-        textFields: [
-          DialogTextField(hintText: 'Enter new group name'),
-        ],
-        title: 'Change group name',
-        message: 'In the box below enter a new name for this group.',
-        okLabel: 'OK',
-        cancelLabel: 'Cancel',
-        isDestructiveAction: false,
-        style: AdaptiveStyle.adaptive,
-        actionsOverflowDirection: VerticalDirection.up,
-      );
-
-      if (text != null && text[0] != null) {
-        var result = await Group.editGroupName(userId, token, groupId, text[0]);
-
-        if (!result)
-          showNewDialog(
-            'Error',
-            'An error occurred while changing group name',
-            DialogType.WARNING,
-            context,
-          );
-        else
-          showNewDialog(
-            'Changed name',
-            'Group name was successfully changed',
-            DialogType.SUCCES,
-            context,
-          );
-      }
     }
 
     return Scaffold(
@@ -110,14 +77,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     Icons.person_add,
                     color: kAppColor,
                   ),
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      AddFriendsToGroupScreen.id,
-                      arguments: AddFriendsToGroupScreenArguments(
-                          token, userId, groupId, groupName),
-                    );
-                  },
+                  onPressed: addFriends,
                 )
               : Container(),
           isGroup
@@ -126,14 +86,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     Icons.admin_panel_settings,
                     color: kAppColor,
                   ),
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      SetAdminScreen.id,
-                      arguments: SetAdminScreenArguments(
-                          token, userId, groupId, groupName),
-                    );
-                  },
+                  onPressed: setAdmins,
                 )
               : Container(),
           isGroup
@@ -151,54 +104,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     Icons.phone,
                     color: kAppColor,
                   ),
-                  onPressed: () async {
-                    var response =
-                        await Group.getMembersForGroup(userId, groupId, token);
-
-                    if (response == null) {
-                      showNewDialog(
-                        'Error',
-                        'There was an error while processing your request',
-                        DialogType.WARNING,
-                        context,
-                      );
-                      return;
-                    }
-
-                    var decoded;
-
-                    try {
-                      decoded = jsonDecode(response);
-                    } catch (e) {
-                      showNewDialog(
-                        'Error',
-                        'There was an error while processing your request',
-                        DialogType.WARNING,
-                        context,
-                      );
-                      return;
-                    }
-
-                    if (hubConnection.state ==
-                        HubConnectionState.Disconnected) {
-                      await hubConnection.start();
-                    }
-
-                    var calleeId = decoded[0].toString() == userId
-                        ? decoded[1]
-                        : decoded[0];
-
-                    Navigator.pushNamed(
-                      context,
-                      CallScreen.id,
-                      arguments: CallScreenArguments(
-                        calleeId.toString(),
-                        groupName,
-                        hubConnection,
-                        false,
-                      ),
-                    );
-                  },
+                  onPressed: callUser,
                 ),
           IconButton(
             icon: Icon(
@@ -206,14 +112,7 @@ class _ChatScreenState extends State<ChatScreen> {
               color: kAppColor,
             ),
             onPressed: () async {
-              var response = await Messages.getMessagesForGroup(
-                userId,
-                groupId,
-                token,
-              );
-
-              ui = buildChats(userId, response);
-              setState(() {});
+              fetchMessages();
             },
           ),
         ],
@@ -245,74 +144,10 @@ class _ChatScreenState extends State<ChatScreen> {
                       Icons.photo,
                       color: kAppColor,
                     ),
-                    onPressed: () async {
-                      FilePickerResult result =
-                          await FilePicker.platform.pickFiles(
-                        type: FileType.image,
-                        allowMultiple: false,
-                      );
-
-                      if (result != null) {
-                        File file = File(result.files.single.path);
-                        await Messages.sendPhotoMessage(
-                          userId,
-                          groupId,
-                          file.path,
-                          token,
-                        );
-
-                        var response = await Messages.getMessagesForGroup(
-                          userId,
-                          groupId,
-                          token,
-                        );
-
-                        if (response == null) {
-                          showNewDialog(
-                            'Error',
-                            'There was an error while processing your request',
-                            DialogType.WARNING,
-                            context,
-                          );
-                          return;
-                        }
-
-                        ui = buildChats(userId, response);
-                        setState(() {});
-                      }
-                    },
+                    onPressed: sendImage,
                   ),
                   IconButton(
-                    onPressed: () async {
-                      if (messageText == '' || messageText == null) return;
-
-                      messageTextController.clear();
-                      await Messages.sendTextMessage(
-                        userId,
-                        groupId,
-                        messageText,
-                        token,
-                      );
-
-                      var response = await Messages.getMessagesForGroup(
-                        userId,
-                        groupId,
-                        token,
-                      );
-
-                      if (response == null) {
-                        showNewDialog(
-                          'Error',
-                          'There was an error while processing your request',
-                          DialogType.WARNING,
-                          context,
-                        );
-                        return;
-                      }
-
-                      ui = buildChats(userId, response);
-                      setState(() {});
-                    },
+                    onPressed: sendText,
                     icon: Icon(
                       Icons.send,
                       color: kAppColor,
@@ -326,156 +161,155 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
-}
 
-Expanded buildChats(userId, data) {
-  List<MessageBubble> messageBubbles = [];
-  var decoded = jsonDecode(data);
-  for (var element in decoded) {
-    bool isMe = userId == element['senderId'].toString();
-    messageBubbles.add(MessageBubble(
-        sender: element['senderName'],
-        text: element['content'],
-        isMe: isMe,
-        isPhoto: element['isPhoto'],
-        url: element['url']));
+  void addFriends() {
+    Navigator.pushNamed(
+      context,
+      AddFriendsToGroupScreen.id,
+      arguments:
+          AddFriendsToGroupScreenArguments(token, userId, groupId, groupName),
+    );
   }
 
-  return Expanded(
-    child: ListView(
-      reverse: true,
-      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-      children: messageBubbles,
-    ),
-  );
-}
+  void setAdmins() {
+    Navigator.pushNamed(
+      context,
+      SetAdminScreen.id,
+      arguments: SetAdminScreenArguments(token, userId, groupId, groupName),
+    );
+  }
 
-class MessagesBuilder extends StatelessWidget {
-  MessagesBuilder(this.userId, this.groupId, this.token);
+  Future editGroup() async {
+    final text = await showTextInputDialog(
+      context: context,
+      textFields: [
+        DialogTextField(hintText: 'Enter new group name'),
+      ],
+      title: 'Change group name',
+      message: 'In the box below enter a new name for this group.',
+      okLabel: 'OK',
+      cancelLabel: 'Cancel',
+      isDestructiveAction: false,
+      style: AdaptiveStyle.adaptive,
+      actionsOverflowDirection: VerticalDirection.up,
+    );
 
-  final String userId;
-  final String groupId;
-  final String token;
+    if (text != null && text[0] != null) {
+      var result = await Group.editGroupName(userId, token, groupId, text[0]);
 
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Messages.getMessagesForGroup(
+      if (!result)
+        showNewDialog(
+          'Error',
+          'An error occurred while changing group name',
+          DialogType.WARNING,
+          context,
+        );
+      else
+        showNewDialog(
+          'Changed name',
+          'Group name was successfully changed',
+          DialogType.SUCCES,
+          context,
+        );
+    }
+  }
+
+  void callUser() async {
+    var response = await Group.getMembersForGroup(userId, groupId, token);
+
+    if (response == null) {
+      showNewDialog(
+        'Error',
+        'There was an error while processing your request',
+        DialogType.WARNING,
+        context,
+      );
+      return;
+    }
+
+    var decoded;
+
+    try {
+      decoded = jsonDecode(response);
+    } catch (e) {
+      showNewDialog(
+        'Error',
+        'There was an error while processing your request',
+        DialogType.WARNING,
+        context,
+      );
+      return;
+    }
+
+    if (hubConnection.state == HubConnectionState.Disconnected) {
+      await hubConnection.start();
+    }
+
+    var calleeId = decoded[0].toString() == userId ? decoded[1] : decoded[0];
+
+    Navigator.pushNamed(
+      context,
+      CallScreen.id,
+      arguments: CallScreenArguments(
+        calleeId.toString(),
+        groupName,
+        hubConnection,
+        false,
+      ),
+    );
+  }
+
+  void sendImage() async {
+    FilePickerResult result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+    );
+
+    if (result != null) {
+      File file = File(result.files.single.path);
+      await Messages.sendPhotoMessage(
         userId,
         groupId,
+        file.path,
         token,
-      ),
-      builder: (context, snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return new Center(
-              child: CircularProgressIndicator(
-                backgroundColor: kAppColor,
-              ),
-            );
-          default:
-            if (snapshot.data == null) {
-              showNewDialog(
-                'Error',
-                'There was an error while getting your messages',
-                DialogType.WARNING,
-                context,
-              );
-              return Container();
-            }
-            return buildChats(userId, snapshot.data);
-        }
-      },
-    );
+      );
+
+      fetchMessages();
+    }
   }
-}
 
-class MessageBubble extends StatelessWidget {
-  MessageBubble({this.sender, this.text, this.isMe, this.isPhoto, this.url});
+  void sendText() async {
+    if (messageText == '' || messageText == null) return;
 
-  final String sender;
-  final String text;
-  final bool isMe;
-  final bool isPhoto;
-  final String url;
-
-  @override
-  Widget build(BuildContext context) {
-    String message = text == null ? '' : text;
-
-    return Padding(
-      padding: EdgeInsets.all(10.0),
-      child: Column(
-        crossAxisAlignment:
-            isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            isMe ? 'You' : sender,
-            style: TextStyle(
-              fontSize: 12.0,
-              color: Colors.black54,
-            ),
-          ),
-          Material(
-            borderRadius: isMe
-                ? BorderRadius.only(
-                    topLeft: Radius.circular(30.0),
-                    bottomLeft: Radius.circular(30.0),
-                    bottomRight: Radius.circular(30.0))
-                : BorderRadius.only(
-                    bottomLeft: Radius.circular(30.0),
-                    bottomRight: Radius.circular(30.0),
-                    topRight: Radius.circular(30.0),
-                  ),
-            elevation: 5.0,
-            color: isMe ? kAppColor : Colors.white,
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-              child: !isPhoto
-                  ? Text(
-                      message,
-                      style: TextStyle(
-                        color: isMe ? Colors.white : Colors.black54,
-                        fontSize: 15.0,
-                      ),
-                    )
-                  : GestureDetector(
-                      child: Image.network(
-                        url,
-                        width: 250,
-                      ),
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) {
-                          return DetailScreen(url);
-                        }));
-                      },
-                    ),
-            ),
-          ),
-        ],
-      ),
+    messageTextController.clear();
+    await Messages.sendTextMessage(
+      userId,
+      groupId,
+      messageText,
+      token,
     );
+
+    var response = await Messages.getMessagesForGroup(
+      userId,
+      groupId,
+      token,
+    );
+
+    if (response == null) {
+      showNewDialog(
+        'Error',
+        'There was an error while processing your request',
+        DialogType.WARNING,
+        context,
+      );
+      return;
+    }
+
+    fetchMessages();
   }
-}
 
-class DetailScreen extends StatelessWidget {
-  DetailScreen(this.url);
-
-  final String url;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: GestureDetector(
-        child: Center(
-          child: Image.network(
-            url,
-          ),
-        ),
-        onTap: () {
-          Navigator.pop(context);
-        },
-      ),
-    );
+  void fetchMessages() {
+    ui = MessagesBuilder(userId, groupId, token);
+    setState(() {});
   }
 }

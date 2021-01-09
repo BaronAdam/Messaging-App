@@ -105,49 +105,52 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 height: 24.0,
               ),
               RoundedButton(
-                  title: 'Register',
-                  color: Colors.blueAccent,
-                  onPressed: () async {
-                    showSpinner = true;
-                    var result = '';
-
-                    try {
-                      result = await Auth.register(
-                        _login,
-                        _password,
-                        _email,
-                        _name,
-                      );
-                      showSpinner = false;
-                    } catch (e) {
-                      print(e);
-                    }
-                    if (result == null) {
-                      loginTextController.clear();
-                      passwordTextController.clear();
-                      emailTextController.clear();
-                      nameTextController.clear();
-                      Navigator.pushNamed(context, LoginScreen.id);
-                    } else if (result == '500') {
-                      showNewDialog(
-                        'Internal server error',
-                        'A server error occurred while processing your request. Try again later',
-                        DialogType.ERROR,
-                        context,
-                      );
-                    } else {
-                      showNewDialog(
-                        'Following errors occurred',
-                        result,
-                        DialogType.WARNING,
-                        context,
-                      );
-                    }
-                  }),
+                title: 'Register',
+                color: Colors.blueAccent,
+                onPressed: register,
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void register() async {
+    showSpinner = true;
+    var result = '';
+
+    try {
+      result = await Auth.register(
+        _login,
+        _password,
+        _email,
+        _name,
+      );
+      showSpinner = false;
+    } catch (e) {
+      print(e);
+    }
+    if (result == null) {
+      loginTextController.clear();
+      passwordTextController.clear();
+      emailTextController.clear();
+      nameTextController.clear();
+      Navigator.pushNamed(context, LoginScreen.id);
+    } else if (result == '500') {
+      showNewDialog(
+        'Internal server error',
+        'A server error occurred while processing your request. Try again later',
+        DialogType.ERROR,
+        context,
+      );
+    } else {
+      showNewDialog(
+        'Following errors occurred',
+        result,
+        DialogType.WARNING,
+        context,
+      );
+    }
   }
 }

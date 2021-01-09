@@ -14,22 +14,24 @@ class AnswerCallScreen extends StatefulWidget {
 }
 
 class _AnswerCallScreenState extends State<AnswerCallScreen> {
+  HubConnection hubConnection;
+  int id;
+  String name;
+
   @override
   Widget build(BuildContext context) {
     final AnswerCallScreenArguments args =
         ModalRoute.of(context).settings.arguments;
-    HubConnection hubConnection = args.hubConnection;
+    hubConnection = args.hubConnection;
     Object otherPerson = args.otherPerson;
     var encoded = jsonEncode(otherPerson);
     var decoded = jsonDecode(encoded);
-    String name;
-    int id;
 
     try {
       name = decoded['name'];
       id = decoded['id'];
     } catch (e) {
-      print(otherPerson);
+      print(e);
       return Text('');
     }
 
@@ -77,13 +79,7 @@ class _AnswerCallScreenState extends State<AnswerCallScreen> {
                     children: [
                       Spacer(),
                       RoundIconButton(
-                          onPressed: () {
-                            hubConnection.invoke(
-                              'AnswerCall',
-                              args: <Object>[false, id],
-                            );
-                            Navigator.pop(context);
-                          },
+                          onPressed: hangUp,
                           fillColor: Colors.red[800],
                           borderColor: Colors.red[800],
                           icon: Icon(
@@ -93,19 +89,7 @@ class _AnswerCallScreenState extends State<AnswerCallScreen> {
                           isElevated: true),
                       Spacer(),
                       RoundIconButton(
-                          onPressed: () async {
-                            await Navigator.pushNamed(
-                              context,
-                              CallScreen.id,
-                              arguments: CallScreenArguments(
-                                id.toString(),
-                                name,
-                                hubConnection,
-                                true,
-                              ),
-                            );
-                            Navigator.pop(context);
-                          },
+                          onPressed: answerCall,
                           fillColor: Colors.green[800],
                           borderColor: Colors.green[800],
                           icon: Icon(
@@ -126,5 +110,27 @@ class _AnswerCallScreenState extends State<AnswerCallScreen> {
         ),
       ),
     );
+  }
+
+  void hangUp() {
+    hubConnection.invoke(
+      'AnswerCall',
+      args: <Object>[false, id],
+    );
+    Navigator.pop(context);
+  }
+
+  void answerCall() async {
+    await Navigator.pushNamed(
+      context,
+      CallScreen.id,
+      arguments: CallScreenArguments(
+        id.toString(),
+        name,
+        hubConnection,
+        true,
+      ),
+    );
+    Navigator.pop(context);
   }
 }

@@ -27,6 +27,8 @@ class _CallScreenState extends State<CallScreen> {
   bool isOnSpeaker = false;
   bool isMicrophoneMuted = false;
   bool isInCall = false;
+  bool answerCall;
+  String otherPersonId;
 
   HubConnection hubConnection;
 
@@ -48,73 +50,18 @@ class _CallScreenState extends State<CallScreen> {
     super.dispose();
   }
 
-  void handleTick() {
-    if (!mounted) return;
-    setState(() {
-      secondsPassed++;
-      seconds = secondsPassed % 60;
-      minutes = secondsPassed ~/ 60;
-      hours = secondsPassed ~/ (60 * 60);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final CallScreenArguments args = ModalRoute.of(context).settings.arguments;
-    String otherPersonId = args.otherPersonId;
+    otherPersonId = args.otherPersonId;
     String otherPersonName = args.otherPersonName;
     hubConnection = args.hubConnection;
-    bool answerCall = args.shouldSendCallAnswer;
+    answerCall = args.shouldSendCallAnswer;
 
     if (isFirstTime) {
       isFirstTime = false;
 
-      hubConnection.on('callAccepted', (data) {
-        var acceptingUser = data[0];
-        //TODO: setup webRTC
-        setState(() {
-          secondsPassed = 0;
-          seconds = 0;
-          minutes = 0;
-          isInCall = true;
-        });
-      });
-
-      hubConnection.on('callDeclined', (data) {
-        Navigator.pop(context);
-      });
-
-      hubConnection.on('receiveSignal', (data) {
-        var signalingUser = data[0];
-        var signal = data[1];
-
-        //TODO: webRTC
-      });
-
-      hubConnection.on('callEnded', (data) {
-        //TODO: webRTC close
-
-        try {
-          Navigator.pop(context);
-        } catch (e) {
-          print(e);
-        }
-      });
-
-      if (answerCall) {
-        hubConnection.invoke(
-          'AnswerCall',
-          args: <Object>[true, int.parse(otherPersonId)],
-        );
-        setState(() {
-          isInCall = true;
-        });
-      } else {
-        hubConnection.invoke(
-          'callUser',
-          args: <Object>[int.parse(otherPersonId)],
-        );
-      }
+      setupHub();
     }
 
     return WillPopScope(
@@ -163,33 +110,19 @@ class _CallScreenState extends State<CallScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Spacer(),
-                      isOnSpeaker
-                          ? RoundIconButton(
-                              onPressed: () {
-                                setState(() {
-                                  isOnSpeaker = false;
-                                });
-                              },
-                              fillColor: Colors.white,
-                              borderColor: Colors.white,
-                              icon: Icon(
-                                Icons.volume_up,
-                                color: Colors.black,
-                              ),
-                              isElevated: true)
-                          : RoundIconButton(
-                              onPressed: () {
-                                setState(() {
-                                  isOnSpeaker = true;
-                                });
-                              },
-                              fillColor: Color(0),
-                              borderColor: Colors.white,
-                              icon: Icon(
-                                Icons.volume_up,
-                                color: Colors.white,
-                              ),
-                              isElevated: false),
+                      RoundIconButton(
+                          onPressed: () {
+                            setState(() {
+                              isOnSpeaker = isOnSpeaker ? false : true;
+                            });
+                          },
+                          fillColor: isOnSpeaker ? Colors.white : Color(0),
+                          borderColor: Colors.white,
+                          icon: Icon(
+                            Icons.volume_up,
+                            color: isOnSpeaker ? Colors.black : Colors.white,
+                          ),
+                          isElevated: isOnSpeaker),
                       Spacer(),
                       RoundIconButton(
                         icon: Icon(
@@ -198,40 +131,26 @@ class _CallScreenState extends State<CallScreen> {
                         ),
                         fillColor: Colors.red[800],
                         borderColor: Colors.red[800],
-                        onPressed: () {
-                          hubConnection.invoke('hangUp');
-                          Navigator.pop(context);
-                        },
+                        onPressed: endCall,
                         isElevated: true,
                       ),
                       Spacer(),
-                      isMicrophoneMuted
-                          ? RoundIconButton(
-                              onPressed: () {
-                                setState(() {
-                                  isMicrophoneMuted = false;
-                                });
-                              },
-                              fillColor: Colors.white,
-                              borderColor: Colors.white,
-                              icon: Icon(
-                                Icons.mic_off,
-                                color: Colors.black,
-                              ),
-                              isElevated: true)
-                          : RoundIconButton(
-                              onPressed: () {
-                                setState(() {
-                                  isMicrophoneMuted = true;
-                                });
-                              },
-                              fillColor: Color(0),
-                              borderColor: Colors.white,
-                              icon: Icon(
-                                Icons.mic_off,
-                                color: Colors.white,
-                              ),
-                              isElevated: false),
+                      RoundIconButton(
+                          onPressed: () {
+                            setState(() {
+                              isMicrophoneMuted =
+                                  isMicrophoneMuted ? false : true;
+                            });
+                          },
+                          fillColor:
+                              isMicrophoneMuted ? Colors.white : Color(0),
+                          borderColor: Colors.white,
+                          icon: Icon(
+                            Icons.mic_off,
+                            color:
+                                isMicrophoneMuted ? Colors.black : Colors.white,
+                          ),
+                          isElevated: isMicrophoneMuted),
                       Spacer(),
                     ],
                   ),
@@ -246,17 +165,81 @@ class _CallScreenState extends State<CallScreen> {
       ),
     );
   }
-}
 
-String formatTime(int hours, int minutes, int seconds) {
-  String minutesString, secondsString;
-  hours == 0
-      ? minutesString = minutes.toString()
-      : minutesString = minutes < 10 ? '0$minutes' : minutes.toString();
+  void handleTick() {
+    if (!mounted) return;
+    setState(() {
+      secondsPassed++;
+      seconds = secondsPassed % 60;
+      minutes = secondsPassed ~/ 60;
+      hours = secondsPassed ~/ (60 * 60);
+    });
+  }
 
-  secondsString = seconds < 10 ? '0$seconds' : seconds.toString();
+  void endCall() {
+    hubConnection.invoke('hangUp');
+    Navigator.pop(context);
+  }
 
-  return hours == 0
-      ? '$minutesString:$secondsString'
-      : '$hours:$minutesString:$secondsString';
+  String formatTime(int hours, int minutes, int seconds) {
+    String minutesString, secondsString;
+    hours == 0
+        ? minutesString = minutes.toString()
+        : minutesString = minutes < 10 ? '0$minutes' : minutes.toString();
+
+    secondsString = seconds < 10 ? '0$seconds' : seconds.toString();
+
+    return hours == 0
+        ? '$minutesString:$secondsString'
+        : '$hours:$minutesString:$secondsString';
+  }
+
+  void setupHub() {
+    hubConnection.on('callAccepted', (data) {
+      var acceptingUser = data[0];
+      //TODO: setup webRTC
+      setState(() {
+        secondsPassed = 0;
+        seconds = 0;
+        minutes = 0;
+        isInCall = true;
+      });
+    });
+
+    hubConnection.on('callDeclined', (data) {
+      Navigator.pop(context);
+    });
+
+    hubConnection.on('receiveSignal', (data) {
+      var signalingUser = data[0];
+      var signal = data[1];
+
+      //TODO: webRTC
+    });
+
+    hubConnection.on('callEnded', (data) {
+      //TODO: webRTC close
+
+      try {
+        Navigator.pop(context);
+      } catch (e) {
+        print(e);
+      }
+    });
+
+    if (answerCall) {
+      hubConnection.invoke(
+        'AnswerCall',
+        args: <Object>[true, int.parse(otherPersonId)],
+      );
+      setState(() {
+        isInCall = true;
+      });
+    } else {
+      hubConnection.invoke(
+        'callUser',
+        args: <Object>[int.parse(otherPersonId)],
+      );
+    }
+  }
 }

@@ -8,6 +8,7 @@ import 'package:messaging_app_flutter/DTOs//user_for_single_dto.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
 import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
 import 'package:messaging_app_flutter/constants.dart';
+import 'package:messaging_app_flutter/screens/AddFriendScreen/add_friend_widget_builder.dart';
 
 class AddFriendScreen extends StatefulWidget {
   static const String id = 'add_friends_screen';
@@ -25,15 +26,15 @@ class _AddFriendScreen extends State<AddFriendScreen> {
     super.initState();
   }
 
+  String _token, _userId, _input;
+
   @override
   Widget build(BuildContext context) {
     final AddFriendScreenArguments args =
         ModalRoute.of(context).settings.arguments;
 
-    String _token = args.token;
-    String _userId = args.userId;
-
-    String _input;
+    _token = args.token;
+    _userId = args.userId;
 
     return Scaffold(
       appBar: AppBar(
@@ -74,42 +75,7 @@ class _AddFriendScreen extends State<AddFriendScreen> {
               RoundedButton(
                 title: 'Search',
                 color: kAppColor,
-                onPressed: () async {
-                  var resultUser = await User.findUser(_token, _input);
-
-                  var resultFriends = await User.getFriends(_userId, _token);
-
-                  if (checkUserRequestResult(resultUser, context) &&
-                      checkFriendsRequestResult(resultFriends, context)) {
-                    var user;
-                    List friends;
-
-                    try {
-                      user = UserForSingleDto.fromJson(
-                        jsonDecode(resultUser),
-                      );
-                      friends = jsonDecode(resultFriends);
-                    } catch (e) {
-                      print(e);
-                      return;
-                    }
-
-                    bool isInFriends = false;
-
-                    if (friends.contains(user.id)) {
-                      isInFriends = true;
-                    }
-
-                    container = AddFriendWidgetBuilder(
-                      user,
-                      _userId,
-                      _token,
-                      isInFriends,
-                    );
-
-                    setState(() {});
-                  }
-                },
+                onPressed: findFriend,
               ),
               Container(
                 child: container,
@@ -120,119 +86,69 @@ class _AddFriendScreen extends State<AddFriendScreen> {
       ),
     );
   }
-}
 
-class AddFriendWidgetBuilder extends StatelessWidget {
-  AddFriendWidgetBuilder(
-    this.decodedData,
-    this.userId,
-    this.token,
-    this.isInFriends,
-  );
+  void findFriend() async {
+    var resultUser = await User.findUser(_token, _input);
 
-  final UserForSingleDto decodedData;
-  final String userId;
-  final String token;
-  final bool isInFriends;
+    var resultFriends = await User.getFriends(_userId, _token);
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              decodedData.name,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
-            Spacer(),
-            isInFriends
-                ? IconButton(
-                    icon: Icon(
-                      Icons.done,
-                      color: Colors.green,
-                    ),
-                    onPressed: null)
-                : IconButton(
-                    icon: Icon(Icons.person_add),
-                    onPressed: () async {
-                      await addFriend(userId, token, decodedData, context);
-                    },
-                  ),
-          ],
-        ),
-        Text(decodedData.username),
-        Text(decodedData.email),
-      ],
-    );
-  }
-}
+    if (checkUserRequestResult(resultUser, context) &&
+        checkFriendsRequestResult(resultFriends, context)) {
+      var user;
+      List friends;
 
-bool checkUserRequestResult(result, context) {
-  if (result == null) {
-    showNewDialog(
-      'Error',
-      'There was an error while processing your request',
-      DialogType.WARNING,
-      context,
-    );
-    return false;
+      try {
+        user = UserForSingleDto.fromJson(
+          jsonDecode(resultUser),
+        );
+        friends = jsonDecode(resultFriends);
+      } catch (e) {
+        print(e);
+        return;
+      }
+
+      bool isInFriends = false;
+
+      if (friends.contains(user.id)) {
+        isInFriends = true;
+      }
+
+      container = AddFriendWidgetBuilder(
+        user,
+        _userId,
+        _token,
+        isInFriends,
+      );
+
+      setState(() {});
+    }
   }
 
-  return true;
-}
+  bool checkUserRequestResult(result, context) {
+    if (result == null) {
+      showNewDialog(
+        'Error',
+        'There was an error while processing your request',
+        DialogType.WARNING,
+        context,
+      );
+      return false;
+    }
 
-bool checkFriendsRequestResult(result, context) {
-  if (result == null) {
-    showNewDialog(
-      'Error',
-      'There was an error while processing your request',
-      DialogType.WARNING,
-      context,
-    );
-    return false;
+    return true;
   }
 
-  return true;
-}
+  bool checkFriendsRequestResult(result, context) {
+    if (result == null) {
+      showNewDialog(
+        'Error',
+        'There was an error while processing your request',
+        DialogType.WARNING,
+        context,
+      );
+      return false;
+    }
 
-Future addFriend(userId, token, decoded, context) async {
-  String response = await User.addFriend(
-    token,
-    userId,
-    decoded.id,
-  );
-
-  displayResultOfAddFriend(response, context);
-}
-
-void displayResultOfAddFriend(response, context) {
-  if (response == '200') {
-    Navigator.pop(context);
-  } else if (response == '401') {
-    showNewDialog(
-      'Unauthorized',
-      'You cannot perform this operation',
-      DialogType.WARNING,
-      context,
-    );
-  } else if (response == '500') {
-    showNewDialog(
-      'Internal Server Error',
-      'There was an server error while performing this operation',
-      DialogType.WARNING,
-      context,
-    );
-  } else {
-    showNewDialog(
-      'Error',
-      response,
-      DialogType.WARNING,
-      context,
-    );
+    return true;
   }
 }
