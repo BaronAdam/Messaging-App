@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:messaging_app_flutter/constants.dart';
-import 'package:messaging_app_flutter/screens/ChatScreen/detail_screen.dart';
+import 'package:messaging_app_flutter/screens/chat_screen/detail_screen.dart';
 
 class MessageBubble extends StatelessWidget {
   MessageBubble({this.sender, this.text, this.isMe, this.isPhoto, this.url});

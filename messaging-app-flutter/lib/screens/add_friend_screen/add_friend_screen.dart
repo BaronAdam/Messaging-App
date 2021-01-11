@@ -8,7 +8,7 @@ import 'package:messaging_app_flutter/DTOs//user_for_single_dto.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
 import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
 import 'package:messaging_app_flutter/constants.dart';
-import 'package:messaging_app_flutter/screens/AddFriendScreen/add_friend_widget_builder.dart';
+import 'package:messaging_app_flutter/screens/add_friend_screen/add_friend_widget_builder.dart';
 
 class AddFriendScreen extends StatefulWidget {
   static const String id = 'add_friends_screen';

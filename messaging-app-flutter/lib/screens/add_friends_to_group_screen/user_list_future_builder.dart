@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:messaging_app_flutter/DTOs/member_and_friends_dto.dart';
 import 'package:messaging_app_flutter/api/repositories/group_repository.dart';
 import 'package:messaging_app_flutter/constants.dart';
-import 'package:messaging_app_flutter/screens/AddFriendsToGroupScreen/user_card_builder.dart';
+import 'package:messaging_app_flutter/screens/add_friends_to_group_screen/user_card_builder.dart';
 
 class UserListFutureBuilder extends StatelessWidget {
   final userId;

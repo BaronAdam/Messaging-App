@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:messaging_app_flutter/constants.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
-import 'package:messaging_app_flutter/screens/AddFriendsToGroupScreen/user_list_future_builder.dart';
+import 'package:messaging_app_flutter/screens/add_friends_to_group_screen/user_list_future_builder.dart';
 
 class AddFriendsToGroupScreen extends StatefulWidget {
   static const String id = 'add_friends_to_group_screen';

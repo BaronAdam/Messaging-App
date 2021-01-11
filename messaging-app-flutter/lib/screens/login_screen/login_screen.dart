@@ -11,8 +11,8 @@ import 'package:messaging_app_flutter/components/rounded_button.dart';
 import 'package:messaging_app_flutter/constants.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
 import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
-import 'package:messaging_app_flutter/screens/AnswerCallScreen/answer_call_screen.dart';
-import 'package:messaging_app_flutter/screens/ConversationsScreen/conversations_screen.dart';
+import 'package:messaging_app_flutter/screens/answer_call_screen/answer_call_screen.dart';
+import 'package:messaging_app_flutter/screens/conversations_screen/conversations_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'login_screen';

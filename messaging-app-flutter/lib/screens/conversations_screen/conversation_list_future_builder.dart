@@ -5,7 +5,7 @@ import 'package:signalr_client/hub_connection.dart';
 import 'package:messaging_app_flutter/DTOs/message_group_to_return_dto.dart';
 import 'package:messaging_app_flutter/api/messages.dart';
 import 'package:messaging_app_flutter/constants.dart';
-import 'package:messaging_app_flutter/screens/ConversationsScreen/conversation_builder.dart';
+import 'package:messaging_app_flutter/screens/conversations_screen/conversation_builder.dart';
 
 class ConversationsListFutureBuilder extends StatelessWidget {
   final userId;

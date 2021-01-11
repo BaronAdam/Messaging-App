@@ -3,7 +3,7 @@ import 'package:signalr_client/hub_connection.dart';
 
 import 'package:messaging_app_flutter/DTOs/message_group_to_return_dto.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
-import 'package:messaging_app_flutter/screens/ChatScreen/chat_screen.dart';
+import 'package:messaging_app_flutter/screens/chat_screen/chat_screen.dart';
 
 class ConversationBuilder extends StatelessWidget {
   const ConversationBuilder({

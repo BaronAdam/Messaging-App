@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'screens/AnswerCallScreen/answer_call_screen.dart';
-import 'screens/CallScreen/call_screen.dart';
 
-import 'screens/AddFriendsToGroupScreen/add_friends_to_group_screen.dart';
-import 'screens/SetAdminScreen/set_admin_screen.dart';
+import 'screens/answer_call_screen/answer_call_screen.dart';
+import 'screens/call_screen/call_screen.dart';
+import 'screens/add_friends_to_group_screen/add_friends_to_group_screen.dart';
+import 'screens/set_admin_screen/set_admin_screen.dart';
 import 'screens/welcome_screen.dart';
-import 'screens/LoginScreen/login_screen.dart';
-import 'screens/RegisterScreen/register_screen.dart';
-import 'screens/ConversationsScreen/conversations_screen.dart';
-import 'screens/AddFriendScreen/add_friend_screen.dart';
-import 'screens/ChatScreen/chat_screen.dart';
+import 'screens/login_screen/login_screen.dart';
+import 'screens/register_screen/register_screen.dart';
+import 'screens/conversations_screen/conversations_screen.dart';
+import 'screens/add_friend_screen/add_friend_screen.dart';
+import 'screens/chat_screen/chat_screen.dart';
 
 void main() {
   runApp(MessagingApp());

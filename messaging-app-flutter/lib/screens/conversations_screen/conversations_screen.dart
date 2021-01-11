@@ -8,8 +8,8 @@ import 'package:messaging_app_flutter/api/group.dart';
 import 'package:messaging_app_flutter/constants.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
 import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
-import 'package:messaging_app_flutter/screens/AddFriendScreen/add_friend_screen.dart';
-import 'package:messaging_app_flutter/screens/ConversationsScreen/conversation_list_future_builder.dart';
+import 'package:messaging_app_flutter/screens/add_friend_screen/add_friend_screen.dart';
+import 'package:messaging_app_flutter/screens/conversations_screen/conversation_list_future_builder.dart';
 
 class ConversationsScreen extends StatefulWidget {
   static const String id = 'conversations_screen';

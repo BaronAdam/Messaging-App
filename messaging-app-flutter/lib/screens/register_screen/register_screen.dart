@@ -6,7 +6,7 @@ import 'package:messaging_app_flutter/api/auth.dart';
 import 'package:messaging_app_flutter/components/rounded_button.dart';
 import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
 import 'package:messaging_app_flutter/constants.dart';
-import 'package:messaging_app_flutter/screens/LoginScreen/login_screen.dart';
+import 'package:messaging_app_flutter/screens/login_screen/login_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const String id = 'registration_screen';
