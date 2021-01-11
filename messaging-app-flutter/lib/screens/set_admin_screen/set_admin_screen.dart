@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
 import 'package:messaging_app_flutter/constants.dart';
-import 'package:messaging_app_flutter/screens/SetAdminScreen/user_list_future_builder.dart';
+import 'package:messaging_app_flutter/screens/set_admin_screen/user_list_future_builder.dart';
 
 class SetAdminScreen extends StatefulWidget {
   static const String id = 'set_admin_screen';

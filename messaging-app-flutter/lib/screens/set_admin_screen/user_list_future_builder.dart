@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:messaging_app_flutter/DTOs/members_and_admins_dto.dart';
 import 'package:messaging_app_flutter/api/repositories/group_repository.dart';
 import 'package:messaging_app_flutter/constants.dart';
-import 'package:messaging_app_flutter/screens/SetAdminScreen/user_builder.dart';
+import 'package:messaging_app_flutter/screens/set_admin_screen/user_builder.dart';
 
 class UserListFutureBuilder extends StatelessWidget {
   final userId;
