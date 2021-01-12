@@ -10,3 +10,7 @@ dotnet ef --startup-project ../Messaging-App.Api/ migrations add [name]
 ```
 docker-compose up -d
 ```
+## Flutter: build runner
+```bash
+flutter packages pub run build_runner build
+```
