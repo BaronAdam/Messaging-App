@@ -23,12 +23,16 @@ dependencies:
   dio: ^3.0.10
   signalr_client: ^0.1.6
   flutter_secure_storage: ^3.3.5
-  get_it: ^5.0.3
   injectable: ^1.0.7
+  get_it: ^5.0.3
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  injectable_generator: ^1.0.7
+  build_runner: ^1.10.12
 
 flutter:
   uses-material-design: true
