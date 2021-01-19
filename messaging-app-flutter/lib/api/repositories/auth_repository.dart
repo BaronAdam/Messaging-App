@@ -103,27 +103,19 @@ class AuthRepository implements IAuthRepository {
     List<String> toReturn;
 
     if (decoded['Email'] != null) {
-      for (var element in decoded['Email']) {
-        toReturn.add(element);
-      }
+      toReturn.addAll(decoded['Email']);
     }
 
     if (decoded['Password'] != null) {
-      for (var element in decoded['Password']) {
-        toReturn.add(element);
-      }
+      toReturn.addAll(decoded['Password']);
     }
 
     if (decoded['Username'] != null) {
-      for (var element in decoded['Username']) {
-        toReturn.add(element);
-      }
+      toReturn.addAll(decoded['Username']);
     }
 
     if (decoded['Name'] != null) {
-      for (var element in decoded['Name']) {
-        toReturn.add(element);
-      }
+      toReturn.addAll(decoded['Name']);
     }
 
     return toReturn;
