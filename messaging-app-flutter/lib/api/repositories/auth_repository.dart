@@ -34,7 +34,7 @@ class AuthRepository implements IAuthRepository {
       );
     } catch (e) {
       print('Auth.login http request: $e');
-      return 500;
+      return null;
     }
 
     decodeAndStoreToken(response.body);
@@ -79,7 +79,7 @@ class AuthRepository implements IAuthRepository {
       );
     } catch (e) {
       print('Auth.register http request: $e');
-      return new ErrorStatus(null, 500);
+      return null;
     }
 
     if (response.statusCode == 400) {
@@ -128,11 +128,10 @@ class AuthRepository implements IAuthRepository {
     try {
       token = await _storage.read(key: 'token');
       userId = await _storage.read(key: 'id');
+      if (JwtDecoder.isExpired(token)) return null;
     } catch (e) {
       return null;
     }
-
-    if (JwtDecoder.isExpired(token)) return null;
 
     return new Token(token, userId);
   }
