@@ -1,8 +1,8 @@
 import 'package:messaging_app_flutter/DTOs/user_for_single_dto.dart';
 
-class MembersAndFriendsDto {
+class MembersAndFriends {
   final List<UserForSingleDto> friends;
   final List<int> members;
 
-  MembersAndFriendsDto(this.friends, this.members);
+  MembersAndFriends(this.friends, this.members);
 }
