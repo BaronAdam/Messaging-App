@@ -14,7 +14,7 @@ class AuthRepository implements IAuthRepository {
   final _storage = new FlutterSecureStorage();
 
   @override
-  Future<int> login(String username, String password) async {
+  Future<ErrorStatus> login(String username, String password) async {
     Uri uri = Uri.http(kApiUrl, '/api/auth/login');
 
     http.Response response;
@@ -39,7 +39,7 @@ class AuthRepository implements IAuthRepository {
 
     decodeAndStoreToken(response.body);
 
-    return response.statusCode;
+    return new ErrorStatus(null, response.statusCode);
   }
 
   void decodeAndStoreToken(String json) {
