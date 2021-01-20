@@ -15,7 +15,7 @@ class UserListFutureBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: GroupRepository.getFriendsAndMembers(
+      future: GroupRepositoryOld.getFriendsAndMembers(
         userId,
         groupId,
         token,

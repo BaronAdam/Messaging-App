@@ -15,7 +15,7 @@ class UserListFutureBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: GroupRepository.getMembersAndAdminInfo(userId, groupId, token),
+      future: GroupRepositoryOld.getMembersAndAdminInfo(userId, groupId, token),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:

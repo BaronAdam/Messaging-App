@@ -6,7 +6,7 @@ import 'package:messaging_app_flutter/api/objects/member_and_friends.dart';
 import 'package:messaging_app_flutter/api/objects/members_and_admins.dart';
 import 'package:messaging_app_flutter/api/user.dart';
 
-class GroupRepository {
+class GroupRepositoryOld {
   static Future<MembersAndAdmins> getMembersAndAdminInfo(
       userId, groupId, token) async {
     var requestMembers = await Group.getMembersForGroup(userId, groupId, token);
