@@ -2,7 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:messaging_app_flutter/api/user.dart';
-import 'package:messaging_app_flutter/DTOs/user_for_single_dto.dart';
+import 'package:messaging_app_flutter/DTOs/user.dart';
 import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
 
 class AddFriendWidgetBuilder extends StatelessWidget {

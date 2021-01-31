@@ -1,7 +1,7 @@
-import 'package:messaging_app_flutter/DTOs/user_for_single_dto.dart';
+import 'package:messaging_app_flutter/api/objects/user.dart';
 
 class MembersAndAdmins {
-  final List<UserForSingleDto> members;
+  final List<User> members;
   final List<int> adminIds;
 
   MembersAndAdmins(this.members, this.adminIds);

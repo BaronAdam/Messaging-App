@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:messaging_app_flutter/api/user.dart';
 import 'package:messaging_app_flutter/components/rounded_button.dart';
-import 'package:messaging_app_flutter/DTOs//user_for_single_dto.dart';
+import 'package:messaging_app_flutter/DTOs/user.dart';
 import 'package:messaging_app_flutter/helpers/screen_arguments.dart';
 import 'package:messaging_app_flutter/helpers/show_new_dialog.dart';
 import 'package:messaging_app_flutter/constants.dart';
