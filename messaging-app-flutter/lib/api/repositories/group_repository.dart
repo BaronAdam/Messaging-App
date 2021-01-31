@@ -220,16 +220,4 @@ class GroupRepository implements IGroupRepository {
       return null;
     }
   }
-
-  @override
-  Future<MembersAndFriends> getFriendsAndMembers(int groupId) async {
-    // TODO: implement getFriendsAndMembers
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<MembersAndAdmins> getMembersAndAdmins(int groupId) async {
-    // TODO: implement getFriendsAndAdmins
-    throw UnimplementedError();
-  }
 }

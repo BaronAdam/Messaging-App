@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:messaging_app_flutter/DTOs/member_and_friends.dart';
+import 'package:messaging_app_flutter/api/objects/member_and_friends.dart';
 import 'package:messaging_app_flutter/api/repositories/group_repository_old.dart';
 import 'package:messaging_app_flutter/constants.dart';
 import 'package:messaging_app_flutter/screens/add_friends_to_group_screen/user_card_builder.dart';
@@ -44,7 +44,7 @@ class UserListFutureBuilder extends StatelessWidget {
   }
 
   ListView buildFriendsList(
-      MembersAndFriendsDto data, userId, groupId, token, context) {
+      MembersAndFriends data, userId, groupId, token, context) {
     List<Widget> list = [];
 
     for (var friend in data.friends) {

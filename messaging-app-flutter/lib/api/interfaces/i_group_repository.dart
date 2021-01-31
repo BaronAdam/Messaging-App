@@ -9,6 +9,4 @@ abstract class IGroupRepository {
   Future<List<int>> getAdminsForGroup(int groupId);
   Future<ErrorStatus> addMembersToGroup(int groupId, List<int> userIds);
   Future<ErrorStatus> changeAdminStatus(int groupId, int memberId);
-  Future<MembersAndAdmins> getMembersAndAdmins(int groupId);
-  Future<MembersAndFriends> getFriendsAndMembers(int groupId);
 }
